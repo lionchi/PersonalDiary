@@ -1,0 +1,15 @@
+spring:
+  profiles: default
+  application:
+    name: personal-diary-eureka-server
+
+server:
+  port: ${PORT:8700}
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    instance-info-replication-interval-seconds: 10
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/
