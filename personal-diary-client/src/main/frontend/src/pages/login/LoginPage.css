@@ -1,5 +1,5 @@
 .row {
-    min-height: calc(100vh - 64px - 22px);
+    min-height: calc(100vh - 64px - 70px);
 }
 
 .form-btn {
