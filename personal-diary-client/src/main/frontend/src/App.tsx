@@ -23,6 +23,7 @@ function App() {
                     userToken: action.token,
                     isSignOut: !!action.token,
                     language: action.language,
+                    isDarkMode: action.isDarkMode,
                     needTokenRestore: false,
                     isLoading: false,
                 };
@@ -43,6 +44,11 @@ function App() {
                     ...prevState,
                     language: action.language,
                 };
+            case 'THEME':
+                return {
+                    ...prevState,
+                    isDarkMode: action.isDarkMode,
+                };
             case 'LOADING':
                 return {
                     ...prevState,
@@ -54,8 +60,9 @@ function App() {
     useEffect(() => {
         const userToken = localStorage.getItem(EConstantValueString.ACCESS_TOKEN);
         const ln = localStorage.getItem(EConstantValueString.LANGUAGE);
+        const theme = localStorage.getItem(EConstantValueString.THEME);
         if (state.needTokenRestore) {
-            dispatch({type: 'RESTORE_TOKEN', token: userToken, language: ln});
+            dispatch({type: 'RESTORE_TOKEN', token: userToken, language: ln, isDarkMode: theme === 'dark'});
         }
         initI18n(ln);
     });
@@ -78,7 +85,11 @@ function App() {
                 localStorage.setItem(EConstantValueString.LANGUAGE, ln);
                 dispatch({type: 'LANGUAGE', language: ln});
                 i18next.changeLanguage(ln);
-            }
+            },
+            setDarkMode: (isDarkMode: boolean, theme: string): void => {
+                localStorage.setItem(EConstantValueString.THEME, theme);
+                dispatch({type: 'THEME', isDarkMode: isDarkMode})
+            },
         }),
         [state],
     );

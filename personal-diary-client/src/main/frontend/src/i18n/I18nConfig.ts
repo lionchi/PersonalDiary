@@ -7,7 +7,11 @@ export const initI18n = (language: string | null): void => {
             ru: {
                 translation: {
                     "main_title": "Личный дневник",
-                    "footer": "Личный дневник ©2020 создано Jpixel",
+                    "footer": {
+                        "copyright": "Личный дневник ©2020 создано Jpixel",
+                        "theme": "Цветовая тема",
+                        "translations": "Переводы"
+                    },
                     "form": {
                         "login": {
                             "title": "Авторизация",
@@ -27,7 +31,11 @@ export const initI18n = (language: string | null): void => {
             en: {
                 translation: {
                     "main_title": "Personal diary",
-                    "footer": "Personal diary ©2020 by Jpixel",
+                    "footer": {
+                        "copyright": "Personal diary ©2020 by Jpixel",
+                        "theme": "Color theme",
+                        "translations": "Translations"
+                    },
                     "form": {
                         "login": {
                             "title": "Authorization",

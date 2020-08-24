@@ -9,5 +9,9 @@ export enum EConstantValueString {
     /**
      * Локализация
      */
-    LANGUAGE = "ln"
+    LANGUAGE = "ln",
+    /**
+     * Тема
+     */
+    THEME = "theme"
 }
