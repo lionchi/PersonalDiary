@@ -5,14 +5,17 @@ import {Route} from "react-router";
 import {baseUrl} from "./utils/config";
 import RootRouter from "./router/RootRouter";
 import {Provider} from "mobx-react";
+import {ConfigProvider} from "antd";
 
 function App() {
     return (
-        <Provider {...stores}>
-            <BrowserRouter basename={baseUrl()}>
-                <Route component={RootRouter}/>
-            </BrowserRouter>
-        </Provider>
+        <ConfigProvider componentSize={"large"}>
+            <Provider {...stores}>
+                <BrowserRouter basename={baseUrl()}>
+                    <Route component={RootRouter}/>
+                </BrowserRouter>
+            </Provider>
+        </ConfigProvider>
     );
 }
 

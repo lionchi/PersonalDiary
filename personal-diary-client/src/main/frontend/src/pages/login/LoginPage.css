@@ -1,0 +1,15 @@
+.row {
+    min-height: calc(100vh - 64px - 22px);
+}
+
+.form-btn {
+    width: 100%;
+}
+
+.form-title {
+    text-align: center;
+}
+
+.form-text-size {
+    font-size: 16px;
+}
