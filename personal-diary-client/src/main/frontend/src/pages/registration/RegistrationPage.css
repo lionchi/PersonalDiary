@@ -1,0 +1,15 @@
+.row {
+    min-height: calc(100vh - 64px - 71.5px);
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.center {
+    text-align: center;
+}
+
+.form-text-size {
+    font-size: 16px;
+}

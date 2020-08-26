@@ -12,6 +12,8 @@ import {AppContext, AppContextInit} from "./security/AppContext";
 import {EConstantValueString} from "./common/EConstantValueString";
 import i18next from "i18next";
 import {initI18n} from "./i18n/I18nConfig";
+import enGB from 'antd/es/locale/en_GB';
+import ruRU from 'antd/es/locale/ru_RU';
 
 function App() {
 
@@ -96,7 +98,7 @@ function App() {
 
     return (
         <AppContext.Provider value={appContext}>
-            <ConfigProvider componentSize={"large"}>
+            <ConfigProvider locale={state.language === 'en' ? enGB : ruRU} componentSize={"large"}>
                 <Provider {...stores}>
                     <BrowserRouter basename={baseUrl()}>
                         <Spin size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>

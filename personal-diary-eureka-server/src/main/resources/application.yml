@@ -1,5 +1,4 @@
 spring:
-  profiles: default
   application:
     name: personal-diary-eureka-server
 

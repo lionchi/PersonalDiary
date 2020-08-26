@@ -34,7 +34,7 @@ const LoginPage = (): ReactElement => {
                         </Form.Item>
                         <Form.Item>
                             <Text className="form-text-size">{i18next.t('form.login.or')}</Text>
-                            <Link className="form-text-size" href={"*"}>{i18next.t('form.login.register_now')}</Link>
+                            <Link className="form-text-size" href={"/registration"}>{i18next.t('form.login.register_now')}</Link>
                         </Form.Item>
                     </Form>
                 </Col>
