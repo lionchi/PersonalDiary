@@ -6,6 +6,3 @@ spring:
       discovery:
         enabled: true
         service-id: config-server
-
-server:
-  port: 8710
