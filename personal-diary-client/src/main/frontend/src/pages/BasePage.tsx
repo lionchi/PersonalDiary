@@ -50,7 +50,8 @@ const BasePage = (props: IBasePageProps): ReactElement => {
                                 checked={appContext.language === 'en'} onChange={toggleTranslations}/>
                         <Divider type="vertical"/>
                         <Text style={{marginRight: "10px"}}>{i18next.t('footer.theme')}</Text>
-                        <Switch checkedChildren={<BulbTwoTone twoToneColor="back"/>} unCheckedChildren={<BulbTwoTone twoToneColor="yellow"/>}
+                        <Switch checkedChildren={<BulbTwoTone twoToneColor="back"/>}
+                                unCheckedChildren={<BulbTwoTone twoToneColor="yellow"/>}
                                 checked={appContext.isDarkMode} onChange={toggleTheme}/>
                     </Col>
                 </Row>

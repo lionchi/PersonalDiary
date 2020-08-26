@@ -7,6 +7,7 @@ public interface ResourceReader {
 
     /**
      * Вернуть содержимое ресурса в виде строки в UTF-8.
+     *
      * @param path путь к ресурсу
      * @return ресурс в виде строки
      */

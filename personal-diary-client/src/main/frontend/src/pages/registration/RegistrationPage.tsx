@@ -113,7 +113,8 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
                         </Form.Item>
 
                         <Form.Item className="center">
-                            <Button type="primary" htmlType="submit">{i18next.t('form.registration.register_now')}</Button>
+                            <Button type="primary"
+                                    htmlType="submit">{i18next.t('form.registration.register_now')}</Button>
                         </Form.Item>
                     </Form>
                 </Col>

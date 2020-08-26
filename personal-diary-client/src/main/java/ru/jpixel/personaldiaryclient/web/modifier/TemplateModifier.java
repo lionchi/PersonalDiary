@@ -9,6 +9,7 @@ public interface TemplateModifier {
 
     /**
      * Модифицировать шаблон на основе данных реквеста.
+     *
      * @param request  реквест
      * @param template шаблон
      * @return модифицированный шаблон
