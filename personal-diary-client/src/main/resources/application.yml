@@ -1,13 +1,3 @@
 spring:
   application:
     name: personal-diary-zull-client
-
-server:
-  port: 8710
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_URI:http://localhost:8700/eureka}
-  instance:
-    preferIpAddress: true
