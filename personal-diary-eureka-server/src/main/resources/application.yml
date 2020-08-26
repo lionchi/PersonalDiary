@@ -1,3 +1,12 @@
 spring:
   application:
     name: personal-diary-eureka-server
+
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+
+server:
+  port: 8700
