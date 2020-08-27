@@ -44,6 +44,7 @@
                     <execution>
                         <phase>process-resources</phase>
                         <configuration>
+                            <!-- mvn liquibase:rollback -Dliquibase.rollbackTag=${project.version} -->
                             <tag>${project.version}</tag>
                         </configuration>
                         <goals>
