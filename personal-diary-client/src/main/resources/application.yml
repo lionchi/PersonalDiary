@@ -6,3 +6,8 @@ spring:
       discovery:
         enabled: true
         service-id: config-server
+zuul:
+  routes:
+    personal-diary-registration-service:
+      path: /api/registration/**
+      service-id: personal-diary-registration-service

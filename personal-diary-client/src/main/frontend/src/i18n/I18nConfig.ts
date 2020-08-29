@@ -12,6 +12,11 @@ export const initI18n = (language: string | null): void => {
                         "theme": "Цветовая тема",
                         "translations": "Переводы"
                     },
+                    "notification": {
+                        "title": {
+                            "registration": "Регистрация"
+                        }
+                    },
                     "form": {
                         "login": {
                             "title": "Авторизация",
@@ -55,6 +60,11 @@ export const initI18n = (language: string | null): void => {
                         "copyright": "Personal diary ©2020 by Jpixel",
                         "theme": "Color theme",
                         "translations": "Translations"
+                    },
+                    "notification": {
+                        "title": {
+                            "registration": "Registration"
+                        }
                     },
                     "form": {
                         "login": {

@@ -57,4 +57,8 @@
                                  referencedColumnNames="id" onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet id="1.0-3" author="Gavrilov Ivan">
+        <createSequence sequenceName="user_seq" schemaName="secr" dataType="bigint"/>
+    </changeSet>
+
 </databaseChangeLog>

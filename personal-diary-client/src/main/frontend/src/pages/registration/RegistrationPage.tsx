@@ -7,6 +7,8 @@ import {RegistrationFormData} from "../../model/RegistrationFormData";
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import {useForm} from "antd/lib/form/Form";
 import {RouteComponentProps, withRouter} from "react-router";
+import {registration} from "../../api/RegistrationApi";
+import {showNotification} from "../../utils/notification";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -23,8 +25,11 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
         </Form.Item>
     );
 
-    const onFinish = useCallback((data: RegistrationFormData) => {
-        console.log(data.login)
+    const onFinish = useCallback(async (values: RegistrationFormData) => {
+        const {data} = await registration(values);
+
+        showNotification(i18next.t('notification.title.registration'), data);
+
         props.history.goBack();
     }, [props]);
 
