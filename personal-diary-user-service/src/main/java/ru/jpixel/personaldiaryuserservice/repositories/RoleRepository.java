@@ -1,8 +1,8 @@
-package ru.jpixel.personaldiaryregistrationservice.repositories;
+package ru.jpixel.personaldiaryuserservice.repositories;
 
 
 import org.springframework.data.repository.CrudRepository;
-import ru.jpixel.personaldiaryregistrationservice.domain.Role;
+import ru.jpixel.personaldiaryuserservice.domain.Role;
 
 public interface RoleRepository extends CrudRepository<Role, Long> {
 

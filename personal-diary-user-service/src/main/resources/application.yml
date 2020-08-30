@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: personal-diary-user-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+  jpa:
+    hibernate:
+      ddl-auto: none

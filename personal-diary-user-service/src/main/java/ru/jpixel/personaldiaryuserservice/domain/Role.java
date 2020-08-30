@@ -1,4 +1,4 @@
-package ru.jpixel.personaldiaryregistrationservice.domain;
+package ru.jpixel.personaldiaryuserservice.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
