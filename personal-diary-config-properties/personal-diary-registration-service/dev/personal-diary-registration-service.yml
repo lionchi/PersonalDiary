@@ -3,6 +3,8 @@ server:
 
 eureka:
   client:
+    registry-fetch-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8700/eureka}
   instance:
