@@ -2,6 +2,7 @@ package ru.jpixel.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserDto {
 
     private Long id;

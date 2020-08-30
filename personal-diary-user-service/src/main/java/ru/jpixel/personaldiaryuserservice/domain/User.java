@@ -1,16 +1,18 @@
 package ru.jpixel.personaldiaryuserservice.domain;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
 @Entity
 @Table(name = "USERS", schema = "SECR")
+@NoArgsConstructor
+@Getter
+@Setter
 public class User {
 
     @Id

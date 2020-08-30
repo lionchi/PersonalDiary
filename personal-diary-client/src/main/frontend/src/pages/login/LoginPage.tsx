@@ -9,16 +9,23 @@ import {AppContext} from "../../security/AppContext";
 import {authorization} from "../../api/AuthorizationApi";
 import {showNotification} from "../../utils/notification";
 import {OperationResult} from "../../model/OperationResult";
+import {RouteComponentProps, withRouter} from "react-router";
 
 const {Title, Text, Link} = Typography;
 
-const LoginPage = (): ReactElement => {
+const LoginPage = (props: RouteComponentProps): ReactElement => {
 
     const appContext = useContext(AppContext);
 
     const onFinish = useCallback(async (data: LoginFormData) => {
         try {
             const response = await authorization(data);
+
+            const authHeaders = response.headers.authorization as string;
+
+            appContext.signIn(authHeaders.replace('Bearer ', ''));
+
+            props.history.push('/diary');
         } catch (e) {
             const operationResult: OperationResult = {
                 code: 'code.error.authorization',
@@ -28,9 +35,7 @@ const LoginPage = (): ReactElement => {
             }
             showNotification(i18next.t('notification.title.authorization'), operationResult);
         }
-
-        console.log();
-    }, [])
+    }, [appContext, props])
 
     return (
         <BasePage>
@@ -65,4 +70,4 @@ const LoginPage = (): ReactElement => {
     )
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);

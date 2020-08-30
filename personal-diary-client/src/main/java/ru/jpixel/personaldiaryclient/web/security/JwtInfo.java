@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class JwtInfo {
-    @Value("${security.jwt.uri:/auth-api/**}")
+    @Value("${security.jwt.uri:/auth/**}")
     private String uri;
 
     @Value("${security.jwt.header:Authorization}")

@@ -55,6 +55,7 @@ public class UserService {
         var userDto = new UserDto();
         userDto.setId(foundUser.getId());
         userDto.setBirthday(foundUser.getBirthday());
+        userDto.setPassword(foundUser.getPassword());
         userDto.setEmail(foundUser.getEmail());
         userDto.setPrefix(foundUser.getPrefix());
         userDto.setPhone(foundUser.getPhone());
