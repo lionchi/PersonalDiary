@@ -1,10 +1,12 @@
 package ru.jpixel.models;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.MessageFormat;
 
+@NoArgsConstructor
 public class OperationResult {
 
     @Getter

@@ -27,8 +27,11 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
     );
 
     const onFinish = useCallback(async (fieldsValue: RegistrationFormData) => {
-        const birthdayAsMoment = fieldsValue.birthday as Moment;
-        const values = {...fieldsValue, birthday: birthdayAsMoment.format("DD.MM.YYYY")}
+        let values = fieldsValue;
+        if (fieldsValue.birthday) {
+            const birthdayAsMoment = fieldsValue.birthday as Moment;
+            values = {...fieldsValue, birthday: birthdayAsMoment.format("DD.MM.YYYY")};
+        }
 
         const {data} = await registration(values);
 

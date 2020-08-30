@@ -7,11 +7,17 @@ spring:
         enabled: true
         service-id: config-server
 
+
 management:
   endpoints:
     web:
       exposure:
         include: hystrix.stream
+
 feign:
   hystrix:
     enabled: true
+
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: '*'
