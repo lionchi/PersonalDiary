@@ -9,6 +9,7 @@ import {useForm} from "antd/lib/form/Form";
 import {RouteComponentProps, withRouter} from "react-router";
 import {registration} from "../../api/RegistrationApi";
 import {showNotification} from "../../utils/notification";
+import {Moment} from "moment";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -25,12 +26,19 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
         </Form.Item>
     );
 
-    const onFinish = useCallback(async (values: RegistrationFormData) => {
+    const onFinish = useCallback(async (fieldsValue: RegistrationFormData) => {
+        const birthdayAsMoment = fieldsValue.birthday as Moment;
+        const values = {...fieldsValue, birthday: birthdayAsMoment.format("DD.MM.YYYY")}
+
         const {data} = await registration(values);
 
         showNotification(i18next.t('notification.title.registration'), data);
 
-        props.history.goBack();
+        if (data.resultType !== 'error') {
+            setTimeout(() => {
+                props.history.push('/login');
+            }, 1000)
+        }
     }, [props]);
 
     return (
@@ -46,7 +54,7 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
                         <Form.Item name="name"
                                    label={i18next.t('form.registration.name')}
                                    rules={[{required: true, message: i18next.t('form.registration.error.name')}]}>
-                            <Input/>
+                            <Input maxLength={255}/>
                         </Form.Item>
 
                         <Form.Item
@@ -63,7 +71,7 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
                                 }
                             ]}
                         >
-                            <Input/>
+                            <Input maxLength={255}/>
                         </Form.Item>
 
                         <Form.Item
@@ -106,11 +114,11 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
                                 message: i18next.t('form.registration.error.login'),
                                 whitespace: true
                             }]}>
-                            <Input/>
+                            <Input maxLength={25}/>
                         </Form.Item>
 
                         <Form.Item name="phone" label={i18next.t('form.registration.phone')}>
-                            <Input addonBefore={prefixSelector}/>
+                            <Input addonBefore={prefixSelector} maxLength={12}/>
                         </Form.Item>
 
                         <Form.Item name="birthday" label={i18next.t('form.registration.birthday')}>

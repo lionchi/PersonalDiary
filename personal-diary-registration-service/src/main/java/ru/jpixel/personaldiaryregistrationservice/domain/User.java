@@ -15,7 +15,7 @@ public class User {
 
     @Id
     @Column(name = "ID")
-    @SequenceGenerator(name = "USER_SEQ", sequenceName = "USER_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "USER_SEQ", sequenceName = "USER_SEQ", schema = "SECR", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
     private Long id;
 
@@ -41,7 +41,7 @@ public class User {
     private LocalDate birthday;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    @JoinTable(name = "USER_ROLES", schema = "SECR", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private List<Role> roles;
 
 }

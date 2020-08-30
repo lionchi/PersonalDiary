@@ -9,5 +9,5 @@ spring:
 zuul:
   routes:
     personal-diary-registration-service:
-      path: /api/registration/**
+      path: /registration-api/**
       service-id: personal-diary-registration-service

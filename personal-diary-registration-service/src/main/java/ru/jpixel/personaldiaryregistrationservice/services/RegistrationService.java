@@ -1,6 +1,7 @@
 package ru.jpixel.personaldiaryregistrationservice.services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class RegistrationService {
     @Transactional
     public OperationResult registrationUser(UserDto userDto) {
         if (userRepository.existsByLogin(userDto.getLogin())) {
-            return new OperationResult(Error.LOGIN_EXIST);
+            return new OperationResult(Error.LOGIN_EXIST, userDto.getLogin());
         } else if (userRepository.existsByEmail(userDto.getEmail())) {
             return new OperationResult(Error.EMAIL_EXIST);
         }
@@ -34,8 +35,10 @@ public class RegistrationService {
         user.setLogin(userDto.getLogin());
         user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
-        user.setPrefix(userDto.getPrefix());
-        user.setPhone(userDto.getPhone());
+        if (StringUtils.isNotEmpty(userDto.getPhone())) {
+            user.setPrefix(userDto.getPrefix());
+            user.setPhone(userDto.getPhone());
+        }
         user.setBirthday(userDto.getBirthday());
         user.setRoles(Collections.singletonList(roleRepository.findByName("USER")));
         userRepository.save(user);

@@ -4,5 +4,5 @@ import {http} from "../utils/http";
 import {OperationResult} from "../model/OperationResult";
 
 export function registration(values: RegistrationFormData): Promise<AxiosResponse<OperationResult>> {
-    return http.post('/api/registration', values);
+    return http.post('/registration-api/registration', values);
 }

@@ -1,3 +1,5 @@
+import {Moment} from "moment";
+
 export interface RegistrationFormData {
     name: string;
     login: string;
@@ -6,5 +8,5 @@ export interface RegistrationFormData {
     confirmPassword: string;
     prefix?: string;
     phone?: string;
-    birthday?: string;
+    birthday?: Moment | string;
 }

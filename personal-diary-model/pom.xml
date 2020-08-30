@@ -11,6 +11,7 @@
     <properties>
         <lombock.version>1.18.12</lombock.version>
         <compiler.version>1.18.12</compiler.version>
+        <jackson.version>2.9.4</jackson.version>
     </properties>
 
     <dependencies>
@@ -19,6 +20,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombock.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.11.2</version>
         </dependency>
     </dependencies>
 

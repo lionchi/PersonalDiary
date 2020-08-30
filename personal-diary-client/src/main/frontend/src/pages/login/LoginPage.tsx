@@ -23,7 +23,8 @@ const LoginPage = (): ReactElement => {
                         <Form.Item name="username"
                                    rules={[{required: true, message: i18next.t('form.login.error.user_name')}]}>
                             <Input prefix={<UserOutlined className="site-form-item-icon"/>}
-                                   placeholder={i18next.t('form.login.user_name')}/>
+                                   placeholder={i18next.t('form.login.user_name')}
+                                   maxLength={25}/>
                         </Form.Item>
                         <Form.Item name="password"
                                    rules={[{required: true, message: i18next.t('form.login.error.password')}]}>
