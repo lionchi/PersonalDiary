@@ -1,10 +1,7 @@
 package ru.jpixel.personaldiaryuserservice.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.jpixel.models.OperationResult;
 import ru.jpixel.models.dtos.UserDto;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
@@ -19,5 +16,10 @@ public class UserController {
     @PostMapping("save")
     public OperationResult save(@RequestBody UserDto userDto) {
         return userService.save(userDto);
+    }
+
+    @GetMapping("findByLogin/{login}")
+    public UserDto findByLogin(@PathVariable String login) {
+        return userService.findByLogin(login);
     }
 }

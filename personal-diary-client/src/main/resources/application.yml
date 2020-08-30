@@ -11,3 +11,7 @@ zuul:
     personal-diary-registration-service:
       path: /registration-api/**
       service-id: personal-diary-registration-service
+    personal-diary-authorization-service:
+      sensitive-headers: Cookie,Set-Cookie
+      path: /auth-api/**
+      service-id: personal-diary-authorization-service

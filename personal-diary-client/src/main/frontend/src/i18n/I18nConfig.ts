@@ -14,7 +14,8 @@ export const initI18n = (language: string | null): void => {
                     },
                     "notification": {
                         "title": {
-                            "registration": "Регистрация"
+                            "registration": "Регистрация",
+                            "authorization": "Авторизация"
                         }
                     },
                     "form": {
@@ -63,7 +64,8 @@ export const initI18n = (language: string | null): void => {
                     },
                     "notification": {
                         "title": {
-                            "registration": "Registration"
+                            "registration": "Registration",
+                            "authorization": "Authorization"
                         }
                     },
                     "form": {

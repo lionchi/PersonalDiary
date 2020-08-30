@@ -1,17 +1,35 @@
-import React, {ReactElement, useCallback} from "react";
+import React, {ReactElement, useCallback, useContext} from "react";
 import {Button, Col, Form, Input, Row, Typography} from "antd";
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
 import {LoginFormData} from "../../model/LoginFormData";
 import "./LoginPage.css"
 import BasePage from "../BasePage";
 import i18next from "i18next";
+import {AppContext} from "../../security/AppContext";
+import {authorization} from "../../api/AuthorizationApi";
+import {showNotification} from "../../utils/notification";
+import {OperationResult} from "../../model/OperationResult";
 
 const {Title, Text, Link} = Typography;
 
 const LoginPage = (): ReactElement => {
 
-    const onFinish = useCallback((data: LoginFormData) => {
-        console.log(data.username);
+    const appContext = useContext(AppContext);
+
+    const onFinish = useCallback(async (data: LoginFormData) => {
+        try {
+            const response = await authorization(data);
+        } catch (e) {
+            const operationResult: OperationResult = {
+                code: 'code.error.authorization',
+                ruText: 'Ошибка авторизации. Проверьте ваши учетные данные и повторите попытку',
+                enText: 'Authorisation error. Check your credentials and try again',
+                resultType: 'error'
+            }
+            showNotification(i18next.t('notification.title.authorization'), operationResult);
+        }
+
+        console.log();
     }, [])
 
     return (
