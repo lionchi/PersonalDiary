@@ -7,22 +7,16 @@ import lombok.Setter;
 import java.text.MessageFormat;
 
 @NoArgsConstructor
+@Getter
+@Setter
 public class OperationResult {
 
-    @Getter
-    @Setter
     private String code;
 
-    @Getter
-    @Setter
     private String ruText;
 
-    @Getter
-    @Setter
     private String enText;
 
-    @Getter
-    @Setter
     private String resultType;
 
     public OperationResult(Success success) {

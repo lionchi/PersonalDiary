@@ -13,3 +13,11 @@ export function showNotification(title: string, operationResult: OperationResult
         type: operationResult.resultType as IconType
     });
 }
+
+export function showNotificationClient(title: string, description: string, type: string) {
+    notification.open({
+        message: title,
+        description: description,
+        type: type as IconType
+    });
+}

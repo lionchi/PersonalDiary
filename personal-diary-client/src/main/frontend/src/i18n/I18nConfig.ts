@@ -15,7 +15,11 @@ export const initI18n = (language: string | null): void => {
                     "notification": {
                         "title": {
                             "registration": "Регистрация",
-                            "authorization": "Авторизация"
+                            "authorization": "Авторизация",
+                            "logout": "Выход из системы"
+                        },
+                        "error": {
+                            "authorization": "Неизвестная ошибка во время авторизации. Повторите попытку"
                         }
                     },
                     "form": {
@@ -65,7 +69,11 @@ export const initI18n = (language: string | null): void => {
                     "notification": {
                         "title": {
                             "registration": "Registration",
-                            "authorization": "Authorization"
+                            "authorization": "Authorization",
+                            "logout": "Logout"
+                        },
+                        "error": {
+                            "authorization": "Unknown error during authorization. Try again"
                         }
                     },
                     "form": {

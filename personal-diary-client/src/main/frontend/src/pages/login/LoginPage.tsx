@@ -7,9 +7,9 @@ import BasePage from "../BasePage";
 import i18next from "i18next";
 import {AppContext} from "../../security/AppContext";
 import {authorization} from "../../api/AuthorizationApi";
-import {showNotification} from "../../utils/notification";
-import {OperationResult} from "../../model/OperationResult";
+import {showNotification, showNotificationClient} from "../../utils/notification";
 import {RouteComponentProps, withRouter} from "react-router";
+import get from 'lodash/get';
 
 const {Title, Text, Link} = Typography;
 
@@ -27,13 +27,11 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
 
             props.history.push('/diary');
         } catch (e) {
-            const operationResult: OperationResult = {
-                code: 'code.error.authorization',
-                ruText: 'Ошибка авторизации. Проверьте ваши учетные данные и повторите попытку',
-                enText: 'Authorisation error. Check your credentials and try again',
-                resultType: 'error'
+            if (get(e.response.data, 'code')) {
+                showNotification(i18next.t('notification.title.authorization'), e.response.data);
+            } else {
+                showNotificationClient(i18next.t('notification.title.authorization'), i18next.t('notification.error.authorization'), 'error');
             }
-            showNotification(i18next.t('notification.title.authorization'), operationResult);
         }
     }, [appContext, props])
 

@@ -1,6 +1,5 @@
 package ru.jpixel.personaldiaryclient.web.security;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,23 +26,28 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        String header = request.getHeader(jwtInfo.getHeader());
+        var header = request.getHeader(jwtInfo.getHeader());
         if(header == null || !header.startsWith(jwtInfo.getPrefix())) {
             chain.doFilter(request, response);
             return;
         }
-        String token = header.replace(jwtInfo.getPrefix(), "");
+        var token = header.replace(jwtInfo.getPrefix(), "");
         try {
-            Claims claims = Jwts.parser()
+            var claims = Jwts.parser()
                     .setSigningKey(jwtInfo.getSecret().getBytes())
                     .parseClaimsJws(token)
                     .getBody();
-            String username = claims.getSubject();
+            var username = claims.getSubject();
             if(username != null) {
-                List<GrantedAuthority> authorities = Arrays.stream((String[]) claims.get("authorities"))
+                var claimsAuthorities = claims.get("authorities", ArrayList.class);
+                var stringAuthorities = new ArrayList<String>(claimsAuthorities.size());
+                //noinspection unchecked
+                claimsAuthorities.forEach(o -> stringAuthorities.add((String) o));
+                List<GrantedAuthority> authorities = stringAuthorities.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                var user = new PersonalDiaryUser(Long.valueOf(claims.get("user_id", String.class)), username, stringAuthorities);
+                var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         } catch (Exception e) {

@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import ru.jpixel.personaldiaryclient.web.security.JwtAuthenticationEntryPoint;
 import ru.jpixel.personaldiaryclient.web.security.JwtInfo;
 import ru.jpixel.personaldiaryclient.web.security.JwtTokenAuthenticationFilter;
@@ -27,6 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                .logout()
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtInfo), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()

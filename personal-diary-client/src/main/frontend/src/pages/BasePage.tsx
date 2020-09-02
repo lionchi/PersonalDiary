@@ -1,15 +1,19 @@
 import React, {ReactElement, ReactNode, useContext} from "react";
-import {Col, Layout, Row, Switch, Typography, Divider,} from "antd";
+import {Col, Layout, Row, Switch, Typography, Divider, Button,} from "antd";
 import "./BasePage.css"
 import {AppContext} from "../security/AppContext";
 import i18next from "i18next";
 import {useThemeSwitcher} from "react-css-theme-switcher";
-import {BulbTwoTone} from '@ant-design/icons';
+import {BulbTwoTone, LogoutOutlined} from '@ant-design/icons';
+import {logout} from "../api/LogoutApi";
+import {OperationResult} from "../model/OperationResult";
+import {showNotification} from "../utils/notification";
+import {RouteComponentProps, withRouter} from "react-router";
 
 const {Header, Content, Footer} = Layout;
 const {Title, Text} = Typography;
 
-interface IBasePageProps {
+interface IBasePageProps extends RouteComponentProps{
     children: ReactNode;
 }
 
@@ -27,6 +31,22 @@ const BasePage = (props: IBasePageProps): ReactElement => {
         switcher({theme: value ? themes.dark : themes.light});
     }
 
+    const handleLogout = async (): Promise<void> => {
+        try {
+            await logout();
+            appContext.signOut();
+            props.history.push('/login');
+        } catch (e) {
+            const operationResult: OperationResult = {
+                code: 'code.error.logout',
+                ruText: 'Ошибка выхода из системы. Повторите попытку',
+                enText: 'Logout error. Try again',
+                resultType: 'error'
+            }
+            showNotification(i18next.t('notification.title.logout'), operationResult);
+        }
+    }
+
     return (
         <Layout>
             <Header className="header">
@@ -34,6 +54,11 @@ const BasePage = (props: IBasePageProps): ReactElement => {
                     <Col>
                         <Title level={4} style={{color: "white"}}>{i18next.t('main_title')}</Title>
                     </Col>
+                    {appContext.isSignOut ? null : (
+                        <Col>
+                            <Button type="text" shape="circle" icon={<LogoutOutlined style={{color: 'white'}}/>} onClick={handleLogout}/>
+                        </Col>
+                    )}
                 </Row>
             </Header>
             <Content>
@@ -60,4 +85,4 @@ const BasePage = (props: IBasePageProps): ReactElement => {
     )
 }
 
-export default BasePage;
+export default withRouter(BasePage);

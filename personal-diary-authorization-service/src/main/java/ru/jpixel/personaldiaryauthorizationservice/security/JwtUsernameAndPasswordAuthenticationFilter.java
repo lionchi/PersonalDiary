@@ -47,8 +47,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(auth.getName())
-                .claim("authorities", auth.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .claim("authorities", auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .claim("user_id", ((PersonalDiaryUser) auth.getPrincipal()).getId())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + jwtInfo.getExpiration() * 1000))
                 .signWith(SignatureAlgorithm.HS512, jwtInfo.getSecret().getBytes())

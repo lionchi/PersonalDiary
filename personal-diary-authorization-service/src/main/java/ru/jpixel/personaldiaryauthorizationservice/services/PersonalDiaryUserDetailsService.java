@@ -3,12 +3,11 @@ package ru.jpixel.personaldiaryauthorizationservice.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.personaldiaryauthorizationservice.security.PersonalDiaryUser;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class PersonalDiaryUserDetailsService implements UserDetailsService {
     private static final String PREFIX_ROLE = "ROLE_";
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public PersonalDiaryUser loadUserByUsername(String username) throws UsernameNotFoundException {
 
         UserDto foundUser = userServiceFeignClient.findByLogin(username);
 
@@ -34,6 +33,6 @@ public class PersonalDiaryUserDetailsService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(PREFIX_ROLE + role))
                 .collect(Collectors.toList());
 
-        return new User(foundUser.getLogin(), foundUser.getPassword(), authorities);
+        return new PersonalDiaryUser(String.valueOf(foundUser.getId()), foundUser.getLogin(), foundUser.getPassword(), authorities);
     }
 }
