@@ -32,11 +32,8 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
             const birthdayAsMoment = fieldsValue.birthday as Moment;
             values = {...fieldsValue, birthday: birthdayAsMoment.format("DD.MM.YYYY")};
         }
-
         const {data} = await registration(values);
-
         showNotification(i18next.t('notification.title.registration'), data);
-
         if (data.resultType !== 'error') {
             setTimeout(() => {
                 props.history.push('/login');

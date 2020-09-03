@@ -1,10 +1,14 @@
+import {PersonalDiaryUser} from "../model/PersonalDiaryUser";
+
 export interface AppContextModel {
-    isLoading: boolean | undefined;
+    isLoading: boolean;
     isSignOut: boolean;
-    isDarkMode: boolean | undefined;
+    isDarkMode: boolean;
     needTokenRestore: boolean;
-    userToken: string | undefined | null;
-    language: string | undefined | null;
+    userToken: string;
+    language: string;
+    currentUser: PersonalDiaryUser;
+
     signIn: (token: string) => void;
     signOut: () => void;
     setLoading: (loading: boolean) => void;

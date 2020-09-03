@@ -9,7 +9,7 @@ import {AppContext} from "../../security/AppContext";
 import {authorization} from "../../api/AuthorizationApi";
 import {showNotification, showNotificationClient} from "../../utils/notification";
 import {RouteComponentProps, withRouter} from "react-router";
-import get from 'lodash/get';
+import has from 'lodash/has';
 
 const {Title, Text, Link} = Typography;
 
@@ -17,17 +17,14 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
 
     const appContext = useContext(AppContext);
 
-    const onFinish = useCallback(async (data: LoginFormData) => {
+    const onFinish = useCallback(async (formData: LoginFormData) => {
         try {
-            const response = await authorization(data);
-
+            const response = await authorization(formData);
             const authHeaders = response.headers.authorization as string;
-
             appContext.signIn(authHeaders.replace('Bearer ', ''));
-
             props.history.push('/diary');
         } catch (e) {
-            if (get(e.response.data, 'code')) {
+            if (has(e.response.data, 'code')) {
                 showNotification(i18next.t('notification.title.authorization'), e.response.data);
             } else {
                 showNotificationClient(i18next.t('notification.title.authorization'), i18next.t('notification.error.authorization'), 'error');

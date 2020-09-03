@@ -1,4 +1,4 @@
-import React, {Reducer, useEffect, useMemo, useReducer} from 'react';
+import React, {Reducer, useCallback, useEffect, useMemo, useReducer} from 'react';
 import {stores} from "./stores/stores";
 import {BrowserRouter} from "react-router-dom";
 import {Route} from "react-router";
@@ -14,6 +14,10 @@ import i18next from "i18next";
 import {initI18n} from "./i18n/I18nConfig";
 import enGB from 'antd/es/locale/en_GB';
 import ruRU from 'antd/es/locale/ru_RU';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import {accountInformation} from "./api/AccountApi";
+import {PermissionsProvider} from "@tshio/react-router-permissions";
 
 function App() {
 
@@ -22,39 +26,46 @@ function App() {
             case 'RESTORE_TOKEN':
                 return {
                     ...prevState,
-                    userToken: action.token,
+                    userToken: get(action, 'token', ''),
                     isSignOut: !!action.token,
-                    language: action.language,
-                    isDarkMode: action.isDarkMode,
+                    language: get(action, 'language', 'ru'),
+                    isDarkMode: action.isDarkMode ? action.isDarkMode : false,
                     needTokenRestore: false,
                     isLoading: false,
+                };
+            case 'RESTORE_USER':
+                return {
+                    ...prevState,
+                    currentUser: isEmpty(action.currentUser) || !action.currentUser ? {} : action.currentUser
                 };
             case 'SIGN_IN':
                 return {
                     ...prevState,
                     isSignOut: false,
-                    userToken: action.token,
+                    userToken: get(action, 'token', ''),
+                    currentUser: isEmpty(action.currentUser) || !action.currentUser ? {} : action.currentUser
                 };
             case 'SIGN_OUT':
                 return {
                     ...prevState,
                     isSignOut: true,
-                    userToken: null,
+                    userToken: '',
+                    currentUser: {}
                 };
             case 'LANGUAGE':
                 return {
                     ...prevState,
-                    language: action.language,
+                    language: get(action, 'language', 'ru'),
                 };
             case 'THEME':
                 return {
                     ...prevState,
-                    isDarkMode: action.isDarkMode,
+                    isDarkMode: action.isDarkMode ? action.isDarkMode : false,
                 };
             case 'LOADING':
                 return {
                     ...prevState,
-                    isLoading: action.isLoading,
+                    isLoading: action.isLoading ? action.isLoading : false,
                 };
         }
     }, AppContextInit);
@@ -64,7 +75,19 @@ function App() {
         const ln = localStorage.getItem(EConstantValueString.LANGUAGE);
         const theme = localStorage.getItem(EConstantValueString.THEME);
         if (state.needTokenRestore) {
-            dispatch({type: 'RESTORE_TOKEN', token: userToken, language: ln, isDarkMode: theme === 'dark'});
+            dispatch({
+                type: 'RESTORE_TOKEN',
+                token: userToken ? userToken : '',
+                language: ln ? ln : 'ru',
+                isDarkMode: theme ? theme === 'dark' : false
+            });
+        }
+        if (state.userToken && isEmpty(state.currentUser)) {
+            accountInformation()
+                .then(({data}) => {
+                    dispatch({type: 'RESTORE_USER', currentUser: data});
+                })
+                .catch(e => console.log(e))
         }
         initI18n(ln);
     });
@@ -72,9 +95,10 @@ function App() {
     const appContext = useMemo(
         () => ({
             ...state,
-            signIn: (token: string): void => {
+            signIn: async (token: string): Promise<void> => {
                 localStorage.setItem(EConstantValueString.ACCESS_TOKEN, token);
-                dispatch({type: 'SIGN_IN', token: token});
+                const {data} = await accountInformation();
+                dispatch({type: 'SIGN_IN', token: token, currentUser: data});
             },
             signOut: (): void => {
                 localStorage.removeItem(EConstantValueString.ACCESS_TOKEN);
@@ -83,10 +107,10 @@ function App() {
             setLoading: (loading: boolean): void => {
                 dispatch({type: 'LOADING', isLoading: loading})
             },
-            setLanguage: (ln: string): void => {
+            setLanguage: async (ln: string): Promise<void> => {
                 localStorage.setItem(EConstantValueString.LANGUAGE, ln);
                 dispatch({type: 'LANGUAGE', language: ln});
-                i18next.changeLanguage(ln);
+                await i18next.changeLanguage(ln);
             },
             setDarkMode: (isDarkMode: boolean, theme: string): void => {
                 localStorage.setItem(EConstantValueString.THEME, theme);
@@ -96,15 +120,29 @@ function App() {
         [state],
     );
 
+    const authorizationStrategy = useCallback((roles: string[], requirement: string[]) => {
+        if (roles && requirement) {
+            for (let role of roles) {
+                for (let requirementRole of requirement) {
+                    if (role === requirementRole) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }, []);
+
     return (
         <AppContext.Provider value={appContext}>
             <ConfigProvider locale={state.language === 'en' ? enGB : ruRU} componentSize={"large"}>
                 <Provider {...stores}>
-                    <BrowserRouter basename={baseUrl()}>
-                        <Spin size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>
-                            <Route component={RootRouter}/>
-                        </Spin>
-                    </BrowserRouter>
+                    <PermissionsProvider permissions={state.currentUser.roles as string[]} authorizationStrategy={authorizationStrategy}>
+                        <BrowserRouter basename={baseUrl()}>
+                            <Spin size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>
+                                <Route component={RootRouter}/>
+                            </Spin>
+                        </BrowserRouter>
+                    </PermissionsProvider>
                 </Provider>
             </ConfigProvider>
         </AppContext.Provider>

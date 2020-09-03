@@ -1,5 +1,5 @@
 import React, {ReactElement, ReactNode, useContext} from "react";
-import {Col, Layout, Row, Switch, Typography, Divider, Button,} from "antd";
+import {Button, Col, Divider, Layout, Row, Switch, Typography,} from "antd";
 import "./BasePage.css"
 import {AppContext} from "../security/AppContext";
 import i18next from "i18next";
@@ -9,11 +9,13 @@ import {logout} from "../api/LogoutApi";
 import {OperationResult} from "../model/OperationResult";
 import {showNotification} from "../utils/notification";
 import {RouteComponentProps, withRouter} from "react-router";
+import {all} from "../model/ERole";
+import CustomAuthorizedSection from "../components/CustomAuthorizedSection";
 
 const {Header, Content, Footer} = Layout;
 const {Title, Text} = Typography;
 
-interface IBasePageProps extends RouteComponentProps{
+interface IBasePageProps extends RouteComponentProps {
     children: ReactNode;
 }
 
@@ -54,11 +56,12 @@ const BasePage = (props: IBasePageProps): ReactElement => {
                     <Col>
                         <Title level={4} style={{color: "white"}}>{i18next.t('main_title')}</Title>
                     </Col>
-                    {appContext.isSignOut ? null : (
+                    <CustomAuthorizedSection requires={all}>
                         <Col>
-                            <Button type="text" shape="circle" icon={<LogoutOutlined style={{color: 'white'}}/>} onClick={handleLogout}/>
+                            <Button type="text" shape="circle" icon={<LogoutOutlined style={{color: 'white'}}/>}
+                                    onClick={handleLogout}/>
                         </Col>
-                    )}
+                    </CustomAuthorizedSection>
                 </Row>
             </Header>
             <Content>

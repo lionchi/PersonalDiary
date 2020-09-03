@@ -1,14 +1,15 @@
-import React, {ReactElement} from "react";
+import React, {ReactElement, useContext} from "react";
 import BasePage from "../BasePage";
 import {withRouter} from "react-router";
 import {Button, Col, Row} from "antd";
-import {accountInformation} from "../../api/AccountApi";
+import {AppContext} from "../../security/AppContext";
 
 const DiaryPage = (): ReactElement => {
 
+    const authContext = useContext(AppContext);
+
     const handleTest = async (): Promise<void> => {
-        const {data} = await accountInformation();
-        console.log(data.username);
+        console.log(authContext.currentUser.username);
     }
 
     return (
