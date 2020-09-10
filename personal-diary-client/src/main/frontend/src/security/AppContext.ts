@@ -7,7 +7,6 @@ const AppContextInit: AppContextModel = {
     isDarkMode: false,
     needTokenRestore: true,
     language: 'ru',
-    userToken: '',
     currentUser: {},
     signIn: () => ({}),
     signOut: () => ({}),

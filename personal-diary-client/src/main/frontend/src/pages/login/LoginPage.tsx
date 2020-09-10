@@ -19,9 +19,8 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
 
     const onFinish = useCallback(async (formData: LoginFormData) => {
         try {
-            const response = await authorization(formData);
-            const authHeaders = response.headers.authorization as string;
-            appContext.signIn(authHeaders.replace('Bearer ', ''));
+            await authorization(formData);
+            appContext.signIn();
             props.history.push('/diary');
         } catch (e) {
             if (has(e.response.data, 'code')) {

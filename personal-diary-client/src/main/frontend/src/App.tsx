@@ -23,11 +23,9 @@ function App() {
 
     const [state, dispatch] = useReducer<Reducer<AppContextModel, AppAction>>((prevState, action) => {
         switch (action.type) {
-            case 'RESTORE_TOKEN':
+            case 'RESTORE':
                 return {
                     ...prevState,
-                    userToken: get(action, 'token', ''),
-                    isSignOut: !!action.token,
                     language: get(action, 'language', 'ru'),
                     isDarkMode: action.isDarkMode ? action.isDarkMode : false,
                     needTokenRestore: false,
@@ -36,20 +34,19 @@ function App() {
             case 'RESTORE_USER':
                 return {
                     ...prevState,
-                    currentUser: isEmpty(action.currentUser) || !action.currentUser ? {} : action.currentUser
+                    currentUser: isEmpty(action.currentUser) || !action.currentUser ? {} : action.currentUser,
+                    isSignOut: !!(isEmpty(action.currentUser) || !action.currentUser)
                 };
             case 'SIGN_IN':
                 return {
                     ...prevState,
                     isSignOut: false,
-                    userToken: get(action, 'token', ''),
                     currentUser: isEmpty(action.currentUser) || !action.currentUser ? {} : action.currentUser
                 };
             case 'SIGN_OUT':
                 return {
                     ...prevState,
                     isSignOut: true,
-                    userToken: '',
                     currentUser: {}
                 };
             case 'LANGUAGE':
@@ -71,23 +68,19 @@ function App() {
     }, AppContextInit);
 
     useEffect(() => {
-        const userToken = localStorage.getItem(EConstantValueString.ACCESS_TOKEN);
         const ln = localStorage.getItem(EConstantValueString.LANGUAGE);
         const theme = localStorage.getItem(EConstantValueString.THEME);
         if (state.needTokenRestore) {
             dispatch({
-                type: 'RESTORE_TOKEN',
-                token: userToken ? userToken : '',
+                type: 'RESTORE',
                 language: ln ? ln : 'ru',
                 isDarkMode: theme ? theme === 'dark' : false
             });
-        }
-        if (state.userToken && isEmpty(state.currentUser)) {
             accountInformation()
                 .then(({data}) => {
                     dispatch({type: 'RESTORE_USER', currentUser: data});
                 })
-                .catch(e => console.log(e))
+                .catch(e => console.log())
         }
         initI18n(ln);
     });
@@ -95,13 +88,11 @@ function App() {
     const appContext = useMemo(
         () => ({
             ...state,
-            signIn: async (token: string): Promise<void> => {
-                localStorage.setItem(EConstantValueString.ACCESS_TOKEN, token);
+            signIn: async (): Promise<void> => {
                 const {data} = await accountInformation();
-                dispatch({type: 'SIGN_IN', token: token, currentUser: data});
+                dispatch({type: 'SIGN_IN', currentUser: data});
             },
             signOut: (): void => {
-                localStorage.removeItem(EConstantValueString.ACCESS_TOKEN);
                 dispatch({type: 'SIGN_OUT'});
             },
             setLoading: (loading: boolean): void => {

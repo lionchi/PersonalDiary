@@ -1,6 +1,6 @@
 import {AxiosResponse} from "axios";
-import {httpSecurity} from "../utils/https";
+import {http} from "../utils/http";
 
 export function logout(): Promise<AxiosResponse> {
-    return httpSecurity.post('/logout', {});
+    return http.post('/api/logout', {});
 }

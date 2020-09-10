@@ -5,11 +5,10 @@ export interface AppContextModel {
     isSignOut: boolean;
     isDarkMode: boolean;
     needTokenRestore: boolean;
-    userToken: string;
     language: string;
     currentUser: PersonalDiaryUser;
 
-    signIn: (token: string) => void;
+    signIn: () => void;
     signOut: () => void;
     setLoading: (loading: boolean) => void;
     setLanguage: (ln: string) => void;

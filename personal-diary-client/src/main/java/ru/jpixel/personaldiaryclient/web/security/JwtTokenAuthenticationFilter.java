@@ -9,12 +9,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     private final JwtInfo jwtInfo;
@@ -26,12 +28,11 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        var header = request.getHeader(jwtInfo.getHeader());
-        if(header == null || !header.startsWith(jwtInfo.getPrefix())) {
+        var token = getToken(request);
+        if(token == null) {
             chain.doFilter(request, response);
             return;
         }
-        var token = header.replace(jwtInfo.getPrefix(), "");
         try {
             var claims = Jwts.parser()
                     .setSigningKey(jwtInfo.getSecret().getBytes())
@@ -39,14 +40,14 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     .getBody();
             var username = claims.getSubject();
             if(username != null) {
-                var claimsAuthorities = claims.get("authorities", ArrayList.class);
+                var claimsAuthorities = claims.get(jwtInfo.getClaimAuthorities(), ArrayList.class);
                 var stringAuthorities = new ArrayList<String>(claimsAuthorities.size());
                 //noinspection unchecked
                 claimsAuthorities.forEach(o -> stringAuthorities.add((String) o));
                 List<GrantedAuthority> authorities = stringAuthorities.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-                var user = new PersonalDiaryUser(Long.valueOf(claims.get("user_id", String.class)), username, stringAuthorities);
+                var user = new PersonalDiaryUser(Long.valueOf(claims.get(jwtInfo.getClaimUserId(), String.class)), username, stringAuthorities);
                 var auth = new UsernamePasswordAuthenticationToken(user, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
@@ -54,5 +55,21 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.clearContext();
         }
         chain.doFilter(request, response);
+    }
+
+    private String getToken(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+
+        Cookie findCookie = Stream.of(request.getCookies())
+                .filter(cookie -> jwtInfo.getAccessCookieName().equals(cookie.getName()))
+                .findFirst().orElse(null);
+
+        if (findCookie == null) {
+            return null;
+        }
+
+        return findCookie.getValue();
     }
 }

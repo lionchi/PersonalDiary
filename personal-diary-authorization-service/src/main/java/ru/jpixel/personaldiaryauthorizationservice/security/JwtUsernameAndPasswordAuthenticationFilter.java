@@ -13,6 +13,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.jpixel.models.security.UserCredentials;
 
 import javax.servlet.FilterChain;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -47,12 +48,15 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(auth.getName())
-                .claim("authorities", auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .claim("user_id", ((PersonalDiaryUser) auth.getPrincipal()).getId())
+                .claim(jwtInfo.getClaimAuthorities(), auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .claim(jwtInfo.getClaimUserId(), ((PersonalDiaryUser) auth.getPrincipal()).getId())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + jwtInfo.getExpiration() * 1000))
                 .signWith(SignatureAlgorithm.HS512, jwtInfo.getSecret().getBytes())
                 .compact();
-        response.addHeader(jwtInfo.getHeader(), jwtInfo.getPrefix() + token);
+        Cookie cookie = new Cookie(jwtInfo.getAccessCookieName(), token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/api");
+        response.addCookie(cookie);
     }
 }

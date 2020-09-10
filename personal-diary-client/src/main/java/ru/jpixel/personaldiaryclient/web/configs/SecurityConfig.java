@@ -14,6 +14,8 @@ import ru.jpixel.personaldiaryclient.web.security.JwtAuthenticationEntryPoint;
 import ru.jpixel.personaldiaryclient.web.security.JwtInfo;
 import ru.jpixel.personaldiaryclient.web.security.JwtTokenAuthenticationFilter;
 
+import javax.servlet.http.Cookie;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -30,7 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .logout()
-                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    Cookie cookie = new Cookie(jwtInfo.getAccessCookieName(), null);
+                    cookie.setPath("/api");
+                    cookie.setMaxAge(0);
+                    cookie.setHttpOnly(true);
+                    response.addCookie(cookie);
+                    new HttpStatusReturningLogoutSuccessHandler().onLogoutSuccess(request, response, authentication);
+                })
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtInfo), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()

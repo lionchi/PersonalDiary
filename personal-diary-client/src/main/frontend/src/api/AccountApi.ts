@@ -1,7 +1,7 @@
 import {AxiosResponse} from "axios";
-import {httpSecurity} from "../utils/https";
 import {PersonalDiaryUser} from "../model/PersonalDiaryUser";
+import {http} from "../utils/http";
 
 export function accountInformation(): Promise<AxiosResponse<PersonalDiaryUser>> {
-    return httpSecurity.get('/api/account/information')
+    return http.get('/api/account/information')
 }

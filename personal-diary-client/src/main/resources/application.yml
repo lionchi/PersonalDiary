@@ -13,6 +13,6 @@ zuul:
       service-id: personal-diary-registration-service
     personal-diary-authorization-service:
       strip-prefix: false
-      sensitive-headers: Cookie,Set-Cookie
+      sensitive-headers: Authorization
       path: /auth/**
       service-id: personal-diary-authorization-service
