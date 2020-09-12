@@ -8,13 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.jpixel.models.Error;
 import ru.jpixel.models.OperationResult;
 import ru.jpixel.models.Success;
+import ru.jpixel.models.dtos.PasswordResetTokenRequest;
+import ru.jpixel.models.dtos.RecoveryPasswordDto;
 import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.personaldiaryuserservice.domain.PasswordResetToken;
 import ru.jpixel.personaldiaryuserservice.domain.Role;
 import ru.jpixel.personaldiaryuserservice.domain.User;
+import ru.jpixel.personaldiaryuserservice.repositories.PasswordResetTokenRepository;
 import ru.jpixel.personaldiaryuserservice.repositories.RoleRepository;
 import ru.jpixel.personaldiaryuserservice.repositories.UserRepository;
 
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
@@ -48,9 +55,9 @@ public class UserService {
     }
 
     public UserDto findByLogin(String login) {
-        User foundUser = userRepository.findByLogin(login);
+        var foundUser = userRepository.findByLogin(login);
         if (foundUser == null) {
-            return  null;
+            return null;
         }
         var userDto = new UserDto();
         userDto.setId(foundUser.getId());
@@ -64,4 +71,33 @@ public class UserService {
         userDto.setRoles(foundUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
         return userDto;
     }
+
+    @Transactional
+    public OperationResult createPasswordResetToken(PasswordResetTokenRequest passwordResetTokenRequest) {
+        if (passwordResetTokenRepository.existsByUserEmail(passwordResetTokenRequest.getUserEmail())) {
+            return new OperationResult(Error.PASSWORD_RESET_TOKEN_NOT_UNIQUE);
+        }
+        var passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setToken(UUID.randomUUID().toString());
+        passwordResetToken.setExpiryDate(LocalDate.now().plusDays(5));
+        passwordResetToken.setUser(userRepository.findByEmail(passwordResetTokenRequest.getUserEmail()));
+        return new OperationResult(Success.PASSWORD_RESET_TOKEN_CREATE);
+    }
+
+    @Transactional
+    public OperationResult recoveryPassword(RecoveryPasswordDto recoveryPasswordDto) {
+        var findToken = passwordResetTokenRepository.findByToken(recoveryPasswordDto.getToken());
+        if (findToken == null) {
+            return new OperationResult(Error.PASSWORD_RESET_TOKEN_NOT_EXIST);
+        } else if (findToken.isExpired()) {
+            passwordResetTokenRepository.delete(findToken);
+            return new OperationResult(Error.PASSWORD_RESET_TOKEN_EXPIRED);
+        }
+        var user = findToken.getUser();
+        var encodeNewPassword = bCryptPasswordEncoder.encode(recoveryPasswordDto.getNewPassword());
+        userRepository.updatePassword(encodeNewPassword, user.getId());
+        passwordResetTokenRepository.delete(findToken);
+        return new OperationResult(Success.RECOVERY_PASSWORD);
+    }
+
 }

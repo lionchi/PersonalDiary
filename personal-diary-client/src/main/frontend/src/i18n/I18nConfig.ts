@@ -30,9 +30,18 @@ export const initI18n = (language: string | null): void => {
                             "password": "Пароль",
                             "or": "Или ",
                             "register_now": "Зарегистрироваться",
+                            "forgot_password": "Забыли пароль ?",
                             "error": {
                                 "user_name": "Пожалуйста укажите имя пользователя",
                                 "password": "Пожалуйста укажите пароль"
+                            },
+                            "modal": {
+                                "title": "Восстановление пароля",
+                                "email_extra": "Для восстановления пароля укажите ваш email",
+                                "error": {
+                                    "email_error_1": "Введен неверный E-mail",
+                                    "email_error_2": "Пожалуйста укажите свой E-mail"
+                                }
                             }
                         },
                         "registration": {
@@ -53,6 +62,17 @@ export const initI18n = (language: string | null): void => {
                                 "confirm_password_error_1": "Пожалуйста подтвердите свой пароль",
                                 "confirm_password_error_2": "Два введенных вами пароля не совпадают",
                                 "login": "Пожалуйста укажите ваш логин"
+                            }
+                        },
+                        "recovery_password": {
+                            "title": "Восстановление пароля",
+                            "new_password": "Новый пароль",
+                            "confirm_new_password": "Подтвердите новый пароль",
+                            "set_password": "Сменить пароль",
+                            "error": {
+                                "new_password": "Пожалуйста укажите свой новый пароль",
+                                "confirm_new_password_error_1": "Пожалуйста подтвердите свой новый пароль",
+                                "confirm_new_password_error_2": "Два введенных вами пароля не совпадают",
                             }
                         }
                     }
@@ -84,9 +104,18 @@ export const initI18n = (language: string | null): void => {
                             "password": "Password",
                             "or": "Or ",
                             "register_now": "Register now",
+                            "forgot_password": "Forgot your password ?",
                             "error": {
                                 "user_name": "Please enter your username",
                                 "password": "Please enter a password"
+                            },
+                            "modal": {
+                                "title": "Password recovery",
+                                "email_extra": "To recover your password, enter your email",
+                                "error": {
+                                    "email_error_1": "The enter is not valid E-mail",
+                                    "email_error_2": "Please enter your E-mail"
+                                }
                             }
                         },
                         "registration": {
@@ -107,6 +136,17 @@ export const initI18n = (language: string | null): void => {
                                 "confirm_password_error_1": "Please confirm your password",
                                 "confirm_password_error_2": "The two passwords that you entered do not match",
                                 "login": "Please enter your login"
+                            }
+                        },
+                        "recovery_password": {
+                            "title": "Password recovery",
+                            "new_password": "New password",
+                            "confirm_new_password": "Confirm new password",
+                            "set_password": "Change password",
+                            "error": {
+                                "new_password": "Please enter your new password",
+                                "confirm_new_password_error_1": "Please confirm your new password",
+                                "confirm_new_password_error_2": "The two passwords that you entered do not match",
                             }
                         }
                     }

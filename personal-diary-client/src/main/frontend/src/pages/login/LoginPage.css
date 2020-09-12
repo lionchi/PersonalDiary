@@ -13,3 +13,7 @@
 .form-text-size {
     font-size: 16px;
 }
+
+.mrg-bottom-0 {
+    margin-bottom: 0 !important;
+}

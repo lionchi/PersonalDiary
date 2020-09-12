@@ -3,6 +3,8 @@ package ru.jpixel.personaldiaryuserservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.jpixel.models.OperationResult;
+import ru.jpixel.models.dtos.PasswordResetTokenRequest;
+import ru.jpixel.models.dtos.RecoveryPasswordDto;
 import ru.jpixel.models.dtos.UserDto;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
 
@@ -21,5 +23,15 @@ public class UserController {
     @GetMapping("findByLogin/{login}")
     public UserDto findByLogin(@PathVariable String login) {
         return userService.findByLogin(login);
+    }
+
+    @PostMapping("create/passwordResetToken")
+    public OperationResult createPasswordResetToken(@RequestBody PasswordResetTokenRequest passwordResetTokenRequest) {
+        return userService.createPasswordResetToken(passwordResetTokenRequest);
+    }
+
+    @PutMapping("recoveryPassword")
+    public OperationResult recoveryPassword(@RequestBody RecoveryPasswordDto recoveryPasswordDto) {
+        return userService.recoveryPassword(recoveryPasswordDto);
     }
 }

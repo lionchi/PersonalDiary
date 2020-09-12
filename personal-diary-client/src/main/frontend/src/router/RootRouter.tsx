@@ -8,6 +8,7 @@ import CustomAuthorizedRoute from "../components/CustomAuthorizedRoute";
 import {ERole, user} from "../model/ERole";
 import NotAuthorizedRoute from "../components/NotAuthorizedRoute";
 import {usePermissions} from "@tshio/react-router-permissions";
+import RecoveryPasswordPage from "../pages/password/RecoveryPasswordPage";
 
 const RootRouter = (): ReactElement => {
 
@@ -43,6 +44,10 @@ const RootRouter = (): ReactElement => {
 
             <NotAuthorizedRoute path='/registration' redirect={<Redirect to={getMainRedirectUrl()}/>}>
                 <RegistrationPage/>
+            </NotAuthorizedRoute>
+
+            <NotAuthorizedRoute path='/recovery-password' redirect={<Redirect to={getMainRedirectUrl()}/>}>
+                <RecoveryPasswordPage/>
             </NotAuthorizedRoute>
 
             <CustomAuthorizedRoute path="/diary" requires={user} redirect={getRedirect()}>

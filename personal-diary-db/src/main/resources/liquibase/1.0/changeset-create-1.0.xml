@@ -61,4 +61,26 @@
         <createSequence sequenceName="user_seq" schemaName="secr" dataType="bigint"/>
     </changeSet>
 
+    <changeSet id="1.0-4" author="Gavrilov Ivan">
+        <createTable tableName="password_reset_tokens" schemaName="secr">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token" type="text">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableSchemaName="secr" baseTableName="password_reset_tokens" baseColumnNames="user_id"
+                                 constraintName="fk_password_reset_token_on_user" referencedTableSchemaName="secr"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+        <createSequence sequenceName="password_reset_token_seq" schemaName="secr" dataType="bigint"/>
+    </changeSet>
+
 </databaseChangeLog>
