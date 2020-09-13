@@ -5,6 +5,5 @@ import ru.jpixel.personaldiaryuserservice.domain.PasswordResetToken;
 
 public interface PasswordResetTokenRepository extends CrudRepository<PasswordResetToken, Long> {
     PasswordResetToken findByToken(String token);
-
-    boolean existsByUserEmail(String email);
+    PasswordResetToken findByUserEmail(String email);
 }

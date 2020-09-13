@@ -34,4 +34,9 @@ public class UserController {
     public OperationResult recoveryPassword(@RequestBody RecoveryPasswordDto recoveryPasswordDto) {
         return userService.recoveryPassword(recoveryPasswordDto);
     }
+
+    @GetMapping("findTokenByEmail/{email}")
+    public OperationResult findTokenByEmail(@PathVariable String email) {
+        return userService.findTokenByEmail(email);
+    }
 }

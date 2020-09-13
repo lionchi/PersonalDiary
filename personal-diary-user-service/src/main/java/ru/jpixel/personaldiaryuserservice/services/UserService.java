@@ -11,6 +11,7 @@ import ru.jpixel.models.Success;
 import ru.jpixel.models.dtos.PasswordResetTokenRequest;
 import ru.jpixel.models.dtos.RecoveryPasswordDto;
 import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.models.dtos.UserResetTokenDto;
 import ru.jpixel.personaldiaryuserservice.domain.PasswordResetToken;
 import ru.jpixel.personaldiaryuserservice.domain.Role;
 import ru.jpixel.personaldiaryuserservice.domain.User;
@@ -74,7 +75,9 @@ public class UserService {
 
     @Transactional
     public OperationResult createPasswordResetToken(PasswordResetTokenRequest passwordResetTokenRequest) {
-        if (passwordResetTokenRepository.existsByUserEmail(passwordResetTokenRequest.getUserEmail())) {
+        if (!userRepository.existsByEmail(passwordResetTokenRequest.getUserEmail())) {
+            return new OperationResult(Error.EMAIL_NOT_EXIST);
+        } else if (passwordResetTokenRepository.findByUserEmail(passwordResetTokenRequest.getUserEmail()) != null) {
             return new OperationResult(Error.PASSWORD_RESET_TOKEN_NOT_UNIQUE);
         }
         var passwordResetToken = new PasswordResetToken();
@@ -98,6 +101,19 @@ public class UserService {
         userRepository.updatePassword(encodeNewPassword, user.getId());
         passwordResetTokenRepository.delete(findToken);
         return new OperationResult(Success.RECOVERY_PASSWORD);
+    }
+
+    public OperationResult findTokenByEmail(String email) {
+        var passwordResetToken = passwordResetTokenRepository.findByUserEmail(email);
+        if (passwordResetToken == null) {
+            return new OperationResult(Error.PASSWORD_RESET_TOKEN_NOT_EXIST);
+        }
+        var userResetTokenDto = new UserResetTokenDto();
+        userResetTokenDto.setName(passwordResetToken.getUser().getName());
+        userResetTokenDto.setToken(passwordResetToken.getToken());
+        var successOperationResult = new OperationResult(Success.BASE_OPERATION);
+        successOperationResult.setPayload(userResetTokenDto);
+        return successOperationResult;
     }
 
 }

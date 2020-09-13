@@ -1,4 +1,4 @@
-package ru.jpixel.personaldiaryregistrationservice.controlles;
+package ru.jpixel.personaldiaryregistrationservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

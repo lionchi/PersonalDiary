@@ -15,6 +15,13 @@ module.exports = function (app) {
         })
     );
     app.use(
+        '/mail-api/**',
+        createProxyMiddleware({
+            target: 'http://localhost:8710',
+            changeOrigin: true,
+        })
+    );
+    app.use(
         '/auth',
         createProxyMiddleware({
             target: 'http://localhost:8710',

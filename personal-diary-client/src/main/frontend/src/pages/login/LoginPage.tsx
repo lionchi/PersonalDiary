@@ -6,7 +6,7 @@ import "./LoginPage.css"
 import BasePage from "../BasePage";
 import i18next from "i18next";
 import {AppContext} from "../../security/AppContext";
-import {authorization} from "../../api/AuthorizationApi";
+import {authorization, sendRecoveryPasswordMail} from "../../api/AuthorizationApi";
 import {showNotification, showNotificationClient} from "../../utils/notification";
 import {RouteComponentProps, withRouter} from "react-router";
 import has from 'lodash/has';
@@ -46,10 +46,11 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
         try {
             setConfirmLoading(true);
             const values = await recoveryPasswordForm.validateFields();
+            const {data} = await sendRecoveryPasswordMail(values.email);
             recoveryPasswordForm.resetFields();
             setConfirmLoading(false);
             setVisibleModal(false)
-            console.log(values.email);
+            showNotification(i18next.t('notification.title.recovery_password'), data);
         } catch (e) {
             setConfirmLoading(false);
         }

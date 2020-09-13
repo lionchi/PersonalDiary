@@ -19,6 +19,8 @@ public class OperationResult {
 
     private String resultType;
 
+    private Object payload;
+
     public OperationResult(Success success) {
         this.code = success.getCode();
         this.ruText = success.getRuText();
@@ -45,5 +47,9 @@ public class OperationResult {
         this.ruText = MessageFormat.format(error.getRuText(), (Object[]) arg);
         this.enText = MessageFormat.format(error.getEnText(), (Object[]) arg);;
         this.resultType = ResultType.ERROR.getType();
+    }
+
+    public ResultType getResultTypeEnum() {
+        return ResultType.findByType(resultType);
     }
 }

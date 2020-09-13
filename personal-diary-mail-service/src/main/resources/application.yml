@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: personal-diary-mail-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: '*'

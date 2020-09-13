@@ -16,7 +16,8 @@ export const initI18n = (language: string | null): void => {
                         "title": {
                             "registration": "Регистрация",
                             "authorization": "Авторизация",
-                            "logout": "Выход из системы"
+                            "logout": "Выход из системы",
+                            "recovery_password": "Восстановление пароля"
                         },
                         "error": {
                             "authorization": "Неизвестная ошибка во время авторизации. Повторите попытку"
@@ -90,7 +91,8 @@ export const initI18n = (language: string | null): void => {
                         "title": {
                             "registration": "Registration",
                             "authorization": "Authorization",
-                            "logout": "Logout"
+                            "logout": "Logout",
+                            "recovery_password": "Password recovery"
                         },
                         "error": {
                             "authorization": "Unknown error during authorization. Try again"

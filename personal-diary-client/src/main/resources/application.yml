@@ -16,3 +16,6 @@ zuul:
       sensitive-headers: Authorization
       path: /auth/**
       service-id: personal-diary-authorization-service
+    personal-diary-mail-service:
+      path: /mail-api/**
+      service-id: personal-diary-mail-service

@@ -9,6 +9,6 @@ import ru.jpixel.models.dtos.UserDto;
 public class UserServiceFallback implements UserServiceFeignClient {
     @Override
     public OperationResult save(UserDto userDto) {
-        return new OperationResult(Error.UNAVAILABILITY_USER_SERVICE);
+        return new OperationResult(Error.UNAVAILABILITY_REGISTRATION_SERVICE);
     }
 }

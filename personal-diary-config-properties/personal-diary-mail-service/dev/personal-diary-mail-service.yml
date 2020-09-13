@@ -1,0 +1,30 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jpixel40@gmail.com
+    password: 12131415MegaMozg
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8750
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8700/eureka}
+  instance:
+    preferIpAddress: true
+
+message:
+  redirect:
+    host: http://localhost:3000
