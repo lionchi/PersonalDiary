@@ -1,5 +1,9 @@
 package ru.jpixel.personaldiaryuserservice.services;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +23,7 @@ import ru.jpixel.personaldiaryuserservice.repositories.PasswordResetTokenReposit
 import ru.jpixel.personaldiaryuserservice.repositories.RoleRepository;
 import ru.jpixel.personaldiaryuserservice.repositories.UserRepository;
 
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.UUID;
@@ -82,8 +87,9 @@ public class UserService {
         }
         var passwordResetToken = new PasswordResetToken();
         passwordResetToken.setToken(UUID.randomUUID().toString());
-        passwordResetToken.setExpiryDate(LocalDate.now().plusDays(5));
+        passwordResetToken.setExpiryDate(LocalDate.now().plusDays(3));
         passwordResetToken.setUser(userRepository.findByEmail(passwordResetTokenRequest.getUserEmail()));
+        passwordResetTokenRepository.save(passwordResetToken);
         return new OperationResult(Success.PASSWORD_RESET_TOKEN_CREATE);
     }
 
@@ -112,7 +118,12 @@ public class UserService {
         userResetTokenDto.setName(passwordResetToken.getUser().getName());
         userResetTokenDto.setToken(passwordResetToken.getToken());
         var successOperationResult = new OperationResult(Success.BASE_OPERATION);
-        successOperationResult.setPayload(userResetTokenDto);
+        try {
+            ObjectWriter objectWriter = new ObjectMapper().addMixIn(PrintWriter.class, JsonIgnoreType.class).writer();
+            successOperationResult.setJson(objectWriter.writeValueAsString(userResetTokenDto));
+        } catch (JsonProcessingException e) {
+            return new OperationResult(Error.BASE_OPERATION);
+        }
         return successOperationResult;
     }
 

@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public enum Error {
+    BASE_OPERATION("code.error.base_operation", "Во время операции произошла ошибка", "Operation completed successfully"),
+
     UNAVAILABILITY_REGISTRATION_SERVICE("code.error.unavailability_user_service",
             "В данный момент сервис регистрации недоступен", "The registration service is currently unavailable"),
     UNAVAILABILITY_PASSWORD_RESET_SERVICE("code.error.unavailability_user_service",

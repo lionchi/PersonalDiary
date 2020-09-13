@@ -47,9 +47,13 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
             setConfirmLoading(true);
             const values = await recoveryPasswordForm.validateFields();
             const {data} = await sendRecoveryPasswordMail(values.email);
-            recoveryPasswordForm.resetFields();
-            setConfirmLoading(false);
-            setVisibleModal(false)
+            if (data.resultType === 'success') {
+                recoveryPasswordForm.resetFields();
+                setConfirmLoading(false);
+                setVisibleModal(false);
+            } else if (data.resultType === 'error') {
+                setConfirmLoading(false);
+            }
             showNotification(i18next.t('notification.title.recovery_password'), data);
         } catch (e) {
             setConfirmLoading(false);

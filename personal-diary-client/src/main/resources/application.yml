@@ -19,3 +19,6 @@ zuul:
     personal-diary-mail-service:
       path: /mail-api/**
       service-id: personal-diary-mail-service
+personal-diary-mail-service:
+  ribbon:
+    ReadTimeout: 60000

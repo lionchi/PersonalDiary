@@ -1,5 +1,7 @@
 package ru.jpixel.personaldiarymailservice.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,31 +36,27 @@ public class MailService {
         if (operationResultCreateToken.getResultTypeEnum() == ResultType.ERROR) {
             return operationResultCreateToken;
         }
-
         var operationResultFindTokenByEmail = userServiceFeignClient.findTokenByEmail(passwordResetTokenRequest.getUserEmail());
         if (operationResultFindTokenByEmail.getResultTypeEnum() == ResultType.ERROR) {
-            return operationResultCreateToken;
+            return operationResultFindTokenByEmail;
         }
-        var userResetTokenDto = (UserResetTokenDto) operationResultCreateToken.getPayload();
-
-        var model = new HashMap<String, Object>();
-        model.put("fio", userResetTokenDto.getName());
-        model.put("resetUrl", host + "/recovery-password?token=" + userResetTokenDto.getToken());
-
         try {
+            var userResetTokenDto = new ObjectMapper().readValue(operationResultFindTokenByEmail.getJson(), UserResetTokenDto.class);
+            var model = new HashMap<String, Object>();
+            model.put("fio", userResetTokenDto.getName());
+            model.put("resetUrl", host + "/recovery-password?token=" + userResetTokenDto.getToken());
             var message = emailSender.createMimeMessage();
             var helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
             var context = new Context();
             context.setVariables(model);
-            String html = templateEngine.process("email/recovery-password-email-template.html", context);
+            var html = templateEngine.process("email/recovery-password-email-template.html", context);
             helper.setTo(passwordResetTokenRequest.getUserEmail());
             helper.setText(html, true);
             helper.setSubject("Запрос на сброс пароля");
             emailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (MessagingException | JsonProcessingException e) {
             return new OperationResult(Error.RECOVERY_PASSWORD_NOT_SEND_MESSAGE);
         }
-
         return new OperationResult(Success.RECOVERY_PASSWORD_SEND_MESSAGE);
     }
 }

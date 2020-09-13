@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/registration-api/**").permitAll()
+                .antMatchers("/mail-api/**").permitAll()
                 .antMatchers(jwtInfo.getUri()).permitAll()
                 .anyRequest().authenticated();
     }

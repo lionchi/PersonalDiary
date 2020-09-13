@@ -19,7 +19,7 @@ public class OperationResult {
 
     private String resultType;
 
-    private Object payload;
+    private String json;
 
     public OperationResult(Success success) {
         this.code = success.getCode();
