@@ -46,7 +46,7 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
         try {
             setConfirmLoading(true);
             const values = await recoveryPasswordForm.validateFields();
-            const {data} = await sendRecoveryPasswordMail(values.email);
+            const {data} = await sendRecoveryPasswordMail(values.email, appContext.language);
             if (data.resultType === 'success') {
                 recoveryPasswordForm.resetFields();
                 setConfirmLoading(false);
@@ -58,7 +58,7 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
         } catch (e) {
             setConfirmLoading(false);
         }
-    }, [recoveryPasswordForm]);
+    }, [recoveryPasswordForm, appContext]);
 
     return (
         <BasePage>

@@ -18,6 +18,7 @@ import ru.jpixel.models.dtos.UserResetTokenDto;
 
 import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.HashMap;
 
 @Service
@@ -31,7 +32,7 @@ public class MailService {
     @Value("${message.redirect.host}")
     private String host;
 
-    public OperationResult sendRecoveryPasswordMail(PasswordResetTokenRequest passwordResetTokenRequest) {
+    public OperationResult sendRecoveryPasswordMail(PasswordResetTokenRequest passwordResetTokenRequest, String ln) {
         var operationResultCreateToken = userServiceFeignClient.createPasswordResetToken(passwordResetTokenRequest);
         if (operationResultCreateToken.getResultTypeEnum() == ResultType.ERROR) {
             return operationResultCreateToken;
@@ -49,7 +50,8 @@ public class MailService {
             var helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
             var context = new Context();
             context.setVariables(model);
-            var html = templateEngine.process("email/recovery-password-email-template.html", context);
+            var templatePath = MessageFormat.format("email/recovery-password-email-template-{0}.html", ln);
+            var html = templateEngine.process(templatePath, context);
             helper.setTo(passwordResetTokenRequest.getUserEmail());
             helper.setText(html, true);
             helper.setSubject("Запрос на сброс пароля");

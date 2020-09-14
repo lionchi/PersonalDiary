@@ -7,6 +7,6 @@ export function authorization(values: LoginFormData): Promise<AxiosResponse> {
     return http.post('/auth', values);
 }
 
-export function sendRecoveryPasswordMail(email: string): Promise<AxiosResponse<OperationResult>> {
-    return http.post('/mail-api/sendRecoveryPasswordMail', {userEmail: email});
+export function sendRecoveryPasswordMail(email: string, ln: string): Promise<AxiosResponse<OperationResult>> {
+    return http.post('/mail-api/sendRecoveryPasswordMail', {userEmail: email}, {params: {ln: ln}});
 }
