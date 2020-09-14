@@ -44,7 +44,7 @@ public enum Error {
 
     public static Error findByCode(String code) {
         return Stream.of(values())
-                .filter(resultType -> resultType.getCode().equals(code))
+                .filter(error -> error.getCode().equals(code))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(MessageFormat.format("Error with code {0} not found", code)));
     }

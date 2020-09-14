@@ -26,7 +26,7 @@ public enum Success {
 
     public static Success findByCode(String code) {
         return Stream.of(values())
-                .filter(resultType -> resultType.getCode().equals(code))
+                .filter(success -> success.getCode().equals(code))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(MessageFormat.format("Success with code {0} not found", code)));
     }

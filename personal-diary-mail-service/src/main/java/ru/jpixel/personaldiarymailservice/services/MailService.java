@@ -9,10 +9,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import ru.jpixel.models.*;
 import ru.jpixel.models.Error;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.ResultType;
-import ru.jpixel.models.Success;
 import ru.jpixel.models.dtos.PasswordResetTokenRequest;
 import ru.jpixel.models.dtos.UserResetTokenDto;
 
@@ -54,7 +52,7 @@ public class MailService {
             var html = templateEngine.process(templatePath, context);
             helper.setTo(passwordResetTokenRequest.getUserEmail());
             helper.setText(html, true);
-            helper.setSubject("Запрос на сброс пароля");
+            helper.setSubject(Language.findByCode(ln) == Language.RUSSIAN ? "Запрос на сброс пароля" : "Password reset request");
             emailSender.send(message);
         } catch (MessagingException | JsonProcessingException e) {
             return new OperationResult(Error.RECOVERY_PASSWORD_NOT_SEND_MESSAGE);
