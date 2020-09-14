@@ -34,8 +34,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            UserCredentials credentials = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credentials.getUsername(),
+            var credentials = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
+            var authToken = new UsernamePasswordAuthenticationToken(credentials.getUsername(),
                     credentials.getPassword(), Collections.emptyList());
             return authManager.authenticate(authToken);
         } catch (IOException e) {
@@ -45,8 +45,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication auth) {
-        long now = System.currentTimeMillis();
-        String token = Jwts.builder()
+        var now = System.currentTimeMillis();
+        var token = Jwts.builder()
                 .setSubject(auth.getName())
                 .claim(jwtInfo.getClaimAuthorities(), auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .claim(jwtInfo.getClaimUserId(), ((PersonalDiaryUser) auth.getPrincipal()).getId())
@@ -54,7 +54,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .setExpiration(new Date(now + jwtInfo.getExpiration() * 1000))
                 .signWith(SignatureAlgorithm.HS512, jwtInfo.getSecret().getBytes())
                 .compact();
-        Cookie cookie = new Cookie(jwtInfo.getAccessCookieName(), token);
+        var cookie = new Cookie(jwtInfo.getAccessCookieName(), token);
         cookie.setHttpOnly(true);
         cookie.setPath("/api");
         response.addCookie(cookie);

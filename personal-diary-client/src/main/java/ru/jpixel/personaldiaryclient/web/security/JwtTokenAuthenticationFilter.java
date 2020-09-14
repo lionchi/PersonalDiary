@@ -1,6 +1,7 @@
 package ru.jpixel.personaldiaryclient.web.security;
 
 import io.jsonwebtoken.Jwts;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,7 +10,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws ServletException, IOException {
         var token = getToken(request);
         if(token == null) {
@@ -62,7 +62,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             return null;
         }
 
-        Cookie findCookie = Stream.of(request.getCookies())
+        var findCookie = Stream.of(request.getCookies())
                 .filter(cookie -> jwtInfo.getAccessCookieName().equals(cookie.getName()))
                 .findFirst().orElse(null);
 

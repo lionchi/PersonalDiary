@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/api/logout")
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    Cookie cookie = new Cookie(jwtInfo.getAccessCookieName(), null);
+                    var cookie = new Cookie(jwtInfo.getAccessCookieName(), null);
                     cookie.setPath("/api");
                     cookie.setMaxAge(0);
                     cookie.setHttpOnly(true);

@@ -3,7 +3,6 @@ package ru.jpixel.personaldiaryuserservice.services;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -119,7 +118,7 @@ public class UserService {
         userResetTokenDto.setToken(passwordResetToken.getToken());
         var successOperationResult = new OperationResult(Success.BASE_OPERATION);
         try {
-            ObjectWriter objectWriter = new ObjectMapper().addMixIn(PrintWriter.class, JsonIgnoreType.class).writer();
+            var objectWriter = new ObjectMapper().addMixIn(PrintWriter.class, JsonIgnoreType.class).writer();
             successOperationResult.setJson(objectWriter.writeValueAsString(userResetTokenDto));
         } catch (JsonProcessingException e) {
             return new OperationResult(Error.BASE_OPERATION);
