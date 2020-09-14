@@ -10,6 +10,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import {registration} from "../../api/RegistrationApi";
 import {showNotification} from "../../utils/notification";
 import {Moment} from "moment";
+import {EResultType} from "../../common/EResultType";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -34,7 +35,7 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
         }
         const {data} = await registration(values);
         showNotification(i18next.t('notification.title.registration'), data);
-        if (data.resultType !== 'error') {
+        if (data.resultType !== EResultType.ERROR) {
             setTimeout(() => {
                 props.history.push('/login');
             }, 1000)

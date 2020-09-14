@@ -1,10 +1,14 @@
 import {RouteComponentProps, withRouter} from "react-router";
-import React, {ReactElement, useCallback} from "react";
+import React, {ReactElement, useCallback, useContext, useMemo} from "react";
 import BasePage from "../BasePage";
 import {Button, Col, Form, Input, Row, Typography} from "antd";
 import {RecoveryPasswordData} from "../../model/RecoveryPasswordData";
 import i18next from "i18next";
 import "./RecoveryPasswordPage.css"
+import {recoveryPassword} from "../../api/RecoveryPasswordApi";
+import {showNotification} from "../../utils/notification";
+import {AppContext} from "../../security/AppContext";
+import {EResultType} from "../../common/EResultType";
 
 const {Title} = Typography;
 
@@ -14,9 +18,21 @@ interface IRecoveryPasswordPage extends RouteComponentProps {
 
 const RecoveryPasswordPage = (props: IRecoveryPasswordPage): ReactElement => {
 
-    const onFinish = useCallback((formData: RecoveryPasswordData) => {
+    const appContext = useContext(AppContext);
 
-    }, []);
+    const token = useMemo(() => window.location.search.substring(7), []);
+
+    const onFinish = useCallback(async (formData: RecoveryPasswordData) => {
+        appContext.setLoading(true);
+        const {data} = await recoveryPassword(formData.newPassword, token);
+        appContext.setLoading(false);
+        showNotification(i18next.t('notification.title.recovery_password'), data);
+        if (data.resultType !== EResultType.ERROR) {
+            setTimeout(() => {
+                props.history.push('/login');
+            }, 1000)
+        }
+    }, [props, token, appContext]);
 
     return (
         <BasePage>

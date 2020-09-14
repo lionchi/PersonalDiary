@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/registration-api/**").permitAll()
-                .antMatchers("/mail-api/**").permitAll()
+                .antMatchers("/mail-api/sendRecoveryPasswordMail").permitAll()
+                .antMatchers("/user-api/recoveryPassword").permitAll()
                 .antMatchers(jwtInfo.getUri()).permitAll()
                 .anyRequest().authenticated();
     }
@@ -55,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurity) {
         webSecurity.ignoring()
                 .antMatchers(HttpMethod.GET, "/*.css", "/*.png", "/*.ico", "/*.js", "/*.json")
-                .antMatchers(HttpMethod.GET, "/login", "/registration")
+                .antMatchers(HttpMethod.GET, "/login", "/registration", "/recovery-password")
                 .antMatchers(HttpMethod.GET, "/index.html", "/static/**");
     }
 }

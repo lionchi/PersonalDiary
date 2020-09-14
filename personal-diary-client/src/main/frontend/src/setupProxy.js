@@ -22,6 +22,13 @@ module.exports = function (app) {
         })
     );
     app.use(
+        '/user-api/**',
+        createProxyMiddleware({
+            target: 'http://localhost:8710',
+            changeOrigin: true,
+        })
+    );
+    app.use(
         '/auth',
         createProxyMiddleware({
             target: 'http://localhost:8710',

@@ -6,10 +6,12 @@ import "./LoginPage.css"
 import BasePage from "../BasePage";
 import i18next from "i18next";
 import {AppContext} from "../../security/AppContext";
-import {authorization, sendRecoveryPasswordMail} from "../../api/AuthorizationApi";
+import {authorization} from "../../api/AuthorizationApi";
 import {showNotification, showNotificationClient} from "../../utils/notification";
 import {RouteComponentProps, withRouter} from "react-router";
 import has from 'lodash/has';
+import {sendRecoveryPasswordMail} from "../../api/RecoveryPasswordApi";
+import {EResultType} from "../../common/EResultType";
 
 const {Title, Text, Link} = Typography;
 
@@ -19,10 +21,13 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
 
     const onFinish = useCallback(async (formData: LoginFormData) => {
         try {
+            appContext.setLoading(true);
             await authorization(formData);
+            appContext.setLoading(false);
             appContext.signIn();
             props.history.push('/diary');
         } catch (e) {
+            appContext.setLoading(false);
             if (has(e.response.data, 'code')) {
                 showNotification(i18next.t('notification.title.authorization'), e.response.data);
             } else {
@@ -47,11 +52,11 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
             setConfirmLoading(true);
             const values = await recoveryPasswordForm.validateFields();
             const {data} = await sendRecoveryPasswordMail(values.email, appContext.language);
-            if (data.resultType === 'success') {
+            if (data.resultType === EResultType.SUCCESS) {
                 recoveryPasswordForm.resetFields();
                 setConfirmLoading(false);
                 setVisibleModal(false);
-            } else if (data.resultType === 'error') {
+            } else if (data.resultType === EResultType.ERROR) {
                 setConfirmLoading(false);
             }
             showNotification(i18next.t('notification.title.recovery_password'), data);
