@@ -32,11 +32,11 @@ public class MailService {
 
     public OperationResult sendRecoveryPasswordMail(PasswordResetTokenRequest passwordResetTokenRequest, String ln) {
         var operationResultCreateToken = userServiceFeignClient.createPasswordResetToken(passwordResetTokenRequest);
-        if (operationResultCreateToken.getResultTypeEnum() == ResultType.ERROR) {
+        if (ResultType.findByType(operationResultCreateToken.getResultType()) == ResultType.ERROR) {
             return operationResultCreateToken;
         }
         var operationResultFindTokenByEmail = userServiceFeignClient.findTokenByEmail(passwordResetTokenRequest.getUserEmail());
-        if (operationResultFindTokenByEmail.getResultTypeEnum() == ResultType.ERROR) {
+        if (ResultType.findByType(operationResultFindTokenByEmail.getResultType()) == ResultType.ERROR) {
             return operationResultFindTokenByEmail;
         }
         try {

@@ -48,8 +48,4 @@ public class OperationResult {
         this.enText = MessageFormat.format(error.getEnText(), (Object[]) arg);;
         this.resultType = ResultType.ERROR.getType();
     }
-
-    public ResultType getResultTypeEnum() {
-        return ResultType.findByType(resultType);
-    }
 }
