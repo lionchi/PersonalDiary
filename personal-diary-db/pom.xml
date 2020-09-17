@@ -36,7 +36,7 @@
                 <configuration>
                     <propertyFile>liquibase/liquibase.properties</propertyFile>
                     <changeLogFile>liquibase/changeset-master.xml</changeLogFile>
-                    <schemas>secr</schemas>
+                    <schemas>secr,public</schemas>
                     <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
                     <verbose>true</verbose>
                 </configuration>

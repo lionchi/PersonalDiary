@@ -4,9 +4,9 @@ package ru.jpixel.personaldiaryuserservice.repositories.role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.jpixel.personaldiaryuserservice.domain.Role;
+import ru.jpixel.personaldiaryuserservice.domain.secr.Role;
 import ru.jpixel.personaldiaryuserservice.repositories.BaseRepositoryTest;
-import ru.jpixel.personaldiaryuserservice.repositories.RoleRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.RoleRepository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

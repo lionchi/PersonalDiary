@@ -4,9 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.jpixel.personaldiaryuserservice.domain.User;
+import ru.jpixel.personaldiaryuserservice.domain.secr.User;
 import ru.jpixel.personaldiaryuserservice.repositories.BaseRepositoryTest;
-import ru.jpixel.personaldiaryuserservice.repositories.UserRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 
 import java.time.LocalDate;
 import java.time.Month;

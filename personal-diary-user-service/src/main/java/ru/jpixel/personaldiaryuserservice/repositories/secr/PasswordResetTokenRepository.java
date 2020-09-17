@@ -1,7 +1,7 @@
-package ru.jpixel.personaldiaryuserservice.repositories;
+package ru.jpixel.personaldiaryuserservice.repositories.secr;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.jpixel.personaldiaryuserservice.domain.PasswordResetToken;
+import ru.jpixel.personaldiaryuserservice.domain.secr.PasswordResetToken;
 
 public interface PasswordResetTokenRepository extends CrudRepository<PasswordResetToken, Long> {
     PasswordResetToken findByToken(String token);

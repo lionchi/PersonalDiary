@@ -1,4 +1,4 @@
-package ru.jpixel.personaldiaryuserservice.domain;
+package ru.jpixel.personaldiaryuserservice.domain.secr;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

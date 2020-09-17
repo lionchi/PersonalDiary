@@ -3,9 +3,9 @@ package ru.jpixel.personaldiaryuserservice.services;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.jpixel.personaldiaryuserservice.repositories.PasswordResetTokenRepository;
-import ru.jpixel.personaldiaryuserservice.repositories.RoleRepository;
-import ru.jpixel.personaldiaryuserservice.repositories.UserRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.PasswordResetTokenRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.RoleRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 
 @TestConfiguration
 public class ServiceTestConfiguration {

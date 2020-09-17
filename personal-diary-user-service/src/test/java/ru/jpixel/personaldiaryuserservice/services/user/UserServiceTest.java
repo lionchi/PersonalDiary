@@ -15,12 +15,12 @@ import ru.jpixel.models.dtos.PasswordResetTokenRequest;
 import ru.jpixel.models.dtos.RecoveryPasswordDto;
 import ru.jpixel.models.dtos.UserDto;
 import ru.jpixel.models.dtos.UserResetTokenDto;
-import ru.jpixel.personaldiaryuserservice.domain.PasswordResetToken;
-import ru.jpixel.personaldiaryuserservice.domain.Role;
-import ru.jpixel.personaldiaryuserservice.domain.User;
-import ru.jpixel.personaldiaryuserservice.repositories.PasswordResetTokenRepository;
-import ru.jpixel.personaldiaryuserservice.repositories.RoleRepository;
-import ru.jpixel.personaldiaryuserservice.repositories.UserRepository;
+import ru.jpixel.personaldiaryuserservice.domain.secr.PasswordResetToken;
+import ru.jpixel.personaldiaryuserservice.domain.secr.Role;
+import ru.jpixel.personaldiaryuserservice.domain.secr.User;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.PasswordResetTokenRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.RoleRepository;
+import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 import ru.jpixel.personaldiaryuserservice.services.BaseServiceTest;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
 

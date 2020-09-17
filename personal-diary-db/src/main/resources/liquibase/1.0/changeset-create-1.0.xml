@@ -4,9 +4,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="1.0-1" author="Gavrilov Ivan">
+    <changeSet id="1.0-0c" author="Gavrilov Ivan">
+        <createSequence sequenceName="user_seq" schemaName="secr" dataType="bigint" cacheSize="50"/>
+        <createSequence sequenceName="password_reset_token_seq" schemaName="secr" dataType="bigint" cacheSize="50"/>
+        <createSequence sequenceName="diary_seq" dataType="bigint" cacheSize="50"/>
+        <createSequence sequenceName="page_seq" dataType="bigint" cacheSize="50"/>
+    </changeSet>
+
+    <changeSet id="1.0-1c" author="Gavrilov Ivan">
         <createTable tableName="users" schemaName="secr">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" defaultValueComputed="nextval('secr.user_seq')">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -25,14 +32,15 @@
             <column name="phone" type="varchar(12)"/>
             <column name="birthday" type="date"/>
         </createTable>
-        <rollback>
-            <dropTable tableName="users"/>
-        </rollback>
+        <createIndex schemaName="secr" tableName="users" indexName="idx_users">
+            <column name="email"/>
+            <column name="login"/>
+        </createIndex>
     </changeSet>
 
-    <changeSet id="1.0-2" author="Gavrilov Ivan">
+    <changeSet id="1.0-2c" author="Gavrilov Ivan">
         <createTable tableName="roles" schemaName="secr">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(15)">
@@ -55,15 +63,14 @@
                                  constraintName="fk_user_roles_on_role" referencedTableSchemaName="secr"
                                  referencedTableName="roles"
                                  referencedColumnNames="id" onDelete="CASCADE"/>
+        <createIndex schemaName="secr" tableName="roles" indexName="idx_roles">
+            <column name="name"/>
+        </createIndex>
     </changeSet>
 
-    <changeSet id="1.0-3" author="Gavrilov Ivan">
-        <createSequence sequenceName="user_seq" schemaName="secr" dataType="bigint"/>
-    </changeSet>
-
-    <changeSet id="1.0-4" author="Gavrilov Ivan">
+    <changeSet id="1.0-3c" author="Gavrilov Ivan">
         <createTable tableName="password_reset_tokens" schemaName="secr">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="bigint" defaultValueComputed="nextval('secr.password_reset_token_seq')">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="token" type="text">
@@ -80,7 +87,77 @@
                                  constraintName="fk_password_reset_token_on_user" referencedTableSchemaName="secr"
                                  referencedTableName="users"
                                  referencedColumnNames="id" onDelete="CASCADE"/>
-        <createSequence sequenceName="password_reset_token_seq" schemaName="secr" dataType="bigint"/>
+        <createIndex schemaName="secr" tableName="password_reset_tokens" indexName="idx_password_reset_tokens">
+            <column name="token"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0-4c" author="Gavrilov Ivan">
+        <createTable tableName="diaries">
+            <column name="id" type="bigint" defaultValueSequenceNext="diary_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="key" type="blob">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="diaries" baseColumnNames="user_id"
+                                 constraintName="fk_diary_on_user" referencedTableSchemaName="secr"
+                                 referencedTableName="users" referencedColumnNames="id" onDelete="CASCADE"/>
+        <createTable tableName="tags">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name_ru" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name_en" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="pages">
+            <column name="id" type="bigint" defaultValueSequenceNext="page_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="diary_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification_date" type="date"/>
+            <column name="create_date" type="date" defaultValueComputed="CURRENT_DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recording_summary" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confidential" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="pages" baseColumnNames="diary_id"
+                                 constraintName="fk_page_on_diary"
+                                 referencedTableName="diaries" referencedColumnNames="id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="pages" baseColumnNames="tag_id"
+                                 constraintName="fk_page_on_tag"
+                                 referencedTableName="tags" referencedColumnNames="id"/>
+        <createIndex tableName="tags" indexName="idx_tags">
+            <column name="code"/>
+        </createIndex>
+        <createIndex tableName="pages" indexName="idx_pages">
+            <column name="notification_date"/>
+            <column name="create_date"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>

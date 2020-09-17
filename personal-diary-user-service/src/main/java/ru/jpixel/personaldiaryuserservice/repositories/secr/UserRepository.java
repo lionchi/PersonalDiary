@@ -1,10 +1,10 @@
-package ru.jpixel.personaldiaryuserservice.repositories;
+package ru.jpixel.personaldiaryuserservice.repositories.secr;
 
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import ru.jpixel.personaldiaryuserservice.domain.User;
+import ru.jpixel.personaldiaryuserservice.domain.secr.User;
 
 public interface UserRepository extends CrudRepository<User, Long> {
 
