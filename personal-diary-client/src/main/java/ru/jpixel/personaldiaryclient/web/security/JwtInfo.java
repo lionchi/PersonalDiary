@@ -19,6 +19,9 @@ public class JwtInfo {
     @Value("${security.jwt.name:user_id}")
     private String claimUserId;
 
+    @Value("${security.jwt.name:diary_id}")
+    private String claimDiaryId;
+
     @Value("${security.jwt.expiration:#{24*60*60}}")
     private int expiration;
 

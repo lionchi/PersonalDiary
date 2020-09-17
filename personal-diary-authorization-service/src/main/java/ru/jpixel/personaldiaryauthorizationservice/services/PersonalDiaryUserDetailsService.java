@@ -30,6 +30,8 @@ public class PersonalDiaryUserDetailsService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(PREFIX_ROLE + role))
                 .collect(Collectors.toList());
 
-        return new PersonalDiaryUser(String.valueOf(foundUser.getId()), foundUser.getLogin(), foundUser.getPassword(), authorities);
+        return new PersonalDiaryUser(String.valueOf(foundUser.getId()),
+                foundUser.getLogin(), foundUser.getPassword(),
+                String.valueOf(foundUser.getDiaryId()), authorities);
     }
 }

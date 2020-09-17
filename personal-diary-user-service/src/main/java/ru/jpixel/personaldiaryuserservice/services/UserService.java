@@ -65,6 +65,7 @@ public class UserService {
             return null;
         }
         var userDto = new UserDto();
+        userDto.setDiaryId(foundUser.getDiary() != null ? foundUser.getDiary().getId() : null);
         userDto.setId(foundUser.getId());
         userDto.setBirthday(foundUser.getBirthday());
         userDto.setPassword(foundUser.getPassword());

@@ -75,6 +75,9 @@ export const initI18n = (language: string | null): void => {
                                 "confirm_new_password_error_1": "Пожалуйста подтвердите свой новый пароль",
                                 "confirm_new_password_error_2": "Два введенных вами пароля не совпадают",
                             }
+                        },
+                        "diary": {
+                            "create_btn": "Создать свой словарь"
                         }
                     }
                 }
@@ -150,6 +153,9 @@ export const initI18n = (language: string | null): void => {
                                 "confirm_new_password_error_1": "Please confirm your new password",
                                 "confirm_new_password_error_2": "The two passwords that you entered do not match",
                             }
+                        },
+                        "diary": {
+                            "create_btn": "Create your dictionary"
                         }
                     }
                 }

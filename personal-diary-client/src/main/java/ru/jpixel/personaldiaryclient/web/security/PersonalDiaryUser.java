@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class PersonalDiaryUser {
     private final Long id;
+    private final Long diaryId;
     private final String username;
     private final List<String> roles;
 }
