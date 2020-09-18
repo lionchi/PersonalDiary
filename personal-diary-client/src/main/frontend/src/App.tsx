@@ -9,7 +9,7 @@ import {ConfigProvider, Spin} from "antd";
 import {AppContextModel} from "./security/AppContextModel";
 import {AppAction} from "./security/AppAction";
 import {AppContext, AppContextInit} from "./security/AppContext";
-import {EConstantValueString} from "./common/EConstantValueString";
+import {EConstantValueString} from "./model/EConstantValueString";
 import i18next from "i18next";
 import {initI18n} from "./i18n/I18nConfig";
 import enGB from 'antd/es/locale/en_GB';

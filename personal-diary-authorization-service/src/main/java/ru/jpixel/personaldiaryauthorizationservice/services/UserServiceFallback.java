@@ -1,7 +1,7 @@
 package ru.jpixel.personaldiaryauthorizationservice.services;
 
 import org.springframework.stereotype.Component;
-import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.models.dtos.secr.UserDto;
 
 @Component
 public class UserServiceFallback implements UserServiceFeignClient {

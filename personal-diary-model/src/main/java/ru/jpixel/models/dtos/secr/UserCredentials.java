@@ -1,4 +1,4 @@
-package ru.jpixel.models.security;
+package ru.jpixel.models.dtos.secr;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -10,7 +10,7 @@ import {RouteComponentProps, withRouter} from "react-router";
 import {registration} from "../../api/RegistrationApi";
 import {showNotification} from "../../utils/notification";
 import {Moment} from "moment";
-import {EResultType} from "../../common/EResultType";
+import {EResultType} from "../../model/EResultType";
 
 const {Title} = Typography;
 const {Option} = Select;

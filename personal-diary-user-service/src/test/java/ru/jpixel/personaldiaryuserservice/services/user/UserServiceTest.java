@@ -8,13 +8,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ru.jpixel.models.Error;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.Success;
-import ru.jpixel.models.dtos.PasswordResetTokenRequest;
-import ru.jpixel.models.dtos.RecoveryPasswordDto;
-import ru.jpixel.models.dtos.UserDto;
-import ru.jpixel.models.dtos.UserResetTokenDto;
+import ru.jpixel.models.dtos.common.Error;
+import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.common.Success;
+import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
+import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
+import ru.jpixel.models.dtos.secr.UserDto;
+import ru.jpixel.models.dtos.secr.UserResetTokenDto;
 import ru.jpixel.personaldiaryuserservice.domain.secr.PasswordResetToken;
 import ru.jpixel.personaldiaryuserservice.domain.secr.Role;
 import ru.jpixel.personaldiaryuserservice.domain.secr.User;
@@ -135,7 +135,7 @@ public class UserServiceTest {
     public class CreatePasswordResetToken extends InnerClass {
 
         private User user;
-        private PasswordResetTokenRequest passwordResetTokenRequest;
+        private PasswordResetTokenDto passwordResetTokenDto;
 
         @BeforeAll
         public void init() {
@@ -149,8 +149,8 @@ public class UserServiceTest {
             user.setPhone("9109109191");
             user.setBirthday(LocalDate.of(1995, Month.JANUARY, 1));
 
-            passwordResetTokenRequest = new PasswordResetTokenRequest();
-            passwordResetTokenRequest.setUserEmail(user.getEmail());
+            passwordResetTokenDto = new PasswordResetTokenDto();
+            passwordResetTokenDto.setUserEmail(user.getEmail());
         }
 
         @Test
@@ -158,7 +158,7 @@ public class UserServiceTest {
         public void returnOperationResultEmailNotExist() {
             Mockito.when(userRepository.existsByEmail(anyString()))
                     .thenReturn(false);
-            var resultCreate = userService.createPasswordResetToken(passwordResetTokenRequest);
+            var resultCreate = userService.createPasswordResetToken(passwordResetTokenDto);
 
             assertEquals(Error.EMAIL_NOT_EXIST.getCode(), resultCreate.getCode());
         }
@@ -170,7 +170,7 @@ public class UserServiceTest {
                     .thenReturn(true);
             Mockito.when(passwordResetTokenRepository.findByUserEmail(anyString()))
                     .thenReturn(new PasswordResetToken());
-            var resultCreate = userService.createPasswordResetToken(passwordResetTokenRequest);
+            var resultCreate = userService.createPasswordResetToken(passwordResetTokenDto);
 
             assertEquals(Error.PASSWORD_RESET_TOKEN_NOT_UNIQUE.getCode(), resultCreate.getCode());
         }
@@ -184,7 +184,7 @@ public class UserServiceTest {
                     .thenReturn(null);
             Mockito.when(userRepository.findByEmail(anyString()))
                     .thenReturn(user);
-            var resultCreate = userService.createPasswordResetToken(passwordResetTokenRequest);
+            var resultCreate = userService.createPasswordResetToken(passwordResetTokenDto);
 
             assertEquals(Success.PASSWORD_RESET_TOKEN_CREATE.getCode(), resultCreate.getCode());
         }

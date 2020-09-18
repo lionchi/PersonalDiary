@@ -5,7 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import App from "./App";
 import 'antd/dist/antd.css';
 import {ThemeSwitcherProvider} from "react-css-theme-switcher";
-import {EConstantValueString} from "./common/EConstantValueString";
+import {EConstantValueString} from "./model/EConstantValueString";
 
 const themes = {
     dark: `${process.env.PUBLIC_URL}/dark-theme.css`,

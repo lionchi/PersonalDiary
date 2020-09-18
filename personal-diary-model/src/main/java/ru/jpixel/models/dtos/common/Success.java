@@ -1,4 +1,4 @@
-package ru.jpixel.models;
+package ru.jpixel.models.dtos.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

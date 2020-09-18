@@ -2,10 +2,10 @@ package ru.jpixel.personaldiaryuserservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.dtos.PasswordResetTokenRequest;
-import ru.jpixel.models.dtos.RecoveryPasswordDto;
-import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
+import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
+import ru.jpixel.models.dtos.secr.UserDto;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
 
 @RestController
@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @PostMapping("create/passwordResetToken")
-    public OperationResult createPasswordResetToken(@RequestBody PasswordResetTokenRequest passwordResetTokenRequest) {
-        return userService.createPasswordResetToken(passwordResetTokenRequest);
+    public OperationResult createPasswordResetToken(@RequestBody PasswordResetTokenDto passwordResetTokenDto) {
+        return userService.createPasswordResetToken(passwordResetTokenDto);
     }
 
     @PutMapping("recoveryPassword")

@@ -2,8 +2,8 @@ package ru.jpixel.personaldiarymailservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.dtos.PasswordResetTokenRequest;
+import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
 import ru.jpixel.personaldiarymailservice.services.MailService;
 
 @RestController
@@ -14,8 +14,8 @@ public class MailController {
     private final MailService mailService;
 
     @PostMapping("sendRecoveryPasswordMail")
-    public OperationResult sendRecoveryPasswordMail(@RequestBody PasswordResetTokenRequest passwordResetTokenRequest,
+    public OperationResult sendRecoveryPasswordMail(@RequestBody PasswordResetTokenDto passwordResetTokenDto,
                                                     @RequestParam("ln") String ln) {
-        return mailService.sendRecoveryPasswordMail(passwordResetTokenRequest, ln);
+        return mailService.sendRecoveryPasswordMail(passwordResetTokenDto, ln);
     }
 }

@@ -8,7 +8,7 @@ import "./RecoveryPasswordPage.css"
 import {recoveryPassword} from "../../api/RecoveryPasswordApi";
 import {showNotification} from "../../utils/notification";
 import {AppContext} from "../../security/AppContext";
-import {EResultType} from "../../common/EResultType";
+import {EResultType} from "../../model/EResultType";
 
 const {Title} = Typography;
 

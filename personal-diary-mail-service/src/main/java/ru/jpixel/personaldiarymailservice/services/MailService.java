@@ -9,10 +9,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import ru.jpixel.models.*;
-import ru.jpixel.models.Error;
-import ru.jpixel.models.dtos.PasswordResetTokenRequest;
-import ru.jpixel.models.dtos.UserResetTokenDto;
+import ru.jpixel.models.dtos.common.*;
+import ru.jpixel.models.dtos.common.Error;
+import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
+import ru.jpixel.models.dtos.secr.UserResetTokenDto;
 
 import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
@@ -30,12 +30,12 @@ public class MailService {
     @Value("${message.redirect.host}")
     private String host;
 
-    public OperationResult sendRecoveryPasswordMail(PasswordResetTokenRequest passwordResetTokenRequest, String ln) {
-        var operationResultCreateToken = userServiceFeignClient.createPasswordResetToken(passwordResetTokenRequest);
+    public OperationResult sendRecoveryPasswordMail(PasswordResetTokenDto passwordResetTokenDto, String ln) {
+        var operationResultCreateToken = userServiceFeignClient.createPasswordResetToken(passwordResetTokenDto);
         if (ResultType.findByType(operationResultCreateToken.getResultType()) == ResultType.ERROR) {
             return operationResultCreateToken;
         }
-        var operationResultFindTokenByEmail = userServiceFeignClient.findTokenByEmail(passwordResetTokenRequest.getUserEmail());
+        var operationResultFindTokenByEmail = userServiceFeignClient.findTokenByEmail(passwordResetTokenDto.getUserEmail());
         if (ResultType.findByType(operationResultFindTokenByEmail.getResultType()) == ResultType.ERROR) {
             return operationResultFindTokenByEmail;
         }
@@ -50,7 +50,7 @@ public class MailService {
             context.setVariables(model);
             var templatePath = MessageFormat.format("email/recovery-password-email-template-{0}.html", ln);
             var html = templateEngine.process(templatePath, context);
-            helper.setTo(passwordResetTokenRequest.getUserEmail());
+            helper.setTo(passwordResetTokenDto.getUserEmail());
             helper.setText(html, true);
             helper.setSubject(Language.findByCode(ln) == Language.RUSSIAN ? "Запрос на сброс пароля" : "Password reset request");
             emailSender.send(message);

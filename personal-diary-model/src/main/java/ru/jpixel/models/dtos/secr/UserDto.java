@@ -1,4 +1,4 @@
-package ru.jpixel.models.dtos;
+package ru.jpixel.models.dtos.secr;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

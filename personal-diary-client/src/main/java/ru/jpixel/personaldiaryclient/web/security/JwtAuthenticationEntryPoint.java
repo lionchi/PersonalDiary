@@ -6,8 +6,8 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import ru.jpixel.models.Error;
-import ru.jpixel.models.OperationResult;
+import ru.jpixel.models.dtos.common.Error;
+import ru.jpixel.models.dtos.common.OperationResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -2,8 +2,8 @@ package ru.jpixel.personaldiaryregistrationservice.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.secr.UserDto;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 import {OperationResult} from "../model/OperationResult";
 import {notification} from "antd";
-import {EConstantValueString} from "../common/EConstantValueString";
+import {EConstantValueString} from "../model/EConstantValueString";
 import {IconType} from "antd/lib/notification";
 
 export function showNotification(title: string, operationResult: OperationResult) {

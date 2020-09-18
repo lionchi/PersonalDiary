@@ -8,13 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.jpixel.models.Error;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.Success;
-import ru.jpixel.models.dtos.PasswordResetTokenRequest;
-import ru.jpixel.models.dtos.RecoveryPasswordDto;
-import ru.jpixel.models.dtos.UserDto;
-import ru.jpixel.models.dtos.UserResetTokenDto;
+import ru.jpixel.models.dtos.common.Error;
+import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.common.Success;
+import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
+import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
+import ru.jpixel.models.dtos.secr.UserDto;
+import ru.jpixel.models.dtos.secr.UserResetTokenDto;
 import ru.jpixel.personaldiaryuserservice.domain.secr.PasswordResetToken;
 import ru.jpixel.personaldiaryuserservice.domain.secr.Role;
 import ru.jpixel.personaldiaryuserservice.domain.secr.User;
@@ -79,16 +79,16 @@ public class UserService {
     }
 
     @Transactional
-    public OperationResult createPasswordResetToken(PasswordResetTokenRequest passwordResetTokenRequest) {
-        if (!userRepository.existsByEmail(passwordResetTokenRequest.getUserEmail())) {
+    public OperationResult createPasswordResetToken(PasswordResetTokenDto passwordResetTokenDto) {
+        if (!userRepository.existsByEmail(passwordResetTokenDto.getUserEmail())) {
             return new OperationResult(Error.EMAIL_NOT_EXIST);
-        } else if (passwordResetTokenRepository.findByUserEmail(passwordResetTokenRequest.getUserEmail()) != null) {
+        } else if (passwordResetTokenRepository.findByUserEmail(passwordResetTokenDto.getUserEmail()) != null) {
             return new OperationResult(Error.PASSWORD_RESET_TOKEN_NOT_UNIQUE);
         }
         var passwordResetToken = new PasswordResetToken();
         passwordResetToken.setToken(UUID.randomUUID().toString());
         passwordResetToken.setExpiryDate(LocalDate.now().plusDays(3));
-        passwordResetToken.setUser(userRepository.findByEmail(passwordResetTokenRequest.getUserEmail()));
+        passwordResetToken.setUser(userRepository.findByEmail(passwordResetTokenDto.getUserEmail()));
         passwordResetTokenRepository.save(passwordResetToken);
         return new OperationResult(Success.PASSWORD_RESET_TOKEN_CREATE);
     }

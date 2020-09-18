@@ -11,7 +11,7 @@ import {showNotification, showNotificationClient} from "../../utils/notification
 import {RouteComponentProps, withRouter} from "react-router";
 import has from 'lodash/has';
 import {sendRecoveryPasswordMail} from "../../api/RecoveryPasswordApi";
-import {EResultType} from "../../common/EResultType";
+import {EResultType} from "../../model/EResultType";
 
 const {Title, Text, Link} = Typography;
 

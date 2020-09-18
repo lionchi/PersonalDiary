@@ -8,11 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.jpixel.models.OperationResult;
-import ru.jpixel.models.Success;
-import ru.jpixel.models.dtos.PasswordResetTokenRequest;
-import ru.jpixel.models.dtos.RecoveryPasswordDto;
-import ru.jpixel.models.dtos.UserDto;
+import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.common.Success;
+import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
+import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
+import ru.jpixel.models.dtos.secr.UserDto;
 import ru.jpixel.personaldiaryuserservice.controllers.BaseControllerTest;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
 
@@ -74,7 +74,7 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("user api method createPasswordResetToken")
     public void createPasswordResetTokenTest() throws Exception {
-        var passwordResetTokenRequest = new PasswordResetTokenRequest();
+        var passwordResetTokenRequest = new PasswordResetTokenDto();
         passwordResetTokenRequest.setUserEmail("test@mail.ru");
 
         var operationResult = new OperationResult(Success.PASSWORD_RESET_TOKEN_CREATE);

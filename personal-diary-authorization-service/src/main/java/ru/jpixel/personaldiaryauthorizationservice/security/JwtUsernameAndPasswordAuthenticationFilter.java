@@ -10,7 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.jpixel.models.security.UserCredentials;
+import ru.jpixel.models.dtos.secr.UserCredentials;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.Cookie;
