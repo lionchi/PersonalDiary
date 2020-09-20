@@ -67,6 +67,21 @@ function App() {
         }
     }, AppContextInit);
 
+    const downloadAccountInformation = useCallback(async () => {
+        try {
+            const {data} = await accountInformation();
+            if (!data.diaryId) {
+                const diaryId = localStorage.getItem(EConstantValueString.DIARY_ID);
+                const currentUser = {...data, diaryId: diaryId ? Number(diaryId) : null};
+                dispatch({type: 'RESTORE_USER', currentUser: currentUser});
+            } else {
+                dispatch({type: 'RESTORE_USER', currentUser: data});
+            }
+        } catch (e) {
+            console.log();
+        }
+    }, [])
+
     useEffect(() => {
         const ln = localStorage.getItem(EConstantValueString.LANGUAGE);
         const theme = localStorage.getItem(EConstantValueString.THEME);
@@ -76,11 +91,7 @@ function App() {
                 language: ln ? ln : 'ru',
                 isDarkMode: theme ? theme === 'dark' : false
             });
-            accountInformation()
-                .then(({data}) => {
-                    dispatch({type: 'RESTORE_USER', currentUser: data});
-                })
-                .catch(e => console.log())
+            downloadAccountInformation();
         }
         initI18n(ln);
     });
@@ -93,6 +104,7 @@ function App() {
                 dispatch({type: 'SIGN_IN', currentUser: data});
             },
             signOut: (): void => {
+                localStorage.removeItem(EConstantValueString.DIARY_ID)
                 dispatch({type: 'SIGN_OUT'});
             },
             setLoading: (loading: boolean): void => {
@@ -127,7 +139,8 @@ function App() {
         <AppContext.Provider value={appContext}>
             <ConfigProvider locale={state.language === 'en' ? enGB : ruRU} componentSize={"large"}>
                 <Provider {...stores}>
-                    <PermissionsProvider permissions={state.currentUser.roles as string[]} authorizationStrategy={authorizationStrategy}>
+                    <PermissionsProvider permissions={state.currentUser.roles as string[]}
+                                         authorizationStrategy={authorizationStrategy}>
                         <BrowserRouter basename={baseUrl()}>
                             <Spin size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>
                                 <Route component={RootRouter}/>

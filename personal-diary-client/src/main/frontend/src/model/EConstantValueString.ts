@@ -9,5 +9,9 @@ export enum EConstantValueString {
     /**
      * Тема
      */
-    THEME = "theme"
+    THEME = "theme",
+    /**
+     * Иднетификатор дневника
+     */
+    DIARY_ID = "diaryId"
 }

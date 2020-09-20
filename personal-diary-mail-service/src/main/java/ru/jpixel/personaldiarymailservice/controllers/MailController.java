@@ -14,8 +14,7 @@ public class MailController {
     private final MailService mailService;
 
     @PostMapping("sendRecoveryPasswordMail")
-    public OperationResult sendRecoveryPasswordMail(@RequestBody PasswordResetTokenDto passwordResetTokenDto,
-                                                    @RequestParam("ln") String ln) {
+    public OperationResult sendRecoveryPasswordMail(@RequestBody PasswordResetTokenDto passwordResetTokenDto, @RequestParam String ln) {
         return mailService.sendRecoveryPasswordMail(passwordResetTokenDto, ln);
     }
 }

@@ -52,6 +52,6 @@ public class DiaryService {
         diaryRepository.save(diary);
         var operationResult = new OperationResult(Success.CREATE_DIARY);
         operationResult.setJson(String.valueOf(diary.getId()));
-        return new OperationResult(Success.CREATE_DIARY);
+        return operationResult;
     }
 }

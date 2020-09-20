@@ -59,6 +59,7 @@ public class UserService {
         return new OperationResult(Success.REGISTRATION);
     }
 
+    @Transactional
     public UserDto findByLogin(String login) {
         var foundUser = userRepository.findByLogin(login);
         if (foundUser == null) {

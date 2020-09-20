@@ -8,6 +8,7 @@ import {inject, observer} from "mobx-react";
 import {DiaryPageStore} from "../../stores/DiaryPageStore";
 import {showNotification} from "../../utils/notification";
 import {EResultType} from "../../model/EResultType";
+import {EConstantValueString} from "../../model/EConstantValueString";
 
 interface IDiaryPageProps extends RouteComponentProps {
     diaryPageStore?: DiaryPageStore;
@@ -27,7 +28,9 @@ const DiaryPage = inject("diaryPageStore")(observer((props: IDiaryPageProps) => 
         authContext.setLoading(true);
         const operationResult = await diaryPageStore.createDiary(authContext.currentUser.id as number);
         if (operationResult.resultType === EResultType.SUCCESS) {
-           authContext.currentUser.diaryId = Number(operationResult.json);
+            const diaryId = Number(operationResult.json);
+            authContext.currentUser.diaryId = diaryId;
+            localStorage.setItem(EConstantValueString.DIARY_ID, String(diaryId));
         }
         authContext.setLoading(false);
         showNotification(i18next.t('notification.title.personal_diary'), operationResult);

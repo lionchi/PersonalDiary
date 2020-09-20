@@ -5,10 +5,10 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="1.0-0c" author="Gavrilov Ivan">
-        <createSequence sequenceName="user_seq" schemaName="secr" dataType="bigint" cacheSize="50"/>
-        <createSequence sequenceName="password_reset_token_seq" schemaName="secr" dataType="bigint" cacheSize="50"/>
-        <createSequence sequenceName="diary_seq" dataType="bigint" cacheSize="50"/>
-        <createSequence sequenceName="page_seq" dataType="bigint" cacheSize="50"/>
+        <createSequence sequenceName="user_seq" schemaName="secr" dataType="bigint"/>
+        <createSequence sequenceName="password_reset_token_seq" schemaName="secr" dataType="bigint"/>
+        <createSequence sequenceName="diary_seq" dataType="bigint"/>
+        <createSequence sequenceName="page_seq" dataType="bigint"/>
     </changeSet>
 
     <changeSet id="1.0-1c" author="Gavrilov Ivan">
