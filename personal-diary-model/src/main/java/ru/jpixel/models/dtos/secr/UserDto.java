@@ -32,6 +32,4 @@ public class UserDto {
     private LocalDate birthday;
 
     private List<String> roles = new ArrayList<>();
-
-    private Long diaryId;
 }

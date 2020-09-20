@@ -59,14 +59,12 @@ public class UserService {
         return new OperationResult(Success.REGISTRATION);
     }
 
-    @Transactional
     public UserDto findByLogin(String login) {
         var foundUser = userRepository.findByLogin(login);
         if (foundUser == null) {
             return null;
         }
         var userDto = new UserDto();
-        userDto.setDiaryId(foundUser.getDiary() != null ? foundUser.getDiary().getId() : null);
         userDto.setId(foundUser.getId());
         userDto.setBirthday(foundUser.getBirthday());
         userDto.setPassword(foundUser.getPassword());

@@ -80,6 +80,16 @@ export const initI18n = (language: string | null): void => {
                         "diary": {
                             "create_btn": "Создать свой словарь"
                         }
+                    },
+                    "table": {
+                        "diary": {
+                            "column_summary": "Кртакое содержимое записи",
+                            "column_tag": "Тег",
+                            "column_notification_date": "Дата уведомления/напоминания",
+                            "column_create_date": "Дата создания записи",
+                            "column_confidential": "Конфиденциальность",
+                            "column_action": "Действие",
+                        }
                     }
                 }
             },
@@ -158,6 +168,16 @@ export const initI18n = (language: string | null): void => {
                         },
                         "diary": {
                             "create_btn": "Create your dictionary"
+                        }
+                    },
+                    "table": {
+                        "diary": {
+                            "column_summary": "Recoding summary",
+                            "column_tag": "Tag",
+                            "column_notification_date": "Date of notification/reminders",
+                            "column_create_date": "Post creation date",
+                            "column_confidential": "Confidentiality",
+                            "column_action": "Action",
                         }
                     }
                 }

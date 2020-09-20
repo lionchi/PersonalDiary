@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: personal-diary-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: '*'

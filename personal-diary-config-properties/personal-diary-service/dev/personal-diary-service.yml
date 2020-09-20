@@ -6,7 +6,7 @@ spring:
     password: root
 
 server:
-  port: 8730
+  port: 8760
 
 eureka:
   client:
@@ -16,3 +16,9 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8700/eureka}
   instance:
     preferIpAddress: true
+
+encryption:
+  algorithm: AES/ECB/PKCS5Padding
+  key:
+    algorithm: AES
+    charset: GBK

@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class PersonalDiaryUserDetailsService implements UserDetailsService {
 
     private final UserServiceFeignClient userServiceFeignClient;
+    private final DiaryServiceFeignClient diaryServiceFeignClient;
 
     private static final String PREFIX_ROLE = "ROLE_";
 
@@ -30,8 +31,10 @@ public class PersonalDiaryUserDetailsService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(PREFIX_ROLE + role))
                 .collect(Collectors.toList());
 
+        var diaryId = diaryServiceFeignClient.findDiaryIdByUserId(foundUser.getId());
+
         return new PersonalDiaryUser(String.valueOf(foundUser.getId()),
                 foundUser.getLogin(), foundUser.getPassword(),
-                String.valueOf(foundUser.getDiaryId()), authorities);
+                String.valueOf(diaryId), authorities);
     }
 }

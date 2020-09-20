@@ -29,6 +29,13 @@ module.exports = function (app) {
         })
     );
     app.use(
+        '/diary-api/**',
+        createProxyMiddleware({
+            target: 'http://localhost:8710',
+            changeOrigin: true,
+        })
+    );
+    app.use(
         '/auth',
         createProxyMiddleware({
             target: 'http://localhost:8710',
