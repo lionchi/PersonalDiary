@@ -15,7 +15,9 @@ public enum Success {
     PASSWORD_RESET_TOKEN_CREATE("code.success.password_reset_token_create", "Токен для сброса пароля создан", "Password reset token created"),
 
     RECOVERY_PASSWORD_SEND_MESSAGE("code.success.recovery_password_send_message", "На указанную почту было отправлено сообщение. Прочтите его", "A message was sent to the specified mail. Read it"),
-    RECOVERY_PASSWORD("code.success.recovery_password", "Пароль успешно изменен", "Password changed successfully");
+    RECOVERY_PASSWORD("code.success.recovery_password", "Пароль успешно изменен", "Password changed successfully"),
+
+    CREATE_DIARY("code.success.create_diary", "Ваш личный дневник был успешно создан", "Your personal diary has been successfully created");
 
     @Getter
     private final String code;

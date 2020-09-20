@@ -14,6 +14,8 @@ public enum Error {
             "В данный момент сервис регистрации недоступен", "The registration service is currently unavailable"),
     UNAVAILABILITY_PASSWORD_RESET_SERVICE("code.error.unavailability_user_service",
             "В данный момент сервис создания токенов для восстановления пароля недоступен", "The password recovery token creation service is currently unavailable"),
+    UNAVAILABILITY_DIARY_RESET_SERVICE("code.error.unavailability_diary_service",
+            "В данный момент сервис личный дневник недоступен", "The personal diary service is currently unavailable"),
 
     LOGIN_EXIST("code.error.login_exist", "Логин {0} занят", "Login {0} busy"),
     EMAIL_EXIST("code.error.email_exist", "Учетная запись с такми email уже зарегистрирована",
@@ -33,7 +35,10 @@ public enum Error {
             "Запрос на смену пароля истек. Повторите попытку", "Password change request expired. Try again"),
 
     RECOVERY_PASSWORD_NOT_SEND_MESSAGE("code.success.recovery_password_send_message", "Ошибка во время отправки сообщения. Повторите попытку",
-            "An error occurred while sending the message. Try again");
+            "An error occurred while sending the message. Try again"),
+
+    NOT_CREATE_DIARY("code.error.not_create_diary", "Произошла ошбика при создании личного дневника. Повторите попытку или обратитесь к администратору",
+            "An error occurred while creating a personal diary. Please try again or contact your administrator");
 
     @Getter
     private final String code;
