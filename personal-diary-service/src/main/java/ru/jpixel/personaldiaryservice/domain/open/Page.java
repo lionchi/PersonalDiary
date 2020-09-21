@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "PAGES")
@@ -35,7 +36,7 @@ public class Page {
     private LocalDate notificationDate;
 
     @Column(name = "create_date", nullable = false)
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "RECORDING_SUMMARY", nullable = false)
     private String recordingSummary;

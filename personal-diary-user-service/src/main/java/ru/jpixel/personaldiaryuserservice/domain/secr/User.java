@@ -3,7 +3,6 @@ package ru.jpixel.personaldiaryuserservice.domain.secr;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.jpixel.personaldiaryuserservice.domain.open.Diary;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -47,7 +46,4 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLES", schema = "SECR", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private List<Role> roles = new ArrayList<>();
-
-    @OneToOne(mappedBy = "user")
-    private Diary diary;
 }

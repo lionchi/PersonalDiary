@@ -9,6 +9,7 @@ import {ERole, user} from "../model/ERole";
 import NotAuthorizedRoute from "../components/NotAuthorizedRoute";
 import {usePermissions} from "@tshio/react-router-permissions";
 import RecoveryPasswordPage from "../pages/password/RecoveryPasswordPage";
+import SheetPage from "../pages/sheet/SheetPage";
 
 const RootRouter = (): ReactElement => {
 
@@ -52,6 +53,14 @@ const RootRouter = (): ReactElement => {
 
             <CustomAuthorizedRoute path="/diary" requires={user} redirect={getRedirect()}>
                 <DiaryPage/>
+            </CustomAuthorizedRoute>
+
+            <CustomAuthorizedRoute path="/add/page" requires={user} redirect={getRedirect()}>
+                <SheetPage/>
+            </CustomAuthorizedRoute>
+
+            <CustomAuthorizedRoute path="/edit/page/:pageId" requires={user} redirect={getRedirect()}>
+                <SheetPage/>
             </CustomAuthorizedRoute>
 
             <Redirect from="*" to={getMainRedirectUrl()}/>

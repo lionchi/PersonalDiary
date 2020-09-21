@@ -38,7 +38,14 @@ public enum Error {
             "An error occurred while sending the message. Try again"),
 
     NOT_CREATE_DIARY("code.error.not_create_diary", "Произошла ошбика при создании личного дневника. Повторите попытку или обратитесь к администратору",
-            "An error occurred while creating a personal diary. Please try again or contact your administrator");
+            "An error occurred while creating a personal diary. Please try again or contact your administrator"),
+    NOT_CREATE_PAGE_DIARY_ID("code.error.not_create_page", "Отсутсвует дневник для добавления новых записей. Создайте дневник",
+                             "There is no diary for adding new entries. Create a diary"),
+    NOT_CREATE_PAGE("code.error.not_create_page", "Произошла ошбика при попытку создать запись в дневнике. Повторите попытку или обратитесь к администратору",
+            "An error occurred while trying to create a diary entry. Please try again or contact your administrator"),
+    NOT_EDIT_PAGE("code.error.not_edit_page", "Произошла ошбика при попытке отредактировать запись в дневнике. Повторите попытку или обратитесь к администратору",
+                            "An error occurred while trying to edit a diary entry. Please try again or contact your administrator"),
+    NOT_DELETE_PAGE("code.error.not_delete_page", "Невозможно удалить запись. Запись отсутствует в системе", "Unable to delete entry. No entry in the system");
 
     @Getter
     private final String code;

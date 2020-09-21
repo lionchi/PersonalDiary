@@ -1,7 +1,5 @@
 import {action, observable} from "mobx";
 import {Page} from "../model/Page";
-import {createDiaryApi} from "../api/DiaryApi";
-import {OperationResult} from "../model/OperationResult";
 
 export class DiaryPageStore {
     @observable pages: Array<Page>;
@@ -11,8 +9,10 @@ export class DiaryPageStore {
     }
 
     @action
-    public async createDiary(userId: number): Promise<OperationResult> {
-        const {data} = await createDiaryApi(userId);
-        return Promise.resolve(data);
+    public deletePage(pageId: number) {
+        const foundPage = this.pages.find(item => item.id === pageId);
+        if (foundPage) {
+            this.pages.splice(this.pages.indexOf(foundPage), 1);
+        }
     }
 }

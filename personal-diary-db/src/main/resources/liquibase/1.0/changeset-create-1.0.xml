@@ -135,7 +135,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="notification_date" type="date"/>
-            <column name="create_date" type="date" defaultValueComputed="CURRENT_DATE">
+            <column name="create_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="recording_summary" type="text">

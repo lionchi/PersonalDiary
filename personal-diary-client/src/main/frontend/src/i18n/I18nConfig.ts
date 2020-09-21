@@ -18,7 +18,10 @@ export const initI18n = (language: string | null): void => {
                             "authorization": "Авторизация",
                             "logout": "Выход из системы",
                             "recovery_password": "Восстановление пароля",
-                            "personal_diary": "Личный дневник"
+                            "personal_diary": "Личный дневник",
+                            "create_page": "Создание записи",
+                            "delete_page": "Удаление записи",
+                            "edit_page": "Редактирование записи"
                         },
                         "error": {
                             "authorization": "Неизвестная ошибка во время авторизации. Повторите попытку"
@@ -79,10 +82,29 @@ export const initI18n = (language: string | null): void => {
                         },
                         "diary": {
                             "create_btn": "Создать свой словарь"
+                        },
+                        "page": {
+                            "edit_title": "Редактирование записи",
+                            "edit_btn": "Сохранить изменения",
+                            "create_title": "Создание записи",
+                            "create_btn": "Создать запись",
+                            "recording_summary": "Краткое содержимое записи",
+                            "content": "Содержимое записи",
+                            "notification_date": "Дата уведомления/напоминания",
+                            "confidential": "Конфиденциальность",
+                            "tag": "Тег",
+                            "error": {
+                                "recording_summary": "Пожалуйста укажите краткое содержимое записи",
+                                "content": "Пожалуйста заполните содержимое записи",
+                                "notification_date": "Пожалуйста укажите дату уведомления/напоминания",
+                                "tag": "Пожалуйста выберите тег для заполняемой записи"
+                            }
                         }
                     },
                     "table": {
                         "diary": {
+                            "add_btn": "Сделать запись",
+                            "popconfirm": "Вы действительно хотите удалить запись ?",
                             "column_summary": "Кртакое содержимое записи",
                             "column_tag": "Тег",
                             "column_notification_date": "Дата уведомления/напоминания",
@@ -107,7 +129,10 @@ export const initI18n = (language: string | null): void => {
                             "authorization": "Authorization",
                             "logout": "Logout",
                             "recovery_password": "Password recovery",
-                            "personal_diary": "Personal diary"
+                            "personal_diary": "Personal diary",
+                            "create_page": "Create record",
+                            "delete_page": "Delete record",
+                            "edit_page": "Editing record"
                         },
                         "error": {
                             "authorization": "Unknown error during authorization. Try again"
@@ -168,10 +193,29 @@ export const initI18n = (language: string | null): void => {
                         },
                         "diary": {
                             "create_btn": "Create your dictionary"
+                        },
+                        "page": {
+                            "edit_title": "Editing record",
+                            "edit_btn": "Save changes",
+                            "create_title": "Create record",
+                            "create_btn": "Create record",
+                            "recording_summary": "Recoding summary",
+                            "content": "Record content",
+                            "notification_date": "Date of notification/reminders",
+                            "confidential": "Confidentiality",
+                            "tag": "Tag",
+                            "error": {
+                                "recording_summary": "Please enter a brief content of the entry",
+                                "content": "Please fill in the content of the entry",
+                                "notification_date": "Please enter the date of notification / reminder",
+                                "tag": "Please select a tag for the filled entry"
+                            }
                         }
                     },
                     "table": {
                         "diary": {
+                            "add_btn": "Make an entry",
+                            "popconfirm": "Are you sure you want to delete the entry ?",
                             "column_summary": "Recoding summary",
                             "column_tag": "Tag",
                             "column_notification_date": "Date of notification/reminders",
