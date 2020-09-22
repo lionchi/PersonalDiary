@@ -23,11 +23,13 @@ interface IDiaryPageProps extends RouteComponentProps {
 const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: IDiaryPageProps) => {
     const authContext = useContext(AppContext);
 
-    const downloadDiary = useEffect(() => {
+    useEffect(() => {
         if (authContext.currentUser.diaryId) {
-            //todo
+            authContext.setLoading(true);
+            props.diaryPageStore.fetchPage(authContext.currentUser.diaryId);
+            authContext.setLoading(false);
         }
-    }, [authContext]);
+    }, []);
 
     const handleCreateDiary = async (): Promise<void> => {
         authContext.setLoading(true);
@@ -52,12 +54,8 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
     }
 
     const onClickAdd = useCallback(() => {
-        authContext.setLoading(true);
-        props.sheetPageStore.fillTags();
-        props.sheetPageStore.setInitValuesEmpty();
-        authContext.setLoading(false);
         props.history.push("/add/page");
-    }, [authContext, props.sheetPageStore, props.history]);
+    }, [props.history]);
 
     const onClickDelete = useCallback(async (pageId: number) => {
         authContext.setLoading(true);
@@ -70,12 +68,14 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
     }, [authContext, props.diaryPageStore])
 
     const onClickEdit = useCallback((pageId: number) => {
-        authContext.setLoading(true);
-        props.sheetPageStore.fillTags();
-        props.sheetPageStore.setInitValuesByPageId(pageId);
-        authContext.setLoading(false);
         props.history.push(`/edit/page/${pageId}`);
-    }, [authContext, props.sheetPageStore, props.history])
+    }, [props.history])
+
+    const onChangePagination = useCallback((page: number, pageSize?: number) => {
+        authContext.setLoading(true);
+        props.diaryPageStore.nextPage(page, pageSize);
+        authContext.setLoading(false);
+    }, [authContext, props.diaryPageStore]);
 
     const columns = useMemo(() => getColumns(authContext.language, onClickDelete, onClickEdit)
         , [authContext.language, onClickDelete, onClickEdit]);
@@ -84,12 +84,20 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
         return (
             <Row justify="center" align="middle" className="row">
                 <Col flex='90%'>
-                    <Button onClick={onClickAdd} type="primary" className="margin-bottom-16">
+                    <Button onClick={onClickAdd} type="primary" className="margin-bottom-top-16">
                         {i18next.t("table.diary.add_btn")}
                     </Button>
                     <Table rowKey={(record: Page) => record.id}
                            columns={columns}
                            dataSource={props.diaryPageStore.pages}
+                           pagination={
+                               {
+                                   total: props.diaryPageStore.pageTotalCount,
+                                   pageSize: 8,
+                                   pageSizeOptions: ['8', '16', '32', '48', '64'],
+                                   onChange: (page: number, pageSize?: number) => onChangePagination(page, pageSize)
+                               }
+                           }
                            expandable={
                                {
                                    expandedRowRender: (record: Page) => <p>{record.content}</p>,

@@ -1,5 +1,6 @@
-.margin-bottom-16 {
+.margin-bottom-top-16 {
     margin-bottom: 16px;
+    margin-top: 16px;
 }
 
 .ant-table-tbody:hover {

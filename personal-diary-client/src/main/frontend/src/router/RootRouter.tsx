@@ -9,7 +9,8 @@ import {ERole, user} from "../model/ERole";
 import NotAuthorizedRoute from "../components/NotAuthorizedRoute";
 import {usePermissions} from "@tshio/react-router-permissions";
 import RecoveryPasswordPage from "../pages/password/RecoveryPasswordPage";
-import SheetPage from "../pages/sheet/SheetPage";
+import NewSheetPage from "../pages/sheet/NewSheetPage";
+import EditSheetPage from "../pages/sheet/EditSheetPage";
 
 const RootRouter = (): ReactElement => {
 
@@ -56,11 +57,11 @@ const RootRouter = (): ReactElement => {
             </CustomAuthorizedRoute>
 
             <CustomAuthorizedRoute path="/add/page" requires={user} redirect={getRedirect()}>
-                <SheetPage/>
+                <NewSheetPage/>
             </CustomAuthorizedRoute>
 
             <CustomAuthorizedRoute path="/edit/page/:pageId" requires={user} redirect={getRedirect()}>
-                <SheetPage/>
+                <EditSheetPage/>
             </CustomAuthorizedRoute>
 
             <Redirect from="*" to={getMainRedirectUrl()}/>

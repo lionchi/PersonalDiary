@@ -1,46 +1,52 @@
-import {RouteComponentProps, withRouter} from "react-router";
-import React, {ReactElement, useCallback, useContext, useMemo, useState} from "react";
-import BasePage from "../BasePage";
-import {inject, observer} from "mobx-react";
 import "./SheetPage.css"
-import {IMatchParams} from "../../model/IMatchParams";
-import i18next from "i18next";
-import {Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Typography} from "antd";
-import {Page} from "../../model/Page";
-import TextArea from "antd/lib/input/TextArea";
+import {inject, observer} from "mobx-react";
+import React, {ReactElement, useCallback, useContext, useEffect, useMemo} from "react";
+import {RouteComponentProps, withRouter} from "react-router";
 import {AppContext} from "../../security/AppContext";
-import {ETag} from "../../model/ETag";
+import {Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Typography} from "antd";
+import i18next from "i18next";
 import {renderTag} from "../common/function";
+import TextArea from "antd/lib/input/TextArea";
+import {ETag} from "../../model/ETag";
+import BasePage from "../BasePage";
+import {IMatchParams} from "../../model/IMatchParams";
+import {SheetPageStore} from "../../stores/SheetPageStore";
+import {Page} from "../../model/Page";
+import {Moment} from "moment";
+import {updatePage} from "../../api/DiaryApi";
 import {showNotification} from "../../utils/notification";
 import {EResultType} from "../../model/EResultType";
-import {Moment} from "moment";
-import {createPage} from "../../api/DiaryApi";
-import {SheetPageStore} from "../../stores/SheetPageStore";
 
 const {Title} = Typography;
 const {Option} = Select;
 
-interface IDiaryNewPageProps extends RouteComponentProps<IMatchParams> {
+interface IEditSheetPageProps extends RouteComponentProps<IMatchParams> {
     sheetPageStore?: SheetPageStore;
 }
 
-const SheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProps): ReactElement => {
+const EditSheetPage = inject("sheetPageStore")(observer((props: IEditSheetPageProps): ReactElement => {
     const appContext = useContext(AppContext);
+    const [sheetForm] = Form.useForm();
 
-    const title = useMemo(() => props.match.params.pageId
-        ? i18next.t('form.page.edit_title')
-        : i18next.t('form.page.create_title'), [props.match.params.pageId]);
+    useEffect(() => {
+        appContext.setLoading(true);
+        props.sheetPageStore.fetchTags();
+        props.sheetPageStore.fetchPageByPageId(Number(props.match.params.pageId));
+        appContext.setLoading(false);
+    }, [props.match.params.pageId]);
 
-    const btnText = useMemo(() => props.match.params.pageId
-        ? i18next.t('form.page.edit_btn')
-        : i18next.t('form.page.create_btn'), [props.match.params.pageId]);
+    useMemo(() => {
+        const {initValues} = props.sheetPageStore;
+        sheetForm.setFields([
+            {name: 'recordingSummary', value: initValues.recordingSummary},
+            {name: 'tag', value: initValues.tag},
+            {name: 'content', value: initValues.content},
+            {name: 'notificationDate', value: initValues.notificationDate},
+            {name: 'confidential', value: initValues.confidential},
+        ]);
+    }, [sheetForm, props.sheetPageStore.initValues]);
 
     const tags = useMemo(() => props.sheetPageStore.tags, [props.sheetPageStore.tags]);
-
-    const [selectedTag, setSelectedTag] = useState();
-    const onSelectTag = useCallback((value: string | unknown) => {
-        setSelectedTag(tags.find(item => item.code === value));
-    }, [tags, setSelectedTag]);
 
     const onFinish = useCallback(async (formData: Page) => {
         appContext.setLoading(true);
@@ -48,32 +54,26 @@ const SheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProps):
             const notificationDateAsMoment = formData.notificationDate as Moment;
             formData = {...formData, notificationDate: notificationDateAsMoment.format("DD.MM.YYYY")};
         }
-        if (props.match.params.pageId) {
-
-        } else {
-            const {data} = await createPage({
-                ...formData,
-                diaryId: appContext.currentUser.diaryId,
-                tag: selectedTag
-            });
-            showNotification(i18next.t('notification.title.create_page'), data);
-            if (data.resultType !== EResultType.ERROR) {
-                setTimeout(() => {
-                    props.history.goBack();
-                }, 500)
-            }
+        const {data} = await updatePage({
+            ...formData,
+            id: Number(props.match.params.pageId),
+            tag: tags.find(item => item.code === sheetForm.getFieldValue('tag'))
+        });
+        showNotification(i18next.t('notification.title.edit_page'), data);
+        if (data.resultType !== EResultType.ERROR) {
+            setTimeout(() => {
+                props.history.goBack();
+            }, 500)
         }
         appContext.setLoading(false);
-    }, [appContext, props, selectedTag]);
-
-    const initValues = useMemo(() => props.sheetPageStore.initValues, [props.sheetPageStore.initValues]);
+    }, [tags, appContext, props, sheetForm]);
 
     return (
         <BasePage>
             <Row justify="center" align="middle" className="row">
                 <Col flex="650px">
-                    <Title level={3} className="center">{title}</Title>
-                    <Form name="sheet_form" initialValues={initValues}
+                    <Title level={3} className="center">{i18next.t('form.page.edit_title')}</Title>
+                    <Form form={sheetForm} name="sheet_form"
                           onFinish={onFinish} scrollToFirstError labelCol={{span: 10}}>
                         <Form.Item name="recordingSummary" label={i18next.t('form.page.recording_summary')}
                                    rules={[{required: true, message: i18next.t('form.page.error.recording_summary')}]}>
@@ -82,7 +82,7 @@ const SheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProps):
 
                         <Form.Item name="tag" label={i18next.t('form.page.tag')}
                                    rules={[{required: true, message: i18next.t('form.page.error.tag')}]}>
-                            <Select showArrow allowClear onSelect={onSelectTag}>
+                            <Select showArrow allowClear>
                                 {tags.map(item => (<Option key={item.id}
                                                            value={item.code}>{renderTag(item, appContext.language)}</Option>))}
                             </Select>
@@ -116,7 +116,7 @@ const SheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProps):
                         </Form.Item>
 
                         <Form.Item className="center">
-                            <Button type="primary" htmlType="submit">{btnText}</Button>
+                            <Button type="primary" htmlType="submit">{i18next.t('form.page.edit_btn')}</Button>
                         </Form.Item>
                     </Form>
                 </Col>
@@ -125,4 +125,4 @@ const SheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProps):
     )
 }))
 
-export default withRouter(SheetPage)
+export default withRouter(EditSheetPage);

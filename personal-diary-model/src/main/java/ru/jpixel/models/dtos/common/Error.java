@@ -45,6 +45,7 @@ public enum Error {
             "An error occurred while trying to create a diary entry. Please try again or contact your administrator"),
     NOT_EDIT_PAGE("code.error.not_edit_page", "Произошла ошбика при попытке отредактировать запись в дневнике. Повторите попытку или обратитесь к администратору",
                             "An error occurred while trying to edit a diary entry. Please try again or contact your administrator"),
+    NOT_EDIT_PAGE_ID("code.error.not_edit_page_id", "Неверный идентификатор записи для обновления данных", "Invalid record ID for data update"),
     NOT_DELETE_PAGE("code.error.not_delete_page", "Невозможно удалить запись. Запись отсутствует в системе", "Unable to delete entry. No entry in the system");
 
     @Getter

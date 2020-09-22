@@ -5,10 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jpixel.models.dtos.common.Error;
 import ru.jpixel.models.dtos.common.OperationResult;
+import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.models.dtos.common.Success;
 import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
@@ -39,6 +41,7 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final TagRepository tagRepository;
     private final PageRepository pageRepository;
+    private final PageApplySearchParams pageApplySearchParams;
 
     @Value("${encryption.key.algorithm}")
     private String algorithmKey;
@@ -47,6 +50,12 @@ public class DiaryService {
     @Value("${encryption.algorithm}")
     private String algorithmCipher;
 
+    /**
+     * Создает дневник для пользователя
+     *
+     * @param userId идентификатор пользователя
+     * @return результат операции
+     */
     @Transactional
     public OperationResult create(Long userId) {
         var diary = new Diary();
@@ -68,11 +77,21 @@ public class DiaryService {
         return operationResult;
     }
 
-    @Transactional
+    /**
+     * Получает индентификатор дневника по иднетификатору пользователя
+     *
+     * @param userId идентификатор пользователя
+     * @return идентификатор дневника
+     */
     public Long findDiaryIdByUserId(Long userId) {
         return diaryRepository.findByUserId(userId);
     }
 
+    /**
+     * Загружает на клиента теги
+     *
+     * @return список тегов
+     */
     public List<DirectoryDto> downloadTags() {
         var directoryConverter = new DirectoryConverter();
         return StreamSupport.stream(tagRepository.findAll().spliterator(), false)
@@ -80,6 +99,12 @@ public class DiaryService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Создает запись в дневнике
+     *
+     * @param pageDto объект из интерфейса
+     * @return результат операции
+     */
     @Transactional
     public OperationResult createPage(PageDto pageDto) {
         var page = new Page();
@@ -93,39 +118,63 @@ public class DiaryService {
         page.setNotificationDate(pageDto.getNotificationDate());
         page.setConfidential(pageDto.isConfidential());
         page.setTag(tagRepository.findByCode(pageDto.getTag().getCode()));
+        return contentEncryption(page, pageDto, diary.getKey(), Success.CREATE_PAGE, Error.NOT_CREATE_PAGE);
+    }
+
+    /**
+     * Обновляет запись в дневника
+     *
+     * @param pageDto объект из интерфейса
+     * @return результат операции
+     */
+    @Transactional
+    public OperationResult updatePage(PageDto pageDto) {
+        var page = pageRepository.findById(pageDto.getId()).orElse(null);
+        if (page == null) {
+            return new OperationResult(Error.NOT_EDIT_PAGE_ID);
+        }
+        var diary = page.getDiary();
+        page.setRecordingSummary(pageDto.getRecordingSummary());
+        page.setNotificationDate(pageDto.getNotificationDate());
+        page.setConfidential(pageDto.isConfidential());
+        page.setTag(tagRepository.findByCode(pageDto.getTag().getCode()));
+        return contentEncryption(page, pageDto, diary.getKey(), Success.EDIT_PAGE, Error.NOT_EDIT_PAGE);
+    }
+
+    private OperationResult contentEncryption(Page page, PageDto pageDto, byte[] key, Success success, Error error) {
         if (page.isConfidential()) {
             try {
                 Cipher cipher = Cipher.getInstance(algorithmCipher);
-                Key keyOfJson = new GoogleGsonFacade<>(Key.class).fromJson(diary.getKey(), nameCharset);
+                Key keyOfJson = new GoogleGsonFacade<>(Key.class).fromJson(key, nameCharset);
                 cipher.init(Cipher.ENCRYPT_MODE, keyOfJson);
                 byte[] encrypted = cipher.doFinal(pageDto.getContent().getBytes());
                 page.setContent(DatatypeConverter.printHexBinary(encrypted));
             } catch (Exception e) {
                 logger.error("Неудачная попытка шифрования данных", e);
-                return new OperationResult(Error.NOT_CREATE_PAGE);
+                return new OperationResult(error);
             }
         } else {
             page.setContent(pageDto.getContent());
         }
         pageRepository.save(page);
-        return new OperationResult(Success.CREATE_PAGE);
+        return new OperationResult(success);
     }
 
+    /**
+     * Получает запись дневника
+     *
+     * @param pageId иднетификатор записи
+     * @return запись дневника
+     */
     @Transactional
     public PageDto getPageById(Long pageId) {
         var page = pageRepository.findById(pageId).orElse(null);
         if (page == null) {
             return null;
         }
-        var result = new PageDto();
-        result.setId(page.getId());
+        var result = new PageConverter().convert(page);
         var diary = page.getDiary();
         result.setDiaryId(diary.getId());
-        result.setRecordingSummary(page.getRecordingSummary());
-        result.setNotificationDate(page.getNotificationDate());
-        result.setCreateDate(page.getCreateDate());
-        result.setTag(new DirectoryConverter().convert(page.getTag()));
-        result.setConfidential(page.isConfidential());
         if (page.isConfidential()) {
             try {
                 Cipher cipher = Cipher.getInstance(algorithmCipher);
@@ -135,12 +184,16 @@ public class DiaryService {
             } catch (Exception e) {
                 logger.error("Неудачная попытка дешифрования данных", e);
             }
-        } else {
-            result.setContent(page.getContent());
         }
         return result;
     }
 
+    /**
+     * Удаляет запись из дненивка
+     *
+     * @param pageId идентификатор записи
+     * @return результат операции
+     */
     @Transactional
     public OperationResult deletePage(Long pageId) {
         try {
@@ -149,5 +202,31 @@ public class DiaryService {
             new OperationResult(Error.NOT_DELETE_PAGE);
         }
         return new OperationResult(Success.DELETE_PAGE);
+    }
+
+    /**
+     * Получает общее количество записей в дненивке
+     *
+     * @param diaryId иднетификатор дненвика
+     * @return количество записей
+     */
+    public Integer getPageTotalCount(Long diaryId) {
+        return pageRepository.countByDiaryId(diaryId);
+    }
+
+    /**
+     * Получает записи дненивка
+     *
+     * @param searchParams параметры поиска
+     * @return записи дневника
+     */
+    public List<PageDto> getPageAll(SearchParams searchParams) {
+        var sort = pageApplySearchParams.getSort(searchParams.getOrderParameters());
+        var pageRequest = PageRequest.of(searchParams.getPageNumber(), searchParams.getPageSize(), sort);
+        var specification = pageApplySearchParams.getSpecification(searchParams.getAdditionalFilter());
+        var pages = pageRepository.findAll(specification, pageRequest);
+        return pages.getContent().stream()
+                .map(page -> new PageConverter().convert(page))
+                .collect(Collectors.toList());
     }
 }
