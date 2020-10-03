@@ -3,6 +3,7 @@ package ru.jpixel.personaldiaryservice.utils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.Assert;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public final class SpecUtils {
@@ -30,8 +31,8 @@ public final class SpecUtils {
 
             Assert.notNull(
                     result,
-                    String.format(
-                            "Expected not NULL specification at the end of 'and'-joining. Source list of specifications contains '%d'.",
+                    MessageFormat.format(
+                            "Expected not NULL specification at the end of 'and'-joining. Source list of specifications contains ''{0}''.",
                             specifications.size()
                     )
             );

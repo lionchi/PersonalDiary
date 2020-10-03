@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.personaldiaryservice.utils.SpecUtils;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public abstract class ApplySearchParams<T> {
                 continue;
             }
 
-            Assert.state(!alreadyProcessed.contains(enumValue), String.format("Found more than one filter param with name %s", filter.getNameFilter()));
+            Assert.state(!alreadyProcessed.contains(enumValue), MessageFormat.format("Found more than one filter param with name {0}", filter.getNameFilter()));
             alreadyProcessed.add(enumValue);
 
             specsList.add(enumValue.getSpecificationFilter().getSpecification(filter.getDataType().convert(filter.getValue())));
