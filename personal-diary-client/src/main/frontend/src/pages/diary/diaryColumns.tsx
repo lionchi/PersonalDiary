@@ -7,6 +7,7 @@ import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {renderTag} from "../common/function";
 import {ExpansionColumnsType} from "../../model/ExpansionColumnType";
 import {ETag} from "../../model/ETag";
+import DateFilter from "../../components/DateFilter";
 
 export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, onClickEdit: (pageId: number) => void): ExpansionColumnsType<Page> => {
     return [
@@ -38,6 +39,8 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
             key: 'notificationDate',
             nameSort: 'SORT_BY_NOTIFICATION_DATE',
             sorter: true,
+            filterDropdown: props => <DateFilter {...props}/>,
+            filterMultiple: false,
             align: 'center'
         },
         {
@@ -47,6 +50,8 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
             nameSort: 'SORT_BY_CREATE_DATE',
             defaultSortOrder: 'descend',
             sorter: true,
+            filterDropdown: props => <DateFilter {...props}/>,
+            filterMultiple: false,
             align: 'center'
         },
         {

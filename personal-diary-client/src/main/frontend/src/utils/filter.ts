@@ -17,11 +17,17 @@ export function createFilterForDiaryTable(filters: Record<string, Key[] | null>)
                 dataType: "String"
             });
         } else if (filtersKey === 'notificationDate') {
-
+            result.push({
+                nameFilter: "FIND_BY_NOTIFICATION_DATE",
+                value: filters.notificationDate ? filters.notificationDate[0] : null,
+                dataType: "Date"
+            });
         } else if (filtersKey === 'createDate') {
-
-        } else {
-            return null;
+            result.push({
+                nameFilter: "FIND_BY_CREATE_DATE",
+                value: filters.createDate ? filters.createDate[0] : null,
+                dataType: "Date"
+            });
         }
     }
     return result;

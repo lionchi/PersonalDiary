@@ -1,6 +1,7 @@
 export interface Filter {
     nameFilter: NameFilterType;
     value: string | number | boolean;
+    dataType: DataType;
 }
 
 export type NameFilterType = 'FIND_BY_DIARY_ID'

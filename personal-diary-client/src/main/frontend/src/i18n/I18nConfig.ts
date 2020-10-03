@@ -120,6 +120,13 @@ export const initI18n = (language: string | null): void => {
                                 "bookmark": "Закладка",
                             }
                         }
+                    },
+                    "component": {
+                        "date_filter": {
+                            "placeholder": "Выберите дату для фильтра",
+                            "reset": "Сбросить",
+                            "confirm": "ОК",
+                        }
                     }
                 }
             },
@@ -238,6 +245,13 @@ export const initI18n = (language: string | null): void => {
                                 "reminder": "Reminder",
                                 "bookmark": "Bookmark",
                             }
+                        }
+                    },
+                    "component": {
+                        "date_filter": {
+                            "placeholder": "Select a date to filter",
+                            "reset": "Reset",
+                            "confirm": "OK",
                         }
                     }
                 }
