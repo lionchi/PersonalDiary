@@ -3,6 +3,6 @@ package ru.jpixel.personaldiaryservice.services;
 import org.springframework.data.jpa.domain.Specification;
 
 @FunctionalInterface
-public interface SpecificationOperation<T> {
-    Specification<T> getSpecification(String propertyName, Object value);
+public interface SpecificationFilter<T> {
+    Specification<T> getSpecification(Object value);
 }

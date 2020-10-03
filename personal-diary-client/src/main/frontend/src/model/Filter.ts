@@ -1,10 +1,9 @@
 export interface Filter {
-    fieldName: string;
-    nameOperation: NameOperationType;
-    value: any;
+    nameFilter: NameFilterType;
+    value: string | number | boolean;
 }
 
-export type NameOperationType = 'FIND_BY_DIARY_ID'
+export type NameFilterType = 'FIND_BY_DIARY_ID'
     | 'FIND_BY_NOTIFICATION_DATE'
     | 'FIND_BY_CREATE_DATE'
     | 'FIND_BY_CONFIDENTIAL'

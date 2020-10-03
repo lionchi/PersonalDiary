@@ -42,14 +42,9 @@ public class SearchParams {
     @AllArgsConstructor
     public static class Filter {
         /**
-         * Поле по которому будет идти поиск
+         * Наименование фильтра
          */
-        private String fieldName;
-
-        /**
-         * Наименование операции
-         */
-        private String nameOperation;
+        private String nameFilter;
 
         /**
          * Значение
@@ -66,9 +61,9 @@ public class SearchParams {
     @AllArgsConstructor
     public static class OrderParameter {
         /**
-         * Сортируемое поле
+         * Наименование сортировки
          */
-        private String fieldName;
+        private String nameSort;
         /**
          * Направление сортировки
          */

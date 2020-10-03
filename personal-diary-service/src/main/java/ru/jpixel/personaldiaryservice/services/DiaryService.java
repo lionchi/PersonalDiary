@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jpixel.models.dtos.common.Error;
@@ -221,10 +222,10 @@ public class DiaryService {
      * @return записи дневника
      */
     public List<PageDto> getPageAll(SearchParams searchParams) {
-        var sort = pageApplySearchParams.getSort(searchParams.getOrderParameters());
-        var pageRequest = PageRequest.of(searchParams.getPageNumber(), searchParams.getPageSize(), sort);
-        var specification = pageApplySearchParams.getSpecification(searchParams.getAdditionalFilter());
-        var pages = pageRepository.findAll(specification, pageRequest);
+        var pageRequest = PageRequest.of(searchParams.getPageNumber(), searchParams.getPageSize(), Sort.unsorted());
+        var filter = pageApplySearchParams.getSpecificationFilter(searchParams.getAdditionalFilter());
+        var result = pageApplySearchParams.getSpecificationSort(filter, searchParams.getOrderParameters());
+        var pages = pageRepository.findAll(result, pageRequest);
         return pages.getContent().stream()
                 .map(page -> new PageConverter().convert(page))
                 .collect(Collectors.toList());

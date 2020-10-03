@@ -14,6 +14,9 @@ import {Page} from "../../model/Page";
 import "./DiaryPage.css"
 import {createDiary, deletePage} from "../../api/DiaryApi";
 import {SheetPageStore} from "../../stores/SheetPageStore";
+import {TablePaginationConfig} from "antd/lib/table";
+import {Key, SorterResult, TableCurrentDataSource} from "antd/lib/table/interface";
+import {ExpansionColumnType} from "../../model/ExpansionColumnType";
 
 interface IDiaryPageProps extends RouteComponentProps {
     diaryPageStore?: DiaryPageStore;
@@ -71,14 +74,33 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
         props.history.push(`/edit/page/${pageId}`);
     }, [props.history])
 
-    const onChangePagination = useCallback((page: number, pageSize?: number) => {
-        authContext.setLoading(true);
-        props.diaryPageStore.nextPage(page, pageSize);
-        authContext.setLoading(false);
+    const onChangeSort = useCallback((pagination: TablePaginationConfig,
+                                      filters: Record<string, Key[] | null>,
+                                      sorter: SorterResult<Page> | SorterResult<Page>[],
+                                      extra: TableCurrentDataSource<Page>) => {
+        if (extra.action === 'sort') {
+            const currentSorter = sorter as SorterResult<Page>;
+            const currentColumn = currentSorter.column as ExpansionColumnType<Page>;
+            if (currentSorter.order) {
+                const currentDirection = currentSorter.order === 'ascend' ? 'asc' : 'desc';
+                props.diaryPageStore.sortPage({direction: currentDirection, nameSort: currentColumn.nameSort});
+            } else {
+                props.diaryPageStore.sortPage(null);
+            }
+        } else if (extra.action === 'filter') {
+
+        } else if (extra.action === 'paginate') {
+            authContext.setLoading(true);
+            props.diaryPageStore.nextPage(pagination.current, pagination.pageSize);
+            authContext.setLoading(false);
+        }
+        console.log();
     }, [authContext, props.diaryPageStore]);
 
     const columns = useMemo(() => getColumns(authContext.language, onClickDelete, onClickEdit)
         , [authContext.language, onClickDelete, onClickEdit]);
+
+    const dataSource = useMemo(() => props.diaryPageStore.pages, [props.diaryPageStore.pages]);
 
     const renderContent = (): ReactElement => {
         return (
@@ -89,13 +111,14 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
                     </Button>
                     <Table rowKey={(record: Page) => record.id}
                            columns={columns}
-                           dataSource={props.diaryPageStore.pages}
+                           dataSource={dataSource}
+                           onChange={onChangeSort}
                            pagination={
                                {
+                                   current: props.diaryPageStore.pageCurrentNumber,
                                    total: props.diaryPageStore.pageTotalCount,
                                    pageSize: 8,
                                    pageSizeOptions: ['8', '16', '32', '48', '64'],
-                                   onChange: (page: number, pageSize?: number) => onChangePagination(page, pageSize)
                                }
                            }
                            expandable={

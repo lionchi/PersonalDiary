@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.personaldiaryservice.domain.open.Page;
 
@@ -16,35 +17,47 @@ import java.util.List;
 @Component
 public class PageApplySearchParams extends ApplySearchParams<Page> {
 
-    public Specification<Page> getSpecification(List<SearchParams.Filter> filters) {
-        return getSpecification(filters, PageSpecificationOperationEnum.class);
+    public Specification<Page> getSpecificationFilter(List<SearchParams.Filter> filters) {
+        return getSpecificationFilter(filters, PageSpecificationFilter.class);
+    }
+
+    public Specification<Page> getSpecificationSort(Specification<Page> filteringSpec, List<SearchParams.OrderParameter> orderParameters) {
+        if (CollectionUtils.isEmpty(orderParameters)) {
+            return filteringSpec;
+        }
+        return getSpecificationSort(filteringSpec, orderParameters, PageSpecificationSort.class);
     }
 
     @Getter
     @RequiredArgsConstructor
-    private enum PageSpecificationOperationEnum implements Operating<Page> {
-
-        FIND_BY_DIARY_ID((propertyName, value) -> (root, criteriaQuery, criteriaBuilder) -> {
-            var propertyNames = propertyName.split("\\.");
-            return criteriaBuilder.equal(root.join(propertyNames[0]).get(propertyNames[1]), value);
-        }),
-        FIND_BY_NOTIFICATION_DATE((propertyName, value) -> (root, criteriaQuery, criteriaBuilder) -> {
+    private enum PageSpecificationFilter implements Filtering<Page> {
+        FIND_BY_DIARY_ID((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("diary").get("id"), value)),
+        FIND_BY_NOTIFICATION_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> {
             var searchNotificationDate = LocalDate.parse((String) value, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            return criteriaBuilder.equal(root.get(propertyName), searchNotificationDate);
+            return criteriaBuilder.equal(root.get("notificationDate"), searchNotificationDate);
         }),
-        FIND_BY_CREATE_DATE((propertyName, value) -> (root, criteriaQuery, criteriaBuilder) -> {
+        FIND_BY_CREATE_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> {
             var searchCreateDate = LocalDate.parse((String) value, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
             return criteriaBuilder.and(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get(propertyName), LocalDateTime.of(searchCreateDate, LocalTime.MIN)),
-                    criteriaBuilder.lessThanOrEqualTo(root.get(propertyName), LocalDateTime.of(searchCreateDate, LocalTime.MAX))
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), LocalDateTime.of(searchCreateDate, LocalTime.MIN)),
+                    criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), LocalDateTime.of(searchCreateDate, LocalTime.MAX))
             );
         }),
-        FIND_BY_CONFIDENTIAL((propertyName, value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get(propertyName), value)),
-        FIND_BY_TAG((propertyName, value) -> (root, criteriaQuery, criteriaBuilder) -> {
-            var propertyNames = propertyName.split("\\.");
-            return criteriaBuilder.equal(root.join(propertyNames[0]).get(propertyNames[1]), value);
-        });
+        FIND_BY_CONFIDENTIAL((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("confidential"), value)),
+        FIND_BY_TAG((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("tag").get("code"), value));
 
-        private final SpecificationOperation<Page> specificationOperation;
+        private final SpecificationFilter<Page> specificationFilter;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    private enum PageSpecificationSort implements Sorting<Page> {
+
+        SORT_BY_NOTIFICATION_DATE(List.of(root -> root.get("notificationDate"))),
+        SORT_BY_TAG(List.of(root -> root.join("tag").get("code"))),
+        SORT_BY_CREATE_DATE(List.of(root -> root.get("createDate"))),
+        SORT_BY_CONFIDENTIAL(List.of(root -> root.get("confidential")));
+
+        private final List<SpecificationSort<Page>> specificationsSort;
     }
 }
