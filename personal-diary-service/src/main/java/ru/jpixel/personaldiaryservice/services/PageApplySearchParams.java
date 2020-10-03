@@ -11,7 +11,6 @@ import ru.jpixel.personaldiaryservice.domain.open.Page;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -32,17 +31,11 @@ public class PageApplySearchParams extends ApplySearchParams<Page> {
     @RequiredArgsConstructor
     private enum PageSpecificationFilter implements Filtering<Page> {
         FIND_BY_DIARY_ID((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("diary").get("id"), value)),
-        FIND_BY_NOTIFICATION_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> {
-            var searchNotificationDate = LocalDate.parse((String) value, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            return criteriaBuilder.equal(root.get("notificationDate"), searchNotificationDate);
-        }),
-        FIND_BY_CREATE_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> {
-            var searchCreateDate = LocalDate.parse((String) value, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            return criteriaBuilder.and(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), LocalDateTime.of(searchCreateDate, LocalTime.MIN)),
-                    criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), LocalDateTime.of(searchCreateDate, LocalTime.MAX))
-            );
-        }),
+        FIND_BY_NOTIFICATION_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("notificationDate"), value)),
+        FIND_BY_CREATE_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), LocalDateTime.of((LocalDate) value, LocalTime.MIN)),
+                criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), LocalDateTime.of((LocalDate) value, LocalTime.MAX))
+        )),
         FIND_BY_CONFIDENTIAL((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("confidential"), value)),
         FIND_BY_TAG((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("tag").get("code"), value));
 

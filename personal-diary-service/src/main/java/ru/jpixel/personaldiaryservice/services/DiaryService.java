@@ -17,6 +17,7 @@ import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
 import ru.jpixel.personaldiaryservice.domain.open.Diary;
 import ru.jpixel.personaldiaryservice.domain.open.Page;
+import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
 import ru.jpixel.personaldiaryservice.facades.GoogleGsonFacade;
 import ru.jpixel.personaldiaryservice.repositories.open.DiaryRepository;
 import ru.jpixel.personaldiaryservice.repositories.open.PageRepository;
@@ -206,28 +207,21 @@ public class DiaryService {
     }
 
     /**
-     * Получает общее количество записей в дненивке
-     *
-     * @param diaryId иднетификатор дненвика
-     * @return количество записей
-     */
-    public Integer getPageTotalCount(Long diaryId) {
-        return pageRepository.countByDiaryId(diaryId);
-    }
-
-    /**
      * Получает записи дненивка
      *
      * @param searchParams параметры поиска
      * @return записи дневника
      */
-    public List<PageDto> getPageAll(SearchParams searchParams) {
+    public PageAllResponse getPageAll(SearchParams searchParams) {
         var pageRequest = PageRequest.of(searchParams.getPageNumber(), searchParams.getPageSize(), Sort.unsorted());
         var filter = pageApplySearchParams.getSpecificationFilter(searchParams.getAdditionalFilter());
         var result = pageApplySearchParams.getSpecificationSort(filter, searchParams.getOrderParameters());
         var pages = pageRepository.findAll(result, pageRequest);
-        return pages.getContent().stream()
+        var response = new PageAllResponse();
+        response.setTotalCount(pages.getTotalElements());
+        response.setPages(pages.getContent().stream()
                 .map(page -> new PageConverter().convert(page))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        return response;
     }
 }

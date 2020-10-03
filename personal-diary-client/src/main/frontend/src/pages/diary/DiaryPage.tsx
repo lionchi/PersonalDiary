@@ -17,6 +17,7 @@ import {SheetPageStore} from "../../stores/SheetPageStore";
 import {TablePaginationConfig} from "antd/lib/table";
 import {Key, SorterResult, TableCurrentDataSource} from "antd/lib/table/interface";
 import {ExpansionColumnType} from "../../model/ExpansionColumnType";
+import {createFilterForDiaryTable} from "../../utils/filter";
 
 interface IDiaryPageProps extends RouteComponentProps {
     diaryPageStore?: DiaryPageStore;
@@ -78,6 +79,7 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
                                       filters: Record<string, Key[] | null>,
                                       sorter: SorterResult<Page> | SorterResult<Page>[],
                                       extra: TableCurrentDataSource<Page>) => {
+        authContext.setLoading(true);
         if (extra.action === 'sort') {
             const currentSorter = sorter as SorterResult<Page>;
             const currentColumn = currentSorter.column as ExpansionColumnType<Page>;
@@ -88,13 +90,11 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
                 props.diaryPageStore.sortPage(null);
             }
         } else if (extra.action === 'filter') {
-
+            props.diaryPageStore.filterPage(createFilterForDiaryTable(filters));
         } else if (extra.action === 'paginate') {
-            authContext.setLoading(true);
             props.diaryPageStore.nextPage(pagination.current, pagination.pageSize);
-            authContext.setLoading(false);
         }
-        console.log();
+        authContext.setLoading(false);
     }, [authContext, props.diaryPageStore]);
 
     const columns = useMemo(() => getColumns(authContext.language, onClickDelete, onClickEdit)

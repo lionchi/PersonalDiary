@@ -4,6 +4,7 @@ import {http} from "../utils/http";
 import {Tag} from "../model/Tag";
 import {Page} from "../model/Page";
 import {SearchParams} from "../model/SearchParams";
+import {PageAllResponse} from "../model/PageAllResponse";
 
 export function createDiary(userId: number): Promise<AxiosResponse<OperationResult>> {
     return http.post("/diary-api/create", {}, {params: {userId: userId}});
@@ -29,10 +30,6 @@ export function downloadTags(): Promise<AxiosResponse<Tag[]>> {
     return http.get("/diary-api/download/tags");
 }
 
-export function getPageTotalCount(diaryId: number): Promise<AxiosResponse<number>> {
-    return http.get(`/diary-api/page/get/totalCount/${diaryId}`);
-}
-
-export function getPageAll(searchParams: SearchParams): Promise<AxiosResponse<Page[]>> {
+export function getPageAll(searchParams: SearchParams): Promise<AxiosResponse<PageAllResponse>> {
     return http.post("/diary-api/page/getAll", searchParams);
 }

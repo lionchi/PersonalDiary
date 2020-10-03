@@ -1,8 +1,9 @@
 import {action, observable} from "mobx";
 import {Page} from "../model/Page";
 import {SearchParams} from "../model/SearchParams";
-import {getPageAll, getPageTotalCount} from "../api/DiaryApi";
+import {getPageAll} from "../api/DiaryApi";
 import {OrderParameter} from "../model/OrderParameter";
+import {Filter} from "../model/Filter";
 
 export class DiaryPageStore {
     @observable pages: Array<Page>;
@@ -14,20 +15,23 @@ export class DiaryPageStore {
         this.pages = [];
         this.pageTotalCount = 0;
         this.pageCurrentNumber = 1;
-        this.searchParams = {pageNumber: 0, pageSize: 8, additionalFilter: [], orderParameters: [{direction: 'desc', nameSort: "SORT_BY_CREATE_DATE"}]};
+        this.searchParams = {
+            pageNumber: 0,
+            pageSize: 8,
+            additionalFilter: [],
+            orderParameters: [{direction: 'desc', nameSort: "SORT_BY_CREATE_DATE"}]
+        };
     }
 
     @action
     public async fetchPage(diaryId: number): Promise<void> {
-        const responseTotalCount = await getPageTotalCount(diaryId);
-        this.pageTotalCount = responseTotalCount.data;
-
         this.searchParams = {
             ...this.searchParams,
-            additionalFilter: [{nameFilter: "FIND_BY_DIARY_ID", value: diaryId}]
+            additionalFilter: [{nameFilter: "FIND_BY_DIARY_ID", value: diaryId, dataType: "Long"}]
         }
-        const responsePageAll = await getPageAll(this.searchParams);
-        this.pages = responsePageAll.data;
+        const {data} = await getPageAll(this.searchParams);
+        this.pageTotalCount = data.totalCount;
+        this.pages = data.pages;
     }
 
     @action
@@ -37,7 +41,7 @@ export class DiaryPageStore {
         if (this.searchParams.pageNumber < interfacePage || this.pages.length < pageSize) {
             this.searchParams = {...this.searchParams, pageNumber: interfacePage, pageSize: pageSize ? pageSize : 8}
             const {data} = await getPageAll(this.searchParams);
-            this.pages = [...this.pages, ...data];
+            this.pages = [...this.pages, ...data.pages];
         }
     }
 
@@ -50,7 +54,33 @@ export class DiaryPageStore {
         }
         this.pageCurrentNumber = 1;
         const {data} = await getPageAll(this.searchParams);
-        this.pages = data;
+        this.pages = data.pages;
+    }
+
+    @action
+    public async filterPage(filters: Filter[]): Promise<void> {
+        for (let filter of filters) {
+            const currentFilters = this.searchParams.additionalFilter.filter(item => item.nameFilter !== filter.nameFilter);
+            if (filter.value) {
+                this.searchParams = {
+                    ...this.searchParams,
+                    pageNumber: 0,
+                    pageSize: 8,
+                    additionalFilter: [...currentFilters, filter]
+                };
+            } else {
+                this.searchParams = {
+                    ...this.searchParams,
+                    pageNumber: 0,
+                    pageSize: 8,
+                    additionalFilter: currentFilters
+                };
+            }
+        }
+        this.pageCurrentNumber = 1;
+        const {data} = await getPageAll(this.searchParams);
+        this.pageTotalCount = data.totalCount
+        this.pages = data.pages;
     }
 
     @action

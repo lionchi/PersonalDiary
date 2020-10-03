@@ -6,6 +6,7 @@ import ru.jpixel.models.dtos.common.OperationResult;
 import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
+import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
 import ru.jpixel.personaldiaryservice.services.DiaryService;
 
 import java.util.List;
@@ -42,13 +43,8 @@ public class DiaryController {
         return diaryService.updatePage(pageDto);
     }
 
-    @GetMapping("page/get/totalCount/{diaryId}")
-    public Integer getPageTotalCount(@PathVariable Long diaryId) {
-        return diaryService.getPageTotalCount(diaryId);
-    }
-
     @PostMapping("page/getAll")
-    public List<PageDto> getPageAll(@RequestBody SearchParams searchParams) {
+    public PageAllResponse getPageAll(@RequestBody SearchParams searchParams) {
         return diaryService.getPageAll(searchParams);
     }
 

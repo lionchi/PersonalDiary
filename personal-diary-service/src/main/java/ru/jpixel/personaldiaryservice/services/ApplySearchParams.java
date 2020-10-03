@@ -4,12 +4,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.Assert;
 import ru.jpixel.models.dtos.common.SearchParams;
+import ru.jpixel.personaldiaryservice.utils.SpecUtils;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class ApplySearchParams<T> {
+
     /**
      * Применяет условия фильтрации
      *
@@ -19,31 +20,30 @@ public abstract class ApplySearchParams<T> {
      * @return спецификация с условиями фильтрации
      */
     protected <E extends Enum<?> & Filtering<T>> Specification<T> getSpecificationFilter(List<SearchParams.Filter> filters, Class<E> filterClass) {
-        Assert.notEmpty(filters, "Expected not empty list of filters");
-        Assert.notNull(filterClass, "Expected not NULL filterClass");
+        var nameToValueMap = Arrays.stream(filterClass.getEnumConstants()).collect(Collectors.toMap(Enum::name, e -> e));
 
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            Specification<T> result = null;
-            for (var filter : filters) {
-                for (var enumConstant : filterClass.getEnumConstants()) {
-                    if (filter.getNameFilter().equals(enumConstant.name())) {
-                        var specificationOperation = enumConstant.getSpecificationFilter();
-                        var tempSpecification = specificationOperation.getSpecification(filter.getValue());
-                        if (result == null) {
-                            result = tempSpecification;
-                        } else {
-                            result.and(tempSpecification);
-                        }
-                        break;
-                    }
-                }
+        var specsList = new ArrayList<Specification<T>>(filterClass.getEnumConstants().length);
+        var alreadyProcessed = new HashSet<E>();
 
+        for (var filter : filters) {
+            var enumValue = nameToValueMap.get(filter.getNameFilter());
+
+            if (enumValue == null) {
+                continue;
             }
 
-            Assert.notNull(result,
-                    MessageFormat.format("Expected not NULL specification at the end of 'and'-joining. Source list of specifications contains '{0}'.", filters.size()));
+            Assert.state(!alreadyProcessed.contains(enumValue), String.format("Found more than one filter param with name %s", filter.getNameFilter()));
+            alreadyProcessed.add(enumValue);
 
-            return result.toPredicate(root, criteriaQuery, criteriaBuilder);
+            specsList.add(enumValue.getSpecificationFilter().getSpecification(filter.getDataType().convert(filter.getValue())));
+        }
+
+        // Case 0, т.к. сортировочной спецификацией можно обернуть только не пустую спецификацию, то создаём фильтрующую
+        // спецификацию, которая ничего не фильтрует
+        return switch (specsList.size()) {
+            case 0 -> (root, query, criteriaBuilder) -> criteriaBuilder.isTrue(criteriaBuilder.literal(Boolean.TRUE));
+            case 1 -> specsList.get(0);
+            default -> SpecUtils.and(specsList);
         };
     }
 
@@ -60,21 +60,25 @@ public abstract class ApplySearchParams<T> {
                                                                                      List<SearchParams.OrderParameter> orderParameters,
                                                                                      Class<E> sortClass) {
         return (root, criteriaQuery, criteriaBuilder) -> {
+            var nameToValueMap = Arrays.stream(sortClass.getEnumConstants()).collect(Collectors.toMap(Enum::name, e -> e));
             var newOrderList = new ArrayList<>(criteriaQuery.getOrderList());
+
             for (var orderParameter : orderParameters) {
-                for (var enumConstant : sortClass.getEnumConstants()) {
-                    if (orderParameter.getNameSort().equals(enumConstant.name())) {
-                        for (var tSpecificationSort : enumConstant.getSpecificationsSort()) {
-                            var sortPath = tSpecificationSort.getPath(root);
-                            var order = Sort.Direction.fromString(orderParameter.getDirection()).isAscending()
-                                    ? criteriaBuilder.asc(sortPath)
-                                    : criteriaBuilder.desc(sortPath);
-                            newOrderList.add(order);
-                        }
-                        break;
-                    }
+                E enumValue = nameToValueMap.get(orderParameter.getNameSort());
+
+                if (enumValue == null) {
+                    continue;
+                }
+
+                for (var tSpecificationSort : enumValue.getSpecificationsSort()) {
+                    var sortPath = tSpecificationSort.getPath(root);
+                    var order = Sort.Direction.fromString(orderParameter.getDirection()).isAscending()
+                            ? criteriaBuilder.asc(sortPath)
+                            : criteriaBuilder.desc(sortPath);
+                    newOrderList.add(order);
                 }
             }
+
             criteriaQuery.orderBy(newOrderList);
             return filteringSpec.toPredicate(root, criteriaQuery, criteriaBuilder);
         };

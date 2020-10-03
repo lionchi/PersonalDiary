@@ -111,6 +111,14 @@ export const initI18n = (language: string | null): void => {
                             "column_create_date": "Дата создания записи",
                             "column_confidential": "Конфиденциальность",
                             "column_action": "Действие",
+                            "filter": {
+                                "confidential_true": "Показывать только конфиденциальные записи",
+                                "confidential_false": "Показывать только неконфиденциальные записи",
+                                "note": "Заметка",
+                                "notification": "Уведомление",
+                                "reminder": "Напоминание",
+                                "bookmark": "Закладка",
+                            }
                         }
                     }
                 }
@@ -222,6 +230,14 @@ export const initI18n = (language: string | null): void => {
                             "column_create_date": "Post creation date",
                             "column_confidential": "Confidentiality",
                             "column_action": "Action",
+                            "filter": {
+                                "confidential_true": "Show only confidential entries",
+                                "confidential_false": "Show only non-confidential entries",
+                                "note": "Note",
+                                "notification": "Notification",
+                                "reminder": "Reminder",
+                                "bookmark": "Bookmark",
+                            }
                         }
                     }
                 }

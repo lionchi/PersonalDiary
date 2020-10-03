@@ -1,11 +1,12 @@
 import i18next from "i18next";
 import React, {ReactElement} from "react";
-import {Button, Checkbox, Popconfirm} from "antd";
+import {Button, Checkbox, Popconfirm, Tag} from "antd";
 import {Directory} from "../../model/Directory";
 import {Page} from "../../model/Page";
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import {renderTag} from "../common/function";
 import {ExpansionColumnsType} from "../../model/ExpansionColumnType";
+import {ETag} from "../../model/ETag";
 
 export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, onClickEdit: (pageId: number) => void): ExpansionColumnsType<Page> => {
     return [
@@ -22,6 +23,13 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
             align: 'center',
             sorter: true,
             nameSort: 'SORT_BY_TAG',
+            filters: [
+                {text: <Tag color='green'>{i18next.t('table.diary.filter.note')}</Tag>, value: ETag.NOTE},
+                {text: <Tag color='magenta'>{i18next.t('table.diary.filter.notification')}</Tag>, value: ETag.NOTIFICATION},
+                {text: <Tag color='red'>{i18next.t('table.diary.filter.reminder')}</Tag>, value: ETag.REMINDER},
+                {text: <Tag color='blue'>{i18next.t('table.diary.filter.bookmark')}</Tag>, value: ETag.BOOKMARK},
+            ],
+            filterMultiple: false,
             render: (tag: Directory): ReactElement => (renderTag(tag, ln))
         },
         {
@@ -47,6 +55,11 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
             key: 'confidential',
             nameSort: 'SORT_BY_CONFIDENTIAL',
             sorter: true,
+            filters: [
+                {text: i18next.t('table.diary.filter.confidential_true'), value: true},
+                {text: i18next.t('table.diary.filter.confidential_false'), value: false},
+            ],
+            filterMultiple: false,
             align: 'center',
             render: (confidential: boolean): ReactElement => (
                 <Checkbox defaultChecked={confidential} disabled/>
