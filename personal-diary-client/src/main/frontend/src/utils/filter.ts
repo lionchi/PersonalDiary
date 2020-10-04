@@ -13,7 +13,7 @@ export function createFilterForDiaryTable(filters: Record<string, Key[] | null>)
         } else if (filtersKey === 'tag') {
             result.push({
                 nameFilter: "FIND_BY_TAG",
-                value: filters.tag ? filters.tag[0] : null,
+                value: filters.tag ? filters.tag.join(',') : null,
                 dataType: "String"
             });
         } else if (filtersKey === 'notificationDate') {

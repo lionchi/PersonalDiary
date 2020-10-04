@@ -30,7 +30,6 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
                 {text: <Tag color='red'>{i18next.t('table.diary.filter.reminder')}</Tag>, value: ETag.REMINDER},
                 {text: <Tag color='blue'>{i18next.t('table.diary.filter.bookmark')}</Tag>, value: ETag.BOOKMARK},
             ],
-            filterMultiple: false,
             render: (tag: Directory): ReactElement => (renderTag(tag, ln))
         },
         {

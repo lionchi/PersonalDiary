@@ -12,6 +12,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class PageApplySearchParams extends ApplySearchParams<Page> {
@@ -37,7 +40,11 @@ public class PageApplySearchParams extends ApplySearchParams<Page> {
                 criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), LocalDateTime.of((LocalDate) value, LocalTime.MAX))
         )),
         FIND_BY_CONFIDENTIAL((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("confidential"), value)),
-        FIND_BY_TAG((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("tag").get("code"), value));
+        FIND_BY_TAG((value) -> (root, criteriaQuery, criteriaBuilder) -> {
+            String[] codes = String.valueOf(value).split(",");
+            Set<String> codesSet = Stream.of(codes).collect(Collectors.toSet());
+            return root.join("tag").get("code").in(codesSet);
+        });
 
         private final SpecificationFilter<Page> specificationFilter;
     }
