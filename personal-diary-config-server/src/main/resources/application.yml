@@ -22,8 +22,8 @@ spring:
           uri: https://github.com/lionchi/PersonalDiary/
           search-paths:
             - "personal-diary-config-properties/{application}/{profile}"
-          username: lionchi
-          password: 12131415MegaMozg
+          username: ${GIT_USERNAME}
+          password: ${GIT_PASSWORD}
 
 server:
   port: 8888
