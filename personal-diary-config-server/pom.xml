@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.jpixel</groupId>
 	<artifactId>personal-diary-config-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>personal-diary-config-server</name>
 	<description>Config server</description>
 
@@ -23,6 +23,11 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-config-server</artifactId>
+		</dependency>
+		<!-- Интегрирование с kubernetes -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-kubernetes</artifactId>
 		</dependency>
 
 		<dependency>

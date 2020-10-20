@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gateway-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              serviceName: personal-diary-zull-client
+              servicePort: 8710
+          - path: /registration-api
+            pathType: Prefix
+            backend:
+              serviceName: personal-diary-registration-service
+              servicePort: 8720
+          - path: /auth
+            pathType: Prefix
+            backend:
+              serviceName: personal-diary-authorization-service
+              servicePort: 8740
+          - path: /mail-api
+            pathType: Prefix
+            backend:
+              serviceName: personal-diary-mail-service
+              servicePort: 8750
+          - path: /user-api
+            pathType: Prefix
+            backend:
+              serviceName: personal-diary-user-service
+              servicePort: 8730
+          - path: /diary-api
+            pathType: Prefix
+            backend:
+              serviceName: personal-diary-service
+              servicePort: 8760

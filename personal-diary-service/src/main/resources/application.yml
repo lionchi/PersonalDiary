@@ -23,3 +23,13 @@ feign:
 hystrix:
   dashboard:
     proxy-stream-allow-list: '*'
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+    url: ${DIARY_BD_URL}
+    username: ${DIARY_BD_USERNAME}
+    password: ${DIARY_BD_PASSWORD}
+    driver-class-name: org.postgresql.Driver

@@ -1,3 +1,6 @@
+server:
+  port: 8760
+
 encryption:
   algorithm: AES/ECB/PKCS5Padding
   key:

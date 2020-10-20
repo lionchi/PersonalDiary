@@ -1,5 +1,2 @@
-encryption:
-  algorithm: AES/ECB/PKCS5Padding
-  key:
-    algorithm: AES
-    charset: GBK
+server:
+  port: 8730

@@ -1,0 +1,6 @@
+server:
+  port: 8750
+
+message:
+  redirect:
+    host: http://localhost

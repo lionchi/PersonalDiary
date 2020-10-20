@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres
+data:
+  db-name: diary
+  db-url: jdbc:postgresql://10.1.0.21:5432/diary

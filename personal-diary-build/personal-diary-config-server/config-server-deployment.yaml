@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+        - name: config-server
+          image: jpixel/personal-diary-config-server:1.0
+          ports:
+            - containerPort: 8888
+              protocol: TCP
+          env:
+            - name: GIT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: config-server
+                  key: git-username
+            - name: GIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: config-server
+                  key: git-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+spec:
+  ports:
+    - port: 8888
+      targetPort: 8888
+      protocol: TCP
+  selector:
+    app: config-server

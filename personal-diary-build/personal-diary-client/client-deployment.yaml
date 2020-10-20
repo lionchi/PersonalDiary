@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: personal-diary-zull-client
+  labels:
+    app: personal-diary-zull-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: personal-diary-zull-client
+  template:
+    metadata:
+      labels:
+        app: personal-diary-zull-client
+    spec:
+      containers:
+        - name: personal-diary-zull-client
+          image: jpixel/personal-diary-client:1.0
+          ports:
+            - containerPort: 8710
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: personal-diary-zull-client
+  labels:
+    app: personal-diary-zull-client
+spec:
+  ports:
+    - port: 8710
+      targetPort: 8710
+      protocol: TCP
+  selector:
+    app: personal-diary-zull-client

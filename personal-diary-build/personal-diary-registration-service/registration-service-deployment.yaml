@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: personal-diary-registration-service
+  labels:
+    app: personal-diary-registration-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: personal-diary-registration-service
+  template:
+    metadata:
+      labels:
+        app: personal-diary-registration-service
+    spec:
+      containers:
+        - name: personal-diary-registration-service
+          image: jpixel/personal-diary-registration-service:1.0
+          ports:
+            - containerPort: 8720
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: personal-diary-registration-service
+  labels:
+    app: personal-diary-registration-service
+spec:
+  ports:
+    - port: 8720
+      targetPort: 8720
+      protocol: TCP
+  selector:
+    app: personal-diary-registration-service
