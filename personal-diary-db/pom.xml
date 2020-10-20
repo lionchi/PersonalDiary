@@ -82,7 +82,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <db.url>jdbc:postgresql://localhost:30432/diary</db.url>
+                <db.url>jdbc:postgresql://172.17.13.56:30432/diary</db.url>
                 <db.driver>org.postgresql.Driver</db.driver>
                 <db.user>postgres</db.user>
                 <db.password>postgres</db.password>
