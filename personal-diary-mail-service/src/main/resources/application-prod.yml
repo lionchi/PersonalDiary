@@ -45,3 +45,7 @@ feign:
 hystrix:
   dashboard:
     proxy-stream-allow-list: '*'
+
+message:
+  redirect:
+    host: http://personaldiary.gavrilovs.keenetic.link

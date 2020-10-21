@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: personal-diary-mail-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+  mail:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8750
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8700/eureka}
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: '*'
+
+message:
+  redirect:
+    host: http://localhost:3000
