@@ -1,0 +1,129 @@
+version: "3.8"
+services:
+  db:
+    image: postgres
+    container_name: postgres_prod
+    ports:
+      - 5433:5432
+    volumes:
+      -  D:\backup(prod):/var/lib/postgresql
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: diary
+      POSTGRES_USER: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    restart: always
+
+  pdcs:
+    build:
+      context: personal-diary-config-server
+      dockerfile: DockerFile
+    container_name: pd-config-server
+    ports:
+      - 8888:8888
+    environment:
+      GIT_USERNAME: lionchi
+      GIT_PASSWORD: 12131415MegaMozg
+    restart: always
+
+  pdes:
+    build:
+      context: personal-diary-eureka-server
+      dockerfile: DockerFile
+    container_name: pd-eureka-server
+    ports:
+      - 8700:8700
+    environment:
+      CONFIG_URL: http://pdcs:8888
+    restart: always
+    links:
+      - pdcs
+
+  pdus:
+    build:
+      context: personal-diary-user-service
+      dockerfile: DockerFile
+    container_name: pd-user-service
+    ports:
+      -  8730:8730
+    environment:
+      DIARY_BD_URL: jdbc:postgresql://db:5433/diary
+      DIARY_BD_USERNAME: postgres
+      DIARY_BD_PASSWORD: postgres
+    restart: always
+    links:
+      - db
+      - pdes
+
+  pds:
+    build:
+      context: personal-diary-service
+      dockerfile: DockerFile
+    container_name: pd-service
+    ports:
+      - 8760:8760
+    environment:
+      DIARY_BD_URL: jdbc:postgresql://db:5433/diary
+      DIARY_BD_USERNAME: postgres
+      DIARY_BD_PASSWORD: postgres
+    restart: always
+    links:
+      - db
+      - pdes
+
+  pdas:
+    build:
+      context: personal-diary-authorization-service
+      dockerfile: DockerFile
+    container_name: pd-authorization-service
+    ports:
+      - 8740:8740
+    restart: always
+    links:
+      - pdes
+      - pdus
+
+  pdrs:
+    build:
+      context: personal-diary-registration-service
+      dockerfile: DockerFile
+    container_name: pd-registration-service
+    ports:
+      - 8720:8720
+    restart: always
+    links:
+      - pdes
+      - pdus
+
+  pdms:
+    build:
+      context: personal-diary-mail-service
+      dockerfile: DockerFile
+    container_name: pd-mail-service
+    ports:
+      - 8750:8750
+    environment:
+      MAIL_USERNAME: jpixel40@gmail.com
+      MAIL_PASSWORD: 12131415MegaMozg
+    restart: always
+    links:
+      - pdes
+      - pdus
+
+  pdc:
+    build:
+      context: personal-diary-client
+      dockerfile: DockerFile
+    container_name: pd-client
+    ports:
+      -  8710:8710
+    restart: always
+    links:
+      - db
+      - pdcs
+      - pdes
+      - pdas
+      - pdms
+      - pdrs
+      - pds
+      - pdus

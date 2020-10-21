@@ -1,11 +1,19 @@
 spring:
   application:
     name: personal-diary-zull-client
-  cloud:
-    config:
-      discovery:
-        enabled: true
-        service-id: config-server
+
+server:
+  port: 8710
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8700/eureka}
+  instance:
+    preferIpAddress: true
+
 zuul:
   routes:
     personal-diary-registration-service:

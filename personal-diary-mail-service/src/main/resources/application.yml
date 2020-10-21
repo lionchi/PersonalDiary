@@ -20,6 +20,17 @@ spring:
           starttls:
             enable: true
 
+server:
+  port: 8750
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8700/eureka}
+  instance:
+    preferIpAddress: true
 
 management:
   endpoints:

@@ -1,14 +1,31 @@
 spring:
   application:
     name: personal-diary-user-service
-  cloud:
-    config:
-      discovery:
-        enabled: true
-        service-id: config-server
   jpa:
     hibernate:
       ddl-auto: none
+
+server:
+  port: 8730
+
+eureka:
+  client:
+    registry-fetch-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8700/eureka}
+  instance:
+    preferIpAddress: true
+
+---
+
+spring:
+  profiles: default,dev
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/diary
+    username: postgres
+    password: root
 
 ---
 

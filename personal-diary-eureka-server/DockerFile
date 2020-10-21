@@ -1,0 +1,14 @@
+FROM openjdk:14-jdk-alpine
+
+ENV APP_FILE personal-diary-eureka-server-1.0-SNAPSHOT.jar
+ENV APP_HOME /usr/apps
+
+EXPOSE 8700
+
+COPY target/$APP_FILE $APP_HOME/
+
+WORKDIR $APP_HOME
+
+ENTRYPOINT ["sh", "-c"]
+
+CMD ["exec java -jar -Dspring.profiles.active=prod $APP_FILE"]
