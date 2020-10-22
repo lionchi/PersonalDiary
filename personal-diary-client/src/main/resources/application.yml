@@ -1,6 +1,11 @@
 spring:
   application:
     name: personal-diary-zull-client
+  zipkin:
+    base-url: ${ZIPKIN_URL:http://localhost:9411/}
+  sleuth:
+    sampler:
+      probability: 100
 
 server:
   port: 8710

@@ -8,7 +8,7 @@ import ru.jpixel.personaldiaryclient.web.security.PersonalDiaryUser;
 
 @RestController
 @RequestMapping("/api/account")
-public class AccountController {
+public class CurrentUserInformationController {
 
     @GetMapping("information")
     public PersonalDiaryUser information(@AuthenticationPrincipal PersonalDiaryUser user) {
