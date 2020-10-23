@@ -30,5 +30,11 @@ feign:
     enabled: true
 
 hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
   dashboard:
     proxy-stream-allow-list: '*'
