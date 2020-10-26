@@ -2,9 +2,7 @@ package ru.jpixel.personaldiaryclient.web.configs;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -50,13 +48,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user-api/recoveryPassword").permitAll()
                 .antMatchers(jwtInfo.getUri()).permitAll()
                 .anyRequest().authenticated();
-    }
-
-    @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity.ignoring()
-                .antMatchers(HttpMethod.GET, "/*.css", "/*.png", "/*.ico", "/*.js", "/*.json")
-                .antMatchers(HttpMethod.GET, "/login", "/registration", "/recovery-password")
-                .antMatchers(HttpMethod.GET, "/index.html", "/static/**");
     }
 }

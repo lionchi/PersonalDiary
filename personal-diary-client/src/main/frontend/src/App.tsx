@@ -2,7 +2,6 @@ import React, {Reducer, useCallback, useEffect, useMemo, useReducer} from 'react
 import {stores} from "./stores/stores";
 import {BrowserRouter} from "react-router-dom";
 import {Route} from "react-router";
-import {baseUrl} from "./utils/config";
 import RootRouter from "./router/RootRouter";
 import {Provider} from "mobx-react";
 import {ConfigProvider, Spin} from "antd";
@@ -141,7 +140,7 @@ function App() {
                 <Provider {...stores}>
                     <PermissionsProvider permissions={state.currentUser.roles as string[]}
                                          authorizationStrategy={authorizationStrategy}>
-                        <BrowserRouter basename={baseUrl()}>
+                        <BrowserRouter>
                             <Spin size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>
                                 <Route component={RootRouter}/>
                             </Spin>
