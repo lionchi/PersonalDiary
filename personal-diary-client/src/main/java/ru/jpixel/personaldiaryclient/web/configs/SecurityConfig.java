@@ -3,6 +3,7 @@ package ru.jpixel.personaldiaryclient.web.configs;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -42,11 +43,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(jwtInfo), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/registration-api/**").permitAll()
                 .antMatchers("/mail-api/sendRecoveryPasswordMail").permitAll()
                 .antMatchers("/user-api/recoveryPassword").permitAll()
+                .antMatchers("/user-api/save").permitAll()
                 .antMatchers(jwtInfo.getUri()).permitAll()
                 .anyRequest().authenticated();
     }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**");
+    }
+
 }

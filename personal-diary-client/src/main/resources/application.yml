@@ -21,9 +21,6 @@ eureka:
 
 zuul:
   routes:
-    personal-diary-registration-service:
-      path: /registration-api/**
-      service-id: personal-diary-registration-service
     personal-diary-authorization-service:
       strip-prefix: false
       sensitive-headers: Authorization

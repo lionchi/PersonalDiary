@@ -8,13 +8,6 @@ module.exports = function (app) {
         })
     );
     app.use(
-        '/registration-api/**',
-        createProxyMiddleware({
-            target: process.env.API_URL,
-            changeOrigin: true,
-        })
-    );
-    app.use(
         '/mail-api/**',
         createProxyMiddleware({
             target: process.env.API_URL,
