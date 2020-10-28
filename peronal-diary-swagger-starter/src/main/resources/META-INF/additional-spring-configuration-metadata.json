@@ -1,0 +1,8 @@
+{
+  "properties": [{
+    "name": "personal.diary.swagger.enabled",
+    "type": "java.lang.Boolean",
+    "defaultValue": true,
+    "description": "Включает/Отключает swagger"
+  }]
+}

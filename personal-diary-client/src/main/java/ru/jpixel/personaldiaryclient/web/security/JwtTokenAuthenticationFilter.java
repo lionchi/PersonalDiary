@@ -28,7 +28,7 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws ServletException, IOException {
-        var token = getToken(request);
+        var token = tokenSearchInCookies(request);
         if (token == null) {
             chain.doFilter(request, response);
             return;
@@ -61,9 +61,9 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private String getToken(HttpServletRequest request) {
+    private String tokenSearchInCookies(HttpServletRequest request) {
         if (request.getCookies() == null) {
-            return null;
+            return tokenSearchInHeaders(request);
         }
 
         var findCookie = Stream.of(request.getCookies())
@@ -75,5 +75,14 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return findCookie.getValue();
+    }
+
+    private String tokenSearchInHeaders(HttpServletRequest request) {
+        var header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.replace("Bearer ", "");
+        } else {
+            return null;
+        }
     }
 }

@@ -12,6 +12,7 @@
         <lombock.version>1.18.12</lombock.version>
         <compiler.version>1.18.12</compiler.version>
         <jackson.version>2.9.4</jackson.version>
+        <swagger.version>1.5.22</swagger.version>
     </properties>
 
     <dependencies>
@@ -25,6 +26,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.11.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
     </dependencies>
 

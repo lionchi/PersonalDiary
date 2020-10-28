@@ -24,7 +24,12 @@ eureka:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8700/eureka}
   instance:
     preferIpAddress: true
-
+personal:
+  diary:
+    swagger:
+      docket:
+        base-package: ru.jpixel.personaldiaryuserservice.controllers
+        paths:
 ---
 
 spring:

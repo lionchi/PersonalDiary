@@ -1,5 +1,6 @@
 package ru.jpixel.models.dtos.common;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,14 +12,19 @@ import java.text.MessageFormat;
 @Setter
 public class OperationResult {
 
+    @ApiModelProperty(notes = "Код результата выполненной операции")
     private String code;
 
+    @ApiModelProperty(notes = "Руссикй текст результата выполненной операции")
     private String ruText;
 
+    @ApiModelProperty(notes = "Английский текст результата выполненной операции")
     private String enText;
 
+    @ApiModelProperty(notes = "Тип результата выполненной операции")
     private String resultType;
 
+    @ApiModelProperty(notes = "Json для внутреннего взаимодействия")
     private String json;
 
     public OperationResult(Success success) {

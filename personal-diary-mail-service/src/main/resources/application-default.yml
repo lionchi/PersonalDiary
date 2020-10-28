@@ -55,3 +55,9 @@ hystrix:
 message:
   redirect:
     host: http://localhost:3000
+
+personal:
+  diary:
+    swagger:
+      docket:
+        base-package: ru.jpixel.personaldiarymailservice.controllers

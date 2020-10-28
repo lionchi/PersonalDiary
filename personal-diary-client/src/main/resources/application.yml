@@ -38,3 +38,9 @@ zuul:
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 5000
+personal:
+  diary:
+    swagger:
+      docket:
+        base-package: ru.jpixel.personaldiaryclient.web.controllers
+

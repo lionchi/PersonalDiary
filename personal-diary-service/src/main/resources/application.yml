@@ -50,7 +50,11 @@ encryption:
   key:
     algorithm: AES
     charset: GBK
-
+personal:
+  diary:
+    swagger:
+      docket:
+        base-package: ru.jpixel.personaldiaryservice.controllers
 ---
 
 spring:

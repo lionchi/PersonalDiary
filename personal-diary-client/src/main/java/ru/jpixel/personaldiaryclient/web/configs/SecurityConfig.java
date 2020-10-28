@@ -46,13 +46,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/mail-api/sendRecoveryPasswordMail").permitAll()
                 .antMatchers("/user-api/recoveryPassword").permitAll()
                 .antMatchers("/user-api/save").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/user-api/v2/api-docs").permitAll()
+                .antMatchers("/mail-api/v2/api-docs").permitAll()
+                .antMatchers("/diary-api/v2/api-docs").permitAll()
                 .antMatchers(jwtInfo.getUri()).permitAll()
                 .anyRequest().authenticated();
     }
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**");
+        web.ignoring()
+                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**");
     }
 
 }
