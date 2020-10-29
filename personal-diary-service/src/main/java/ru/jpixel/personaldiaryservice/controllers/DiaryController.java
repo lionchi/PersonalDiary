@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 @RequiredArgsConstructor
-@Api(tags = "Diary API", authorizations = {@Authorization(value = "header")})
+@Api(tags = "Diary API")
 public class DiaryController {
 
     private final DiaryService diaryService;

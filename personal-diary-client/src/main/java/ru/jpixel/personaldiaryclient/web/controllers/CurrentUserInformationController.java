@@ -11,7 +11,7 @@ import ru.jpixel.personaldiaryclient.web.security.PersonalDiaryUser;
 
 @RestController
 @RequestMapping("/api/account")
-@Api(tags = "User information API", authorizations = {@Authorization(value = "header")})
+@Api(tags = "User information API")
 public class CurrentUserInformationController {
 
     @GetMapping("information")

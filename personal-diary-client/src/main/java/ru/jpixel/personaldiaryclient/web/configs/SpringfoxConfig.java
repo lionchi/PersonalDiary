@@ -43,8 +43,7 @@ public class SpringfoxConfig {
             swaggerResource.setName(locationReplace);
             swaggerResource.setLocation("/" + locationReplace + "/v2/api-docs");
         }
-        String VERSION_API = "1.0";
-        swaggerResource.setSwaggerVersion(VERSION_API);
+        swaggerResource.setSwaggerVersion("1.0");
         return swaggerResource;
     }
 }
