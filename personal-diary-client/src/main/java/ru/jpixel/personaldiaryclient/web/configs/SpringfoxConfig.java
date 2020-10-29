@@ -1,7 +1,6 @@
 package ru.jpixel.personaldiaryclient.web.configs;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class SpringfoxConfig {
 
-    @Autowired
     private final ZuulProperties properties;
 
     @Primary
