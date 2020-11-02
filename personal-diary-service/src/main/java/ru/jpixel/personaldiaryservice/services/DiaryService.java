@@ -1,8 +1,7 @@
 package ru.jpixel.personaldiaryservice.services;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -18,27 +17,21 @@ import ru.jpixel.models.dtos.open.PageDto;
 import ru.jpixel.personaldiaryservice.domain.open.Diary;
 import ru.jpixel.personaldiaryservice.domain.open.Page;
 import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
-import ru.jpixel.personaldiaryservice.facades.GoogleGsonFacade;
+import ru.jpixel.personaldiaryservice.exceptions.CryptoFacadeException;
+import ru.jpixel.personaldiaryservice.facades.CryptoFacade;
 import ru.jpixel.personaldiaryservice.repositories.open.DiaryRepository;
 import ru.jpixel.personaldiaryservice.repositories.open.PageRepository;
 import ru.jpixel.personaldiaryservice.repositories.open.TagRepository;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.xml.bind.DatatypeConverter;
-import java.io.UnsupportedEncodingException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
-
-    private final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 
     private final DiaryRepository diaryRepository;
     private final TagRepository tagRepository;
@@ -63,14 +56,10 @@ public class DiaryService {
         var diary = new Diary();
         diary.setUserId(userId);
         try {
-            var keyGenerator = KeyGenerator.getInstance(algorithmKey);
-            keyGenerator.init(256);
-            var key = keyGenerator.generateKey();
-            var keyJson = new GoogleGsonFacade<>(Key.class).toJson(key);
-            var keyJsonByte = keyJson.getBytes(nameCharset);
-            diary.setKey(keyJsonByte);
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("Неудачная попытка генерации ключа", e);
+            var cryptoFacade = new CryptoFacade(algorithmKey, nameCharset, "");
+            diary.setKey(cryptoFacade.keyGeneration());
+        } catch (CryptoFacadeException e) {
+            log.error("Неудачная попытка генерации ключа", e);
             return new OperationResult(Error.NOT_CREATE_DIARY);
         }
         diaryRepository.save(diary);
@@ -120,7 +109,7 @@ public class DiaryService {
         page.setNotificationDate(pageDto.getNotificationDate());
         page.setConfidential(pageDto.isConfidential());
         page.setTag(tagRepository.findByCode(pageDto.getTag().getCode()));
-        return contentEncryption(page, pageDto, diary.getKey(), Success.CREATE_PAGE, Error.NOT_CREATE_PAGE);
+        return contentEncryption(page, pageDto.getContent(), diary.getKey(), Success.CREATE_PAGE, Error.NOT_CREATE_PAGE);
     }
 
     /**
@@ -140,23 +129,20 @@ public class DiaryService {
         page.setNotificationDate(pageDto.getNotificationDate());
         page.setConfidential(pageDto.isConfidential());
         page.setTag(tagRepository.findByCode(pageDto.getTag().getCode()));
-        return contentEncryption(page, pageDto, diary.getKey(), Success.EDIT_PAGE, Error.NOT_EDIT_PAGE);
+        return contentEncryption(page, pageDto.getContent(), diary.getKey(), Success.EDIT_PAGE, Error.NOT_EDIT_PAGE);
     }
 
-    private OperationResult contentEncryption(Page page, PageDto pageDto, byte[] key, Success success, Error error) {
+    private OperationResult contentEncryption(Page page, String content, byte[] key, Success success, Error error) {
         if (page.isConfidential()) {
             try {
-                Cipher cipher = Cipher.getInstance(algorithmCipher);
-                Key keyOfJson = new GoogleGsonFacade<>(Key.class).fromJson(key, nameCharset);
-                cipher.init(Cipher.ENCRYPT_MODE, keyOfJson);
-                byte[] encrypted = cipher.doFinal(pageDto.getContent().getBytes());
-                page.setContent(DatatypeConverter.printHexBinary(encrypted));
-            } catch (Exception e) {
-                logger.error("Неудачная попытка шифрования данных", e);
+                var cryptoFacade = new CryptoFacade("", nameCharset, algorithmCipher);
+                page.setContent(cryptoFacade.encryptContent(key, content.getBytes()));
+            } catch (CryptoFacadeException e) {
+                log.error("Неудачная попытка шифрования данных", e);
                 return new OperationResult(error);
             }
         } else {
-            page.setContent(pageDto.getContent());
+            page.setContent(content);
         }
         pageRepository.save(page);
         return new OperationResult(success);
@@ -179,12 +165,10 @@ public class DiaryService {
         result.setDiaryId(diary.getId());
         if (page.isConfidential()) {
             try {
-                Cipher cipher = Cipher.getInstance(algorithmCipher);
-                Key keyOfJson = new GoogleGsonFacade<>(Key.class).fromJson(diary.getKey(), nameCharset);
-                cipher.init(Cipher.DECRYPT_MODE, keyOfJson);
-                result.setContent(new String(cipher.doFinal(DatatypeConverter.parseHexBinary(page.getContent()))));
-            } catch (Exception e) {
-                logger.error("Неудачная попытка дешифрования данных", e);
+                var cryptoFacade = new CryptoFacade("", nameCharset, algorithmCipher);
+                result.setContent(cryptoFacade.decryptContent(diary.getKey(), page.getContent()));
+            } catch (CryptoFacadeException e) {
+                log.error("Неудачная попытка дешифрования данных", e);
             }
         }
         return result;
@@ -201,7 +185,7 @@ public class DiaryService {
         try {
             pageRepository.deleteById(pageId);
         } catch (EmptyResultDataAccessException e) {
-            new OperationResult(Error.NOT_DELETE_PAGE);
+            return new OperationResult(Error.NOT_DELETE_PAGE);
         }
         return new OperationResult(Success.DELETE_PAGE);
     }

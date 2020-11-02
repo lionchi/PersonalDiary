@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      javax:
+        persistence:
+          create-database-schemas: true
+
+encryption:
+  algorithm: AES/ECB/PKCS5Padding
+  key:
+    algorithm: AES
+    charset: GBK
