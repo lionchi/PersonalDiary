@@ -1,0 +1,3 @@
+message:
+  redirect:
+    host: http://localhost
