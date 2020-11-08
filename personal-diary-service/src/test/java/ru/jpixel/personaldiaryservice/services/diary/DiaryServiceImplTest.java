@@ -36,7 +36,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 
-public class DiaryServiceTest {
+public class DiaryServiceImplTest {
 
     private static class InnerClass extends BaseServiceTest {
         @Value("${encryption.key.algorithm}")

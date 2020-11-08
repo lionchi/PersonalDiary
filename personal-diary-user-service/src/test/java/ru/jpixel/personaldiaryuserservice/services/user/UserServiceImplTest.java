@@ -23,6 +23,7 @@ import ru.jpixel.personaldiaryuserservice.repositories.secr.RoleRepository;
 import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 import ru.jpixel.personaldiaryuserservice.services.BaseServiceTest;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
+import ru.jpixel.personaldiaryuserservice.services.UserServiceImpl;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -32,7 +33,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     private static class InnerClass extends BaseServiceTest {
         @MockBean

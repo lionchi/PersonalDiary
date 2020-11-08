@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
-public class MailServiceTest {
+public class MailServiceImplTest {
 
     private static class InnerClass extends BaseServiceTest {
         @MockBean

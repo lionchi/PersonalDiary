@@ -12,6 +12,6 @@ public class ServiceTestConfiguration {
 
     @Bean
     public UserService userService(UserRepository uR, RoleRepository rR, PasswordResetTokenRepository prtR, BCryptPasswordEncoder bCrypt) {
-       return new UserService(uR, rR, prtR, bCrypt);
+       return new UserServiceImpl(uR, rR, prtR, bCrypt);
     }
 }

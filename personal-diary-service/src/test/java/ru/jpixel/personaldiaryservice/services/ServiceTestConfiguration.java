@@ -11,7 +11,7 @@ public class ServiceTestConfiguration {
 
     @Bean
     public DiaryService diaryService(DiaryRepository diaryRepository, TagRepository tagRepository,
-                                     PageRepository pageRepository, PageApplySearchParams pageApplySearchParams) {
-        return new DiaryService(diaryRepository, tagRepository, pageRepository, pageApplySearchParams);
+                                         PageRepository pageRepository, PageApplySearchParams pageApplySearchParams) {
+        return new DiaryServiceImpl(diaryRepository, tagRepository, pageRepository, pageApplySearchParams);
     }
 }

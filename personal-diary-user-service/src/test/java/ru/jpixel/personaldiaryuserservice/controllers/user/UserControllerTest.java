@@ -15,6 +15,7 @@ import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
 import ru.jpixel.models.dtos.secr.UserDto;
 import ru.jpixel.personaldiaryuserservice.controllers.BaseControllerTest;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
+import ru.jpixel.personaldiaryuserservice.services.UserServiceImpl;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;

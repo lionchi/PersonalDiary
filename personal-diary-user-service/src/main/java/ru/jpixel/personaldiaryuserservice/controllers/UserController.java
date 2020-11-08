@@ -2,7 +2,6 @@ package ru.jpixel.personaldiaryuserservice.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.jpixel.models.dtos.common.OperationResult;

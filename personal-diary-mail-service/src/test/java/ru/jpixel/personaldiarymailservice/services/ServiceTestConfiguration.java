@@ -10,6 +10,6 @@ public class ServiceTestConfiguration {
 
     @Bean
     public MailService mailService(JavaMailSender mailSender, SpringTemplateEngine templateEngine, UserServiceFeignClient userServiceFeignClient) {
-        return new MailService(mailSender, templateEngine, userServiceFeignClient);
+        return new MailServiceImpl(mailSender, templateEngine, userServiceFeignClient);
     }
 }
