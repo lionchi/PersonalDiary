@@ -19,7 +19,7 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
 
     const appContext = useContext(AppContext);
 
-    const onFinish = useCallback(async (formData: LoginFormData) => {
+    const onFinish = async (formData: LoginFormData) => {
         try {
             appContext.setLoading(true);
             await authorization(formData);
@@ -34,7 +34,7 @@ const LoginPage = (props: RouteComponentProps): ReactElement => {
                 showNotificationClient(i18next.t('notification.title.authorization'), i18next.t('notification.error.authorization'), 'error');
             }
         }
-    }, [appContext, props])
+    };
 
     const [visibleModal, setVisibleModal] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);

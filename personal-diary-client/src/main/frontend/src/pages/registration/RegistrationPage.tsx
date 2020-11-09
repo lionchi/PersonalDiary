@@ -1,7 +1,7 @@
-import React, {ReactElement, useCallback} from "react";
+import React, {ReactElement, useContext} from "react";
 import BasePage from "../BasePage";
 import "./RegistrationPage.css"
-import {Col, Form, Input, Row, Typography, Tooltip, Button, DatePicker, Select} from "antd";
+import {Breadcrumb, Button, Col, DatePicker, Form, Input, Row, Select, Tooltip, Typography} from "antd";
 import i18next from "i18next";
 import {RegistrationFormData} from "../../model/RegistrationFormData";
 import {QuestionCircleOutlined} from '@ant-design/icons';
@@ -11,6 +11,7 @@ import {registration} from "../../api/RegistrationApi";
 import {showNotification} from "../../utils/notification";
 import {Moment} from "moment";
 import {EResultType} from "../../model/EResultType";
+import {AppContext} from "../../security/AppContext";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -18,6 +19,8 @@ const {Option} = Select;
 const RegistrationPage = (props: RouteComponentProps): ReactElement => {
 
     const [form] = useForm();
+
+    const appContext = useContext(AppContext);
 
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
@@ -27,7 +30,8 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
         </Form.Item>
     );
 
-    const onFinish = useCallback(async (fieldsValue: RegistrationFormData) => {
+    const onFinish = async (fieldsValue: RegistrationFormData) => {
+        appContext.setLoading(true);
         let values = fieldsValue;
         if (fieldsValue.birthday) {
             const birthdayAsMoment = fieldsValue.birthday as Moment;
@@ -35,15 +39,16 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
         }
         const {data} = await registration(values);
         showNotification(i18next.t('notification.title.registration'), data);
+        appContext.setLoading(false);
         if (data.resultType !== EResultType.ERROR) {
             setTimeout(() => {
                 props.history.push('/login');
             }, 1000)
         }
-    }, [props]);
+    }
 
     return (
-        <BasePage>
+        <BasePage showBackButton={true}>
             <Row justify="center" align="middle" className="row">
                 <Col flex="500px">
                     <Title level={3} className="center">{i18next.t('form.registration.title')}</Title>

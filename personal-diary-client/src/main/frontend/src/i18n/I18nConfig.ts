@@ -6,11 +6,17 @@ export const initI18n = (language: string | null): void => {
         resources: {
             ru: {
                 translation: {
-                    "main_title": "Личный дневник",
+                    "header": {
+                        "main_title": "Личный дневник",
+                        "tooltip_back": "Вернуться назад",
+                    },
                     "footer": {
                         "copyright": "Личный дневник ©2020 создано Jpixel",
                         "theme": "Цветовая тема",
                         "translations": "Переводы"
+                    },
+                    "spin": {
+                        "tip": "Загрузка..."
                     },
                     "notification": {
                         "title": {
@@ -132,11 +138,17 @@ export const initI18n = (language: string | null): void => {
             },
             en: {
                 translation: {
-                    "main_title": "Personal diary",
+                    "header": {
+                        "main_title": "Personal diary",
+                        "tooltip_back": "Come back",
+                    },
                     "footer": {
                         "copyright": "Personal diary ©2020 by Jpixel",
                         "theme": "Color theme",
                         "translations": "Translations"
+                    },
+                    "spin": {
+                        "tip": "Loading..."
                     },
                     "notification": {
                         "title": {

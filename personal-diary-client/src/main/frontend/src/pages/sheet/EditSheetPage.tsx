@@ -69,7 +69,7 @@ const EditSheetPage = inject("sheetPageStore")(observer((props: IEditSheetPagePr
     }, [tags, appContext, props, sheetForm]);
 
     return (
-        <BasePage>
+        <BasePage showBackButton={true}>
             <Row justify="center" align="middle" className="row">
                 <Col flex="650px">
                     <Title level={3} className="center">{i18next.t('form.page.edit_title')}</Title>

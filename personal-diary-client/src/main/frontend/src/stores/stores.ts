@@ -11,4 +11,4 @@ export class Stores {
     }
 }
 
-export const stores: Stores = new Stores();
+export const stores = new Stores();

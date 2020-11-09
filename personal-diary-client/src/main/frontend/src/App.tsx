@@ -141,7 +141,7 @@ function App() {
                     <PermissionsProvider permissions={state.currentUser.roles as string[]}
                                          authorizationStrategy={authorizationStrategy}>
                         <BrowserRouter>
-                            <Spin size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>
+                            <Spin tip={i18next.t("spin.tip")} size="large" spinning={state.isLoading} style={{marginTop: "15%"}}>
                                 <Route component={RootRouter}/>
                             </Spin>
                         </BrowserRouter>

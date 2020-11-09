@@ -1,10 +1,10 @@
 import React, {ReactElement, ReactNode, useContext} from "react";
-import {Button, Col, Divider, Layout, Row, Switch, Typography,} from "antd";
+import {Button, Col, Divider, Layout, Row, Spin, Switch, Tooltip, Typography,} from "antd";
 import "./BasePage.css"
 import {AppContext} from "../security/AppContext";
 import i18next from "i18next";
 import {useThemeSwitcher} from "react-css-theme-switcher";
-import {BulbTwoTone, LogoutOutlined} from '@ant-design/icons';
+import {BulbTwoTone, LogoutOutlined, ArrowLeftOutlined} from '@ant-design/icons';
 import {logout} from "../api/LogoutApi";
 import {OperationResult} from "../model/OperationResult";
 import {showNotification} from "../utils/notification";
@@ -17,12 +17,17 @@ const {Title, Text} = Typography;
 
 interface IBasePageProps extends RouteComponentProps {
     children: ReactNode;
+    showBackButton?: boolean;
 }
 
 const BasePage = (props: IBasePageProps): ReactElement => {
 
     const appContext = useContext(AppContext);
-    const {switcher, themes} = useThemeSwitcher();
+    const {switcher, themes, status} = useThemeSwitcher();
+
+    if (status === 'loading') {
+        return <Spin tip={i18next.t("spin.tip")} size="large" spinning={true} style={{marginTop: "25%"}}/>
+    }
 
     const toggleTranslations = (value: boolean): void => {
         appContext.setLanguage(value ? 'en' : 'ru');
@@ -31,6 +36,10 @@ const BasePage = (props: IBasePageProps): ReactElement => {
     const toggleTheme = (value: boolean): void => {
         appContext.setDarkMode(value, value ? 'dark' : 'light')
         switcher({theme: value ? themes.dark : themes.light});
+    }
+
+    const handleBack = (): void => {
+        props.history.goBack();
     }
 
     const handleLogout = async (): Promise<void> => {
@@ -54,7 +63,15 @@ const BasePage = (props: IBasePageProps): ReactElement => {
             <Header className="header">
                 <Row justify="space-between" align="middle" className="row-height-100">
                     <Col>
-                        <Title level={4} style={{color: "white"}}>{i18next.t('main_title')}</Title>
+                        <Title level={4} style={{color: "white"}}>
+                            {props.showBackButton && (
+                                <Tooltip title={i18next.t('header.tooltip_back')}>
+                                    <Button type="text" shape="circle"
+                                            icon={<ArrowLeftOutlined style={{color: 'white'}}/>} onClick={handleBack}/>
+                                </Tooltip>
+                            )}
+                            {i18next.t('header.main_title')}
+                        </Title>
                     </Col>
                     <CustomAuthorizedSection requires={all}>
                         <Col>
