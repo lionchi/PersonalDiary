@@ -57,7 +57,7 @@ const NewSheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProp
     }, [tags, appContext, props, sheetForm]);
 
     return (
-        <BasePage showBackButton={true}>
+        <BasePage showBackButton>
             <Row justify="center" align="middle" className="row">
                 <Col flex="650px">
                     <Title level={3} className="center">{i18next.t('form.page.create_title')}</Title>

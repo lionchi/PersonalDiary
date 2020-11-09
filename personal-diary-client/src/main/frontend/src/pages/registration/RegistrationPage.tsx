@@ -48,7 +48,7 @@ const RegistrationPage = (props: RouteComponentProps): ReactElement => {
     }
 
     return (
-        <BasePage showBackButton={true}>
+        <BasePage showBackButton>
             <Row justify="center" align="middle" className="row">
                 <Col flex="500px">
                     <Title level={3} className="center">{i18next.t('form.registration.title')}</Title>
