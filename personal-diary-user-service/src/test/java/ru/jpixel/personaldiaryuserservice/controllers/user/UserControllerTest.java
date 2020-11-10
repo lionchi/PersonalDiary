@@ -15,9 +15,9 @@ import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
 import ru.jpixel.models.dtos.secr.UserDto;
 import ru.jpixel.personaldiaryuserservice.controllers.BaseControllerTest;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
-import ru.jpixel.personaldiaryuserservice.services.UserServiceImpl;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -134,5 +134,16 @@ public class UserControllerTest extends BaseControllerTest {
         var response = asObject(actions.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8), OperationResult.class);
 
         assertEquals(operationResult.getCode(), response.getCode());
+    }
+
+    @Test
+    @DisplayName("user api method searchForUserToNotify")
+    public void searchForUserToNotifyTest() throws Exception {
+        Mockito.when(userService.searchForUserToNotify())
+                .thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/searchForUserToNotify")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

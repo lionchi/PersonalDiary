@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.jpixel.models.dtos.common.OperationResult;
 import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
 import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
+import ru.jpixel.models.dtos.secr.ShortUserDto;
 import ru.jpixel.models.dtos.secr.UserDto;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -46,5 +49,11 @@ public class UserController {
     @ApiOperation(value = "Найти токен восстановления по email пользователя", response = OperationResult.class)
     public OperationResult findTokenByEmail(@PathVariable String email) {
         return userService.findTokenByEmail(email);
+    }
+
+    @GetMapping("searchForUserToNotify")
+    @ApiOperation(value = "Найти всех пользователей, у которых есть уведомления или напоминания", response = List.class)
+    public List<ShortUserDto> searchForUserToNotify() {
+        return userService.searchForUserToNotify();
     }
 }

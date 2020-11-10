@@ -167,4 +167,14 @@ public class DiaryControllerTest extends BaseControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(operationResult.getCode()));
     }
+
+    @Test
+    @DisplayName("diary api method findUserIds")
+    public void findUserIdsTest() throws Exception {
+        Mockito.when(diaryService.findUserIds()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/findUserIds")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }

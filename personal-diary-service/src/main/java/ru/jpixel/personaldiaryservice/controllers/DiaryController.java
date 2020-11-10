@@ -71,4 +71,10 @@ public class DiaryController {
     public OperationResult deletePage(@PathVariable Long pageId) {
         return diaryService.deletePage(pageId);
     }
+
+    @GetMapping("findUserIds")
+    @ApiOperation(value = "Найти всех пользователей, у которых есть уведомления или напоминания", response = List.class)
+    public List<Long> findUserIds() {
+        return diaryService.findUserIds();
+    }
 }

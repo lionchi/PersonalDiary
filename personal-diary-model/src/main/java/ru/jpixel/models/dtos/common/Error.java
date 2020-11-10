@@ -12,8 +12,8 @@ public enum Error {
 
     UNAVAILABILITY_REGISTRATION_SERVICE("code.error.unavailability_user_service",
             "В данный момент сервис регистрации недоступен", "The registration service is currently unavailable"),
-    UNAVAILABILITY_PASSWORD_RESET_SERVICE("code.error.unavailability_user_service",
-            "В данный момент сервис создания токенов для восстановления пароля недоступен", "The password recovery token creation service is currently unavailable"),
+    UNAVAILABILITY_USER_SERVICE("code.error.unavailability_user_service",
+            "В данный момент сервис по работе с пользователями недоступен", "The password recovery token creation service is currently unavailable"),
     UNAVAILABILITY_DIARY_RESET_SERVICE("code.error.unavailability_diary_service",
             "В данный момент сервис личный дневник недоступен", "The personal diary service is currently unavailable"),
 

@@ -24,4 +24,6 @@ public interface DiaryService {
     OperationResult deletePage(Long pageId);
 
     PageAllResponse getPageAll(SearchParams searchParams);
+
+    List<Long> findUserIds();
 }

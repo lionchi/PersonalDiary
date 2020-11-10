@@ -11,7 +11,8 @@ import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 public class ServiceTestConfiguration {
 
     @Bean
-    public UserService userService(UserRepository uR, RoleRepository rR, PasswordResetTokenRepository prtR, BCryptPasswordEncoder bCrypt) {
-       return new UserServiceImpl(uR, rR, prtR, bCrypt);
+    public UserService userService(UserRepository uR, RoleRepository rR, PasswordResetTokenRepository prtR,
+                                   BCryptPasswordEncoder bCrypt, DiaryServiceFeignClient dsfC) {
+       return new UserServiceImpl(uR, rR, prtR, bCrypt, dsfC);
     }
 }

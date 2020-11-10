@@ -22,14 +22,15 @@ import ru.jpixel.personaldiaryuserservice.repositories.secr.PasswordResetTokenRe
 import ru.jpixel.personaldiaryuserservice.repositories.secr.RoleRepository;
 import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 import ru.jpixel.personaldiaryuserservice.services.BaseServiceTest;
+import ru.jpixel.personaldiaryuserservice.services.DiaryServiceFeignClient;
 import ru.jpixel.personaldiaryuserservice.services.UserService;
-import ru.jpixel.personaldiaryuserservice.services.UserServiceImpl;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Collections;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 
@@ -44,6 +45,8 @@ public class UserServiceImplTest {
         protected PasswordResetTokenRepository passwordResetTokenRepository;
         @MockBean
         protected BCryptPasswordEncoder bCryptPasswordEncoder;
+        @MockBean
+        protected DiaryServiceFeignClient diaryServiceFeignClient;
         @Autowired
         protected UserService userService;
     }
@@ -284,6 +287,22 @@ public class UserServiceImplTest {
             var userResetTokenDto = new ObjectMapper().readValue(resultFind.getJson(), UserResetTokenDto.class);
 
             assertEquals(passwordResetToken.getToken(), userResetTokenDto.getToken());
+        }
+    }
+
+    @Nested
+    @DisplayName("Проверка работы метода searchForUserToNotify")
+    public class SearchForUserToNotifyTest extends InnerClass {
+        @Test
+        @DisplayName("Поиск всех пользователей, у которых есть уведомления или напоминания")
+        public void searchForUserToNotifyTest() {
+            Mockito.when(diaryServiceFeignClient.findUserIds())
+                    .thenReturn(Collections.emptyList());
+
+            Mockito.when(userRepository.findAllById(anyIterable()))
+                    .thenReturn(Collections.emptyList());
+
+            assertDoesNotThrow(() -> userService.searchForUserToNotify());
         }
     }
 }

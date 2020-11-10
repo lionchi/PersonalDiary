@@ -5,4 +5,6 @@ import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
 
 public interface MailService {
     OperationResult sendRecoveryPasswordMail(PasswordResetTokenDto passwordResetTokenDto, String ln);
+
+    void sendNotificationMail();
 }

@@ -16,6 +16,7 @@ import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
 import ru.jpixel.personaldiaryservice.domain.open.Diary;
 import ru.jpixel.personaldiaryservice.domain.open.Page;
+import ru.jpixel.personaldiaryservice.domain.open.Tag;
 import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
 import ru.jpixel.personaldiaryservice.exceptions.CryptoFacadeException;
 import ru.jpixel.personaldiaryservice.facades.CryptoFacade;
@@ -23,6 +24,7 @@ import ru.jpixel.personaldiaryservice.repositories.open.DiaryRepository;
 import ru.jpixel.personaldiaryservice.repositories.open.PageRepository;
 import ru.jpixel.personaldiaryservice.repositories.open.TagRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -215,5 +217,11 @@ public class DiaryServiceImpl implements DiaryService {
                 .map(page -> new PageConverter().convert(page))
                 .collect(Collectors.toList()));
         return response;
+    }
+
+    @Override
+    public List<Long> findUserIds() {
+        return pageRepository.findUserIdsWithTagNotificationAndTagReminder(List.of(Tag.CodeEnum.NOTIFICATION.getCode(),
+                Tag.CodeEnum.REMINDER.getCode()), LocalDate.now());
     }
 }

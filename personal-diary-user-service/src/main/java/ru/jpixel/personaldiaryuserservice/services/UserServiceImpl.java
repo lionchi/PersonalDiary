@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.jpixel.models.dtos.common.Error;
 import ru.jpixel.models.dtos.common.OperationResult;
 import ru.jpixel.models.dtos.common.Success;
-import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
-import ru.jpixel.models.dtos.secr.RecoveryPasswordDto;
-import ru.jpixel.models.dtos.secr.UserDto;
-import ru.jpixel.models.dtos.secr.UserResetTokenDto;
+import ru.jpixel.models.dtos.secr.*;
 import ru.jpixel.personaldiaryuserservice.domain.secr.PasswordResetToken;
 import ru.jpixel.personaldiaryuserservice.domain.secr.Role;
 import ru.jpixel.personaldiaryuserservice.domain.secr.User;
@@ -25,8 +22,10 @@ import ru.jpixel.personaldiaryuserservice.repositories.secr.UserRepository;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final DiaryServiceFeignClient diaryServiceFeignClient;
 
     @Override
     @Transactional
@@ -131,4 +131,12 @@ public class UserServiceImpl implements UserService {
         return successOperationResult;
     }
 
+    @Override
+    public List<ShortUserDto> searchForUserToNotify() {
+        var userIds = diaryServiceFeignClient.findUserIds();
+
+        return StreamSupport.stream(userRepository.findAllById(userIds).spliterator(), false)
+                .map(user -> new ShortUserConverter().convert(user))
+                .collect(Collectors.toList());
+    }
 }

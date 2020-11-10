@@ -423,4 +423,18 @@ public class DiaryServiceImplTest {
             assertDoesNotThrow(() -> diaryService.getPageAll(searchParams));
         }
     }
+
+    @Nested
+    @DisplayName("Проверка работы метода findUserIds")
+    public class FindUserIds extends InnerClass {
+        @Test
+        public void findUserIdsTest() {
+            Mockito.when(pageRepository.findUserIdsWithTagNotificationAndTagReminder(anyCollection(), any(LocalDate.class)))
+                    .thenReturn(Collections.emptyList());
+
+            assertDoesNotThrow(() -> diaryService.findUserIds());
+
+            Mockito.verify(pageRepository).findUserIdsWithTagNotificationAndTagReminder(anyCollection(), any(LocalDate.class));
+        }
+    }
 }

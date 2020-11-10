@@ -14,12 +14,14 @@ import ru.jpixel.models.dtos.common.Error;
 import ru.jpixel.models.dtos.common.OperationResult;
 import ru.jpixel.models.dtos.common.Success;
 import ru.jpixel.models.dtos.secr.PasswordResetTokenDto;
+import ru.jpixel.models.dtos.secr.ShortUserDto;
 import ru.jpixel.models.dtos.secr.UserResetTokenDto;
 import ru.jpixel.personaldiarymailservice.services.BaseServiceTest;
 import ru.jpixel.personaldiarymailservice.services.MailService;
 import ru.jpixel.personaldiarymailservice.services.UserServiceFeignClient;
 
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -111,6 +113,26 @@ public class MailServiceImplTest {
             var actualOperationResult = assertDoesNotThrow(() -> mailService.sendRecoveryPasswordMail(passwordResetTokenDto, ln));
 
             assertEquals(Success.RECOVERY_PASSWORD_SEND_MESSAGE.getCode(), actualOperationResult.getCode());
+        }
+    }
+
+    @Nested
+    @DisplayName("Проверка работы метода sendRecoveryPasswordMail")
+    public class SendNotificationMail extends InnerClass {
+
+        @Test
+        public void sendNotificationMailTest() {
+            var shortUserDto = new ShortUserDto();
+            shortUserDto.setName("Тест Тестов");
+            shortUserDto.setEmail("test@mail.ru");
+
+            Mockito.when(userServiceFeignClient.searchForUserToNotify())
+                    .thenReturn(List.of(shortUserDto));
+
+            Mockito.when(mailSender.createMimeMessage())
+                    .thenReturn(Mockito.mock(MimeMessage.class));
+
+            assertDoesNotThrow(() -> mailService.sendNotificationMail());
         }
     }
 }

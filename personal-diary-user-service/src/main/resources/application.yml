@@ -16,6 +16,26 @@ spring:
 server:
   port: 8730
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+  dashboard:
+    proxy-stream-allow-list: '*'
+
 eureka:
   client:
     registry-fetch-interval-seconds: 10
