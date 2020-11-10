@@ -51,7 +51,7 @@ public class PageRepositoryTest extends BaseRepositoryTest {
         testEntityManager.persist(firstDiary);
 
         var secondDiary = new Diary();
-        secondDiary.setUserId(1L);
+        secondDiary.setUserId(2L);
         secondDiary.setKey(new byte[]{});
         testEntityManager.persist(secondDiary);
 
