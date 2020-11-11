@@ -2,6 +2,7 @@ import {Directory} from "../../model/Directory";
 import React, {ReactElement} from "react";
 import {ETag} from "../../model/ETag";
 import {Tag} from "antd";
+import moment, {Moment} from "moment";
 
 export const renderTag = (tag: Directory, ln: string): ReactElement => {
     switch (tag.code) {
@@ -30,4 +31,13 @@ export const renderTag = (tag: Directory, ln: string): ReactElement => {
                 </Tag>
             )
     }
+}
+
+export const compareDates = (date: string): boolean => {
+    const now = new Date();
+    return convertToMoment(date).startOf('day').isSame(convertToMoment(now).startOf('day'));
+}
+
+export const convertToMoment = (date: string | Date): Moment => {
+    return moment(date, 'DD.MM.YYYY');
 }

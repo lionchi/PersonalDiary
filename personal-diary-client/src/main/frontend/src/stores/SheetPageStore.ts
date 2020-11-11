@@ -2,7 +2,7 @@ import {action, observable} from "mobx";
 import {Tag} from "../model/Tag";
 import {Page} from "../model/Page";
 import {downloadTags, getPage} from "../api/DiaryApi";
-import moment from "moment";
+import {convertToMoment} from "../pages/common/function";
 
 export class SheetPageStore {
     @observable tags: Array<Tag>;
@@ -40,7 +40,7 @@ export class SheetPageStore {
         this.initValues = {
             ...data,
             tag: tag.code,
-            notificationDate: data.notificationDate ? moment(data.notificationDate, 'DD.MM.YYYY') : null
+            notificationDate: data.notificationDate ? convertToMoment(data.notificationDate as string) : null
         };
     }
 }

@@ -1,9 +1,9 @@
 import React, {ReactElement} from "react";
 import {FilterDropdownProps} from "antd/lib/table/interface";
 import {Button, DatePicker} from "antd";
-import moment from "moment";
 import i18next from "i18next";
 import "./Filter.css"
+import {convertToMoment} from "../pages/common/function";
 
 const DateFilter = (props: FilterDropdownProps): ReactElement => {
     return (
@@ -13,7 +13,7 @@ const DateFilter = (props: FilterDropdownProps): ReactElement => {
                     className="date-field"
                     placeholder={i18next.t("component.date_filter.placeholder")}
                     format="DD.MM.YYYY"
-                    value={props.selectedKeys[0] ? moment(props.selectedKeys[0], 'DD.MM.YYYY') : null}
+                    value={props.selectedKeys[0] ? convertToMoment(props.selectedKeys[0] as string) : null}
                     onChange={e => props.setSelectedKeys(e ? [e.format("DD.MM.YYYY")] : [])}
                 />
             </div>

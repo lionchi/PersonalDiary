@@ -1,13 +1,15 @@
 import i18next from "i18next";
 import React, {ReactElement} from "react";
-import {Button, Checkbox, Popconfirm, Tag} from "antd";
+import {Badge, Button, Checkbox, Popconfirm, Tag, Tooltip, Typography} from "antd";
 import {Directory} from "../../model/Directory";
 import {Page} from "../../model/Page";
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
-import {renderTag} from "../common/function";
+import {compareDates, renderTag} from "../common/function";
 import {ExpansionColumnsType} from "../../model/ExpansionColumnType";
 import {ETag} from "../../model/ETag";
 import DateFilter from "../../components/DateFilter";
+
+const {Text} = Typography;
 
 export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, onClickEdit: (pageId: number) => void): ExpansionColumnsType<Page> => {
     return [
@@ -15,7 +17,20 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
             title: i18next.t('table.diary.column_summary'),
             dataIndex: 'recordingSummary',
             key: 'recordingSummary',
-            align: 'center'
+            align: 'center',
+            render: (recordingSummary: string, record: Page) => {
+                if (record.notificationDate && compareDates(record.notificationDate as string)) {
+                    return <Tooltip title={i18next.t('table.diary.tooltip_summary')}>
+                        <Badge dot={true}>
+                            <Text>
+                                {recordingSummary}
+                            </Text>
+                        </Badge>
+                    </Tooltip>
+                } else {
+                    return <Text>{recordingSummary}</Text>
+                }
+            }
         },
         {
             title: i18next.t('table.diary.column_tag'),

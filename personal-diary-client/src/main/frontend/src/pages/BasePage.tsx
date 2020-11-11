@@ -4,7 +4,7 @@ import "./BasePage.css"
 import {AppContext} from "../security/AppContext";
 import i18next from "i18next";
 import {useThemeSwitcher} from "react-css-theme-switcher";
-import {BulbTwoTone, LogoutOutlined, ArrowLeftOutlined} from '@ant-design/icons';
+import {BulbTwoTone, LogoutOutlined, ArrowLeftOutlined, EllipsisOutlined} from '@ant-design/icons';
 import {logout} from "../api/LogoutApi";
 import {OperationResult} from "../model/OperationResult";
 import {showNotification} from "../utils/notification";
@@ -26,7 +26,8 @@ const BasePage = (props: IBasePageProps): ReactElement => {
     const {switcher, themes, status} = useThemeSwitcher();
 
     if (status === 'loading') {
-        return <Spin tip={i18next.t("spin.tip")} size="large" spinning={true} style={{marginTop: "25%"}}/>
+        return <Spin indicator={<EllipsisOutlined style={{fontSize: 32, color: '#00adb5'}} spin/>} spinning={true}
+                     style={{marginTop: "25%"}}/>
     }
 
     const toggleTranslations = (value: boolean): void => {
