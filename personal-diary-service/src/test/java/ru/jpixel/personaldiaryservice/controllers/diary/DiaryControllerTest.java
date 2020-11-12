@@ -45,6 +45,22 @@ public class DiaryControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @DisplayName("diary api method delete")
+    public void deleteTest() throws Exception {
+        var diaryId = 1L;
+
+        var operationResult = new OperationResult(Success.DELETE_DIARY);
+
+        Mockito.when(diaryService.delete(diaryId)).thenReturn(operationResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete")
+                .queryParam("diaryId", String.valueOf(diaryId))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(operationResult.getCode()));
+    }
+
+    @Test
     @DisplayName("diary api method findDiaryIdByUserId")
     public void findDiaryIdByUserIdTest() throws Exception {
         var returnId = 1L;

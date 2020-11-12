@@ -27,7 +27,10 @@ export const initI18n = (language: string | null): void => {
                             "personal_diary": "Личный дневник",
                             "create_page": "Создание записи",
                             "delete_page": "Удаление записи",
-                            "edit_page": "Редактирование записи"
+                            "edit_page": "Редактирование записи",
+                            "edit_user": "Редактирование пользователя",
+                            "delete_diary": "Удаление дневника",
+                            "delete_user": "Удаление пользователя"
                         },
                         "error": {
                             "authorization": "Неизвестная ошибка во время авторизации. Повторите попытку"
@@ -186,7 +189,10 @@ export const initI18n = (language: string | null): void => {
                             "personal_diary": "Personal diary",
                             "create_page": "Create record",
                             "delete_page": "Delete record",
-                            "edit_page": "Editing record"
+                            "edit_page": "Editing record",
+                            "edit_user": "Editing user",
+                            "delete_diary": "Delete diary",
+                            "delete_user": "Delete user"
                         },
                         "error": {
                             "authorization": "Unknown error during authorization. Try again"

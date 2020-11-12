@@ -10,6 +10,10 @@ export function createDiary(userId: number): Promise<AxiosResponse<OperationResu
     return http.post("/diary-api/create", {}, {params: {userId: userId}});
 }
 
+export function deleteDiary(diaryId: number): Promise<AxiosResponse<OperationResult>> {
+    return http.delete("/diary-api/delete", {params: {diaryId: diaryId}});
+}
+
 export function createPage(page: Page): Promise<AxiosResponse<OperationResult>> {
     return http.post("/diary-api/page/create", page);
 }

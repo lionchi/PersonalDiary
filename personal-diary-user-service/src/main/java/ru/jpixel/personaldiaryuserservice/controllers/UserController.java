@@ -2,6 +2,7 @@ package ru.jpixel.personaldiaryuserservice.controllers;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.jpixel.models.dtos.common.OperationResult;
@@ -31,6 +32,13 @@ public class UserController {
     @ApiOperation(value = "Обновить информацию пользователя", response = OperationResult.class)
     public OperationResult update(@RequestBody UserDto userDto) {
         return userService.update(userDto);
+    }
+
+    @DeleteMapping("delete")
+    @ApiOperation(value = "Удалить пользователя", response = OperationResult.class)
+    public OperationResult delete(@ApiParam(value = "Идентификатор удаляемого пользователя")
+                                  @RequestParam Long userId) {
+        return userService.delete(userId);
     }
 
     @GetMapping("findByLogin/{login}")

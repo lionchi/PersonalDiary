@@ -72,6 +72,23 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     /**
+     * Удаляет дневник
+     *
+     * @param diaryId идентификатор дневника
+     * @return результат операции
+     */
+    @Override
+    @Transactional
+    public OperationResult delete(Long diaryId) {
+        try {
+            diaryRepository.deleteById(diaryId);
+        } catch (EmptyResultDataAccessException e) {
+            return new OperationResult(Error.NOT_DELETE_DIARY);
+        }
+        return new OperationResult(Success.DELETE_DIARY);
+    }
+
+    /**
      * Получает индентификатор дневника по иднетификатору пользователя
      *
      * @param userId идентификатор пользователя

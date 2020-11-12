@@ -29,6 +29,13 @@ public class DiaryController {
         return diaryService.create(userId);
     }
 
+    @DeleteMapping("delete")
+    @ApiOperation(value = "Удалить дневник", response = OperationResult.class)
+    public OperationResult delete(@ApiParam(value = "Идентификатор удаляемоего дневника", required = true)
+                                  @RequestParam Long diaryId) {
+        return diaryService.delete(diaryId);
+    }
+
     @GetMapping("findDiaryId")
     @ApiOperation(value = "Найти идентификатор дневника для пользователя по его идентификатору", response = Long.class)
     public Long findDiaryIdByUserId(@ApiParam(value = "Идентификатор пользователя для которого будет найден дневник")

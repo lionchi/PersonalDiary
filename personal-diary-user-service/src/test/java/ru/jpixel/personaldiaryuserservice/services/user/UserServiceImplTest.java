@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.jpixel.models.dtos.common.Error;
 import ru.jpixel.models.dtos.common.OperationResult;
@@ -161,6 +162,36 @@ public class UserServiceImplTest {
             OperationResult resultSave = userService.update(userDto);
 
             assertEquals(Success.BASE_OPERATION.getCode(), resultSave.getCode());
+        }
+    }
+
+    @Nested
+    @DisplayName("Проверка работы метода delete")
+    public class Delete extends InnerClass {
+        @Test
+        public void deleteSuccessTest() {
+            var userId = 1L;
+
+            var operationResult = assertDoesNotThrow(() -> userService.delete(userId));
+
+            Mockito.verify(userRepository).deleteById(anyLong());
+
+            assertEquals(Success.DELETE_USER.getCode(), operationResult.getCode());
+
+        }
+
+        @Test
+        public void deleteFailedTest() {
+            var userId = 1L;
+
+            Mockito.doThrow(EmptyResultDataAccessException.class).when(userRepository).deleteById(anyLong());
+
+            var operationResult = assertDoesNotThrow(() -> userService.delete(userId));
+
+            Mockito.verify(userRepository).deleteById(anyLong());
+
+            assertEquals(Error.NOT_DELETE_USER.getCode(), operationResult.getCode());
+
         }
     }
 

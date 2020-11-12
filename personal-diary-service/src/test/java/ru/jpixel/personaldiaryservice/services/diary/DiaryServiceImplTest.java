@@ -75,6 +75,36 @@ public class DiaryServiceImplTest {
     }
 
     @Nested
+    @DisplayName("Проверка работы метода delete")
+    public class DeleteDiary extends InnerClass {
+        @Test
+        public void deleteSuccessTest() {
+            var diaryId = 1L;
+
+            var operationResult = assertDoesNotThrow(() -> diaryService.delete(diaryId));
+
+            Mockito.verify(diaryRepository).deleteById(anyLong());
+
+            assertEquals(Success.DELETE_DIARY.getCode(), operationResult.getCode());
+
+        }
+
+        @Test
+        public void deleteailedTest() {
+            var diaryId = 1L;
+
+            Mockito.doThrow(EmptyResultDataAccessException.class).when(diaryRepository).deleteById(anyLong());
+
+            var operationResult = assertDoesNotThrow(() -> diaryService.delete(diaryId));
+
+            Mockito.verify(diaryRepository).deleteById(anyLong());
+
+            assertEquals(Error.NOT_DELETE_DIARY.getCode(), operationResult.getCode());
+
+        }
+    }
+
+    @Nested
     @DisplayName("Проверка работы метода findDiaryIdByUserId")
     public class FindDiaryIdByUserId extends InnerClass {
         @Test

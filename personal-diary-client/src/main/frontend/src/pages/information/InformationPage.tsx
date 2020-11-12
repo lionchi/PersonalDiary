@@ -10,9 +10,12 @@ import {useForm} from "antd/lib/form/Form";
 import {UserFormData} from "../../model/UserFormData";
 import {AppContext} from "../../security/AppContext";
 import {Moment} from "moment";
-import {updateUserInfo} from "../../api/InformationApi";
 import {showNotification} from "../../utils/notification";
 import {EResultType} from "../../model/EResultType";
+import {deleteDiary} from "../../api/DiaryApi";
+import {deleteUser, updateUserInfo} from "../../api/AccountApi";
+import {logout} from "../../api/LogoutApi";
+import {OperationResult} from "../../model/OperationResult";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -62,7 +65,7 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
             ...formData,
             login: appContext.currentUser.username,
         });
-        showNotification(i18next.t('notification.title.edit_page'), data);
+        showNotification(i18next.t('notification.title.edit_user'), data);
         if (data.resultType !== EResultType.ERROR) {
             props.informationPageStore.updateInitFormValues(formData);
         }
@@ -70,7 +73,25 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
     }
 
     const onClickDelete = async () => {
-
+        appContext.setLoading(true);
+        const responseDeleteDiary = await deleteDiary(appContext.currentUser.diaryId);
+        showNotification(i18next.t('notification.title.delete_diary'), responseDeleteDiary.data);
+        const responseDeleteUser = await deleteUser(appContext.currentUser.id);
+        showNotification(i18next.t('notification.title.delete_user'), responseDeleteUser.data);
+        try {
+            await logout();
+            appContext.signOut();
+            props.history.push('/login');
+        } catch (e) {
+            const operationResult: OperationResult = {
+                code: 'code.error.logout',
+                ruText: 'Ошибка выхода из системы. Повторите попытку',
+                enText: 'Logout error. Try again',
+                resultType: 'error'
+            }
+            showNotification(i18next.t('notification.title.logout'), operationResult);
+        }
+        appContext.setLoading(false);
     }
 
     return (

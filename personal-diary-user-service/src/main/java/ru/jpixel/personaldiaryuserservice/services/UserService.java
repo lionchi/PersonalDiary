@@ -13,6 +13,8 @@ public interface UserService {
 
     OperationResult update(UserDto userDto);
 
+    OperationResult delete(Long userId);
+
     UserDto findByLogin(String login);
 
     OperationResult createPasswordResetToken(PasswordResetTokenDto passwordResetTokenDto);

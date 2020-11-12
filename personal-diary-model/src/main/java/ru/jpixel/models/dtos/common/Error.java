@@ -24,6 +24,8 @@ public enum Error {
             "An account with this email is already registered"),
     EMAIL_NOT_EXIST("code.error.email_not_exist", "Учетной записи с такми email не существует",
             "Account with this email does not exist"),
+    NOT_DELETE_USER("code.error.not_delete_user", "Невозможно удалить пользователя. Пользователь отсутствует в системе",
+            "Unable to delete user. User is not logged in"),
 
     AUTHORIZATION("code.error.authorization", "Ошибка авторизации. Проверьте ваши учетные данные и повторите попытку",
             "Authorisation error. Check your credentials and try again"),
@@ -41,6 +43,8 @@ public enum Error {
 
     NOT_CREATE_DIARY("code.error.not_create_diary", "Произошла ошбика при создании личного дневника. Повторите попытку или обратитесь к администратору",
             "An error occurred while creating a personal diary. Please try again or contact your administrator"),
+    NOT_DELETE_DIARY("code.error.not_delete_diary", "Невозможно удалить дневник. Дневник отсутствует в системе",
+            "Unable to delete the diary. Diary is missing from the system"),
     NOT_CREATE_PAGE_DIARY_ID("code.error.not_create_page", "Отсутсвует дневник для добавления новых записей. Создайте дневник",
                              "There is no diary for adding new entries. Create a diary"),
     NOT_CREATE_PAGE("code.error.not_create_page", "Произошла ошбика при попытку создать запись в дневнике. Повторите попытку или обратитесь к администратору",

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +84,17 @@ public class UserServiceImpl implements UserService {
         }
         foundUser.setBirthday(userDto.getBirthday());
         return new OperationResult(Success.BASE_OPERATION);
+    }
+
+    @Override
+    @Transactional
+    public OperationResult delete(Long pageId) {
+        try {
+            userRepository.deleteById(pageId);
+        } catch (EmptyResultDataAccessException e) {
+            return new OperationResult(Error.NOT_DELETE_USER);
+        }
+        return new OperationResult(Success.DELETE_USER);
     }
 
     @Override

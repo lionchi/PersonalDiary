@@ -11,6 +11,8 @@ import java.util.List;
 public interface DiaryService {
     OperationResult create(Long userId);
 
+    OperationResult delete(Long diaryId);
+
     Long findDiaryIdByUserId(Long userId);
 
     List<DirectoryDto> downloadTags();

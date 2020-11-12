@@ -82,6 +82,22 @@ public class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @DisplayName("user api method delete")
+    public void deleteTest() throws Exception {
+        var userId = 1L;
+
+        var operationResult = new OperationResult(Success.DELETE_USER);
+
+        Mockito.when(userService.delete(userId)).thenReturn(operationResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/delete")
+                .queryParam("userId", String.valueOf(userId))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(operationResult.getCode()));
+    }
+
+    @Test
     @DisplayName("user api method findByLogin")
     public void findByLoginTest() throws Exception {
         var userDto = new UserDto();
