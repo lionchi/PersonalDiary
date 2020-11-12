@@ -105,6 +105,32 @@ export const initI18n = (language: string | null): void => {
                                 "notification_date": "Пожалуйста укажите дату уведомления/напоминания",
                                 "tag": "Пожалуйста выберите тег для заполняемой записи"
                             }
+                        },
+                        "information": {
+                            "title_information_user": "Ваши данные",
+                            "title_static": "Ваша статистика пользолвания дневником",
+                            "title_quantity_page": "Количество записей в дневнике",
+                            "title_conf_page": "Количество конфиденциальных записей",
+                            "title_non_conf_page": "Количество неконфиденциальных записей",
+                            "title_notification": "Количество уведомлений",
+                            "title_remainder": "Количество напоминаний",
+                            "title_note": "Количество заметок",
+                            "title_bookmark": "Количество закладок",
+                            "title_rate": "Ваша оценка приложению",
+                            "change_info": "Изменить данные",
+                            "delete": "Удалить свой личный дневник",
+                            "popconfirm": "Вы действительно хотите удалить свой личный дневник навсегда ? Все ваши данные будут удалены",
+                            "name": "Имя",
+                            "new_password": "Новый пароль",
+                            "confirm_new_password": "Подтвердите новый пароль",
+                            "phone": "Номер телефона",
+                            "birthday": "Дата рождения",
+                            "error": {
+                                "email_error_1": "Введен неверный E-mail",
+                                "email_error_2": "Пожалуйста укажите свой E-mail",
+                                "name": "Укажите свое имя",
+                                "confirm_new_password_error": "Два введенных вами новых пароля не совпадают",
+                            }
                         }
                     },
                     "table": {
@@ -237,6 +263,32 @@ export const initI18n = (language: string | null): void => {
                                 "content": "Please fill in the content of the entry",
                                 "notification_date": "Please enter the date of notification / reminder",
                                 "tag": "Please select a tag for the filled entry"
+                            }
+                        },
+                        "information": {
+                            "title_information_user": "Your data",
+                            "title_static": "Your statistics of using the diary",
+                            "title_quantity_page": "Number of entries in the diary",
+                            "title_conf_page": "Number of confidential records",
+                            "title_non_conf_page": "Number of non-confidential entries",
+                            "title_notification": "Number of notifications",
+                            "title_remainder": "Number of reminders",
+                            "title_note": "Number of notes",
+                            "title_bookmark": "Number of bookmarks",
+                            "title_rate": "Your rating for the application",
+                            "change_info": "To change the data",
+                            "delete": "Delete your personal diary",
+                            "popconfirm": "Are you sure you want to delete your personal diary permanently ? All your data will be deleted",
+                            "name": "Name",
+                            "new_password": "New password",
+                            "confirm_new_password": "Confirm new password",
+                            "phone": "Phone Number",
+                            "birthday": "Date of Birth",
+                            "error": {
+                                "email_error_1": "The enter is not valid E-mail",
+                                "email_error_2": "Please enter your E-mail",
+                                "name": "Please enter your name",
+                                "confirm_new_password_error": "The two new passwords that you entered do not match",
                             }
                         }
                     },

@@ -106,6 +106,65 @@ public class UserServiceImplTest {
     }
 
     @Nested
+    @DisplayName("Проверка работы метода update")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    public class Update extends InnerClass {
+
+        private UserDto userDto;
+
+        @BeforeAll
+        public void init() {
+            userDto = new UserDto();
+            userDto.setLogin("test");
+            userDto.setName("Иван Петров");
+            userDto.setEmail("test@mail.ru");
+            userDto.setPrefix("+7");
+            userDto.setPhone("9109109191");
+
+            Mockito.when(bCryptPasswordEncoder.encode(anyString()))
+                    .thenAnswer(invocationOnMock -> new String(Base64.encodeBase64(((String) invocationOnMock.getArgument(0)).getBytes())));
+        }
+
+        @Test
+        @DisplayName("LOGIN_NOT_EXIST")
+        public void returnOperationResultLoginExist() {
+            Mockito.when(userRepository.findByLogin(anyString()))
+                    .thenReturn(null);
+            var resultUpdate = userService.update(userDto);
+
+            assertEquals(Error.LOGIN_NOT_EXIST.getCode(), resultUpdate.getCode());
+        }
+
+        @Test
+        @DisplayName("EMAIL_EXIST")
+        public void returnOperationResultEmailExist() {
+            var user = new User();
+            user.setEmail("test_test@mail.ru");
+            Mockito.when(userRepository.findByLogin(anyString()))
+                    .thenReturn(user);
+            Mockito.when(userRepository.existsByEmail(anyString()))
+                    .thenReturn(true);
+            var resultSave = userService.update(userDto);
+
+            assertEquals(Error.EMAIL_EXIST.getCode(), resultSave.getCode());
+        }
+
+        @Test
+        @DisplayName("Сохранение пользователя")
+        public void saveTest() {
+            var user = new User();
+            user.setEmail("test_test@mail.ru");
+            Mockito.when(userRepository.findByLogin(anyString()))
+                    .thenReturn(user);
+            Mockito.when(userRepository.existsByEmail(anyString()))
+                    .thenReturn(false);
+            OperationResult resultSave = userService.update(userDto);
+
+            assertEquals(Success.BASE_OPERATION.getCode(), resultSave.getCode());
+        }
+    }
+
+    @Nested
     @DisplayName("Проверка работы метода findByLogin")
     public class FindByLogin extends InnerClass {
         @Test

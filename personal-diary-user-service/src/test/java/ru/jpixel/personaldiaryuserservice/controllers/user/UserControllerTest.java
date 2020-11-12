@@ -58,6 +58,30 @@ public class UserControllerTest extends BaseControllerTest {
     }
 
     @Test
+    @DisplayName("user api method update")
+    public void updateTest() throws Exception {
+        var userDto = new UserDto();
+        userDto.setName("Иван");
+        userDto.setLogin("test");
+        userDto.setEmail("test@mail.ru");
+        userDto.setPrefix("+7");
+        userDto.setPhone("9109109191");
+
+        var operationResult = new OperationResult(Success.BASE_OPERATION);
+
+        Mockito.when(userService.update(any()))
+                .thenReturn(operationResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/update")
+                .content(asJsonString(userDto))
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(operationResult.getCode()));
+    }
+
+    @Test
     @DisplayName("user api method findByLogin")
     public void findByLoginTest() throws Exception {
         var userDto = new UserDto();

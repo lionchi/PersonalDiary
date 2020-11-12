@@ -61,6 +61,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public OperationResult update(UserDto userDto) {
+        var foundUser = userRepository.findByLogin(userDto.getLogin());
+        if (foundUser == null) {
+            return new OperationResult(Error.LOGIN_NOT_EXIST);
+        } else if (!foundUser.getEmail().equals(userDto.getEmail()) && userRepository.existsByEmail(userDto.getEmail())) {
+            return new OperationResult(Error.EMAIL_EXIST);
+        }
+        foundUser.setName(userDto.getName());
+        foundUser.setEmail(userDto.getEmail());
+        if (StringUtils.isNotEmpty(userDto.getPassword())) {
+            foundUser.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        }
+        if (StringUtils.isEmpty(userDto.getPhone())) {
+            foundUser.setPrefix(null);
+            foundUser.setPhone(null);
+        } else {
+            foundUser.setPrefix(userDto.getPrefix());
+            foundUser.setPhone(userDto.getPhone());
+        }
+        foundUser.setBirthday(userDto.getBirthday());
+        return new OperationResult(Success.BASE_OPERATION);
+    }
+
+    @Override
     public UserDto findByLogin(String login) {
         var foundUser = userRepository.findByLogin(login);
         if (foundUser == null) {
@@ -68,6 +93,7 @@ public class UserServiceImpl implements UserService {
         }
         var userDto = new UserDto();
         userDto.setId(foundUser.getId());
+        userDto.setName(foundUser.getName());
         userDto.setBirthday(foundUser.getBirthday());
         userDto.setPassword(foundUser.getPassword());
         userDto.setEmail(foundUser.getEmail());

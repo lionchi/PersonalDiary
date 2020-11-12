@@ -1,0 +1,22 @@
+.row {
+    min-height: calc(100vh - 64px - 71.5px);
+}
+
+.col {
+    text-align: center;
+}
+
+.form-btn {
+    width: 50%;
+}
+
+.div-flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.mgb-15 {
+    margin-bottom: 15px !important;
+}

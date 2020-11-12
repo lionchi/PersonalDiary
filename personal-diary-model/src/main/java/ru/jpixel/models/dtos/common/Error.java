@@ -18,6 +18,8 @@ public enum Error {
             "В данный момент сервис личный дневник недоступен", "The personal diary service is currently unavailable"),
 
     LOGIN_EXIST("code.error.login_exist", "Логин {0} занят", "Login {0} busy"),
+    LOGIN_NOT_EXIST("code.error.login_not_exist", "Учетной записи с такми логином не существует",
+            "Account with this login does not exist"),
     EMAIL_EXIST("code.error.email_exist", "Учетная запись с такми email уже зарегистрирована",
             "An account with this email is already registered"),
     EMAIL_NOT_EXIST("code.error.email_not_exist", "Учетной записи с такми email не существует",

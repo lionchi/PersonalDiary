@@ -11,6 +11,8 @@ import java.util.List;
 public interface UserService {
     OperationResult save(UserDto userDto);
 
+    OperationResult update(UserDto userDto);
+
     UserDto findByLogin(String login);
 
     OperationResult createPasswordResetToken(PasswordResetTokenDto passwordResetTokenDto);

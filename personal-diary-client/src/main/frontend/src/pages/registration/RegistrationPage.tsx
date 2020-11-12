@@ -1,7 +1,7 @@
 import React, {ReactElement, useContext} from "react";
 import BasePage from "../BasePage";
 import "./RegistrationPage.css"
-import {Breadcrumb, Button, Col, DatePicker, Form, Input, Row, Select, Tooltip, Typography} from "antd";
+import {Button, Col, DatePicker, Form, Input, Row, Select, Tooltip, Typography} from "antd";
 import i18next from "i18next";
 import {RegistrationFormData} from "../../model/RegistrationFormData";
 import {QuestionCircleOutlined} from '@ant-design/icons';

@@ -27,8 +27,14 @@ public class UserController {
         return userService.save(userDto);
     }
 
+    @PutMapping("update")
+    @ApiOperation(value = "Обновить информацию пользователя", response = OperationResult.class)
+    public OperationResult update(@RequestBody UserDto userDto) {
+        return userService.update(userDto);
+    }
+
     @GetMapping("findByLogin/{login}")
-    @ApiOperation(value = "Найти пользователя по его логину", response = OperationResult.class)
+    @ApiOperation(value = "Найти пользователя по его логину", response = UserDto.class)
     public UserDto findByLogin(@PathVariable String login) {
         return userService.findByLogin(login);
     }

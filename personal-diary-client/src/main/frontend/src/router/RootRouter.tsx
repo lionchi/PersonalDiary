@@ -11,6 +11,7 @@ import {usePermissions} from "@tshio/react-router-permissions";
 import RecoveryPasswordPage from "../pages/password/RecoveryPasswordPage";
 import NewSheetPage from "../pages/sheet/NewSheetPage";
 import EditSheetPage from "../pages/sheet/EditSheetPage";
+import InformationPage from "../pages/information/InformationPage";
 
 const RootRouter = (): ReactElement => {
 
@@ -62,6 +63,10 @@ const RootRouter = (): ReactElement => {
 
             <CustomAuthorizedRoute path="/edit/page/:pageId" requires={user} redirect={getRedirect()}>
                 <EditSheetPage/>
+            </CustomAuthorizedRoute>
+
+            <CustomAuthorizedRoute path="/information" requires={user} redirect={getRedirect()}>
+                <InformationPage/>
             </CustomAuthorizedRoute>
 
             <Redirect from="*" to={getMainRedirectUrl()}/>
