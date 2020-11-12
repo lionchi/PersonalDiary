@@ -12,6 +12,7 @@ import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.models.dtos.common.Success;
 import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
+import ru.jpixel.models.dtos.open.StatisticsData;
 import ru.jpixel.personaldiaryservice.controllers.BaseControllerTest;
 import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
 import ru.jpixel.personaldiaryservice.services.DiaryService;
@@ -190,6 +191,20 @@ public class DiaryControllerTest extends BaseControllerTest {
         Mockito.when(diaryService.findUserIds()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/findUserIds")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @DisplayName("diary api method statistics")
+    public void statisticsTest() throws Exception {
+        var diaryId = 1L;
+
+        Mockito.when(diaryService.getStatistics(diaryId))
+                .thenReturn(new StatisticsData());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/statistics")
+                .queryParam("diaryId", String.valueOf(diaryId))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

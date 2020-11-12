@@ -4,7 +4,7 @@ import {InformationPageStore} from "../../stores/InformationPageStore";
 import {inject, observer} from "mobx-react";
 import React, {ReactElement, useContext, useEffect, useMemo} from "react";
 import BasePage from "../BasePage";
-import {Button, Card, Col, DatePicker, Form, Input, Popconfirm, Rate, Row, Select, Statistic, Typography} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Statistic, Typography} from "antd";
 import i18next from "i18next";
 import {useForm} from "antd/lib/form/Form";
 import {UserFormData} from "../../model/UserFormData";
@@ -16,6 +16,7 @@ import {deleteDiary} from "../../api/DiaryApi";
 import {deleteUser, updateUserInfo} from "../../api/AccountApi";
 import {logout} from "../../api/LogoutApi";
 import {OperationResult} from "../../model/OperationResult";
+import Countdown from "antd/lib/statistic/Countdown";
 
 const {Title} = Typography;
 const {Option} = Select;
@@ -32,7 +33,7 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
 
     useEffect(() => {
         appContext.setLoading(true);
-        props.informationPageStore.fetchData(appContext.currentUser.username);
+        props.informationPageStore.fetchData(appContext.currentUser);
         appContext.setLoading(false);
     }, []);
 
@@ -201,10 +202,16 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
                             <Statistic value={props.informationPageStore.initStatisticsValue.quantityBookmarkPage}/>
                         </Card>
                     </div>
-                    <Card className='mgb-15' title={i18next.t('form.information.title_rate')}>
-                        <Rate disabled={props.informationPageStore.initStatisticsValue.rate !== 0} allowHalf
-                              defaultValue={props.informationPageStore.initStatisticsValue.rate ? props.informationPageStore.initStatisticsValue.rate : 2.5}/>
-                    </Card>
+                    <div className='div-flex-row'>
+                        <Card title={i18next.t('form.information.title_dateOfLastEntry')}>
+                            <Statistic value={props.informationPageStore.initStatisticsValue.dateOfLastEntry}/>
+                        </Card>
+                        <Card title={i18next.t('form.information.title_dateOfNextNotificationAndReminder')}>
+                            <Countdown
+                                value={props.informationPageStore.initStatisticsValue.dateOfNextNotificationAndReminder}
+                                format={i18next.t('form.information.format_countdown')}/>
+                        </Card>
+                    </div>
                 </Col>
             </Row>
         </BasePage>

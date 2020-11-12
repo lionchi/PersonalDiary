@@ -14,6 +14,7 @@ import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.models.dtos.common.Success;
 import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
+import ru.jpixel.models.dtos.open.StatisticsData;
 import ru.jpixel.personaldiaryservice.domain.open.Diary;
 import ru.jpixel.personaldiaryservice.domain.open.Page;
 import ru.jpixel.personaldiaryservice.domain.open.Tag;
@@ -26,6 +27,7 @@ import ru.jpixel.personaldiaryservice.repositories.open.TagRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -240,5 +242,41 @@ public class DiaryServiceImpl implements DiaryService {
     public List<Long> findUserIds() {
         return pageRepository.findUserIdsWithTagNotificationAndTagReminder(List.of(Tag.CodeEnum.NOTIFICATION.getCode(),
                 Tag.CodeEnum.REMINDER.getCode()), LocalDate.now());
+    }
+
+    /**
+     * Получает статиску дневника
+     *
+     * @param diaryId индетификатор дневника
+     * @return статистика
+     */
+    @Override
+    public StatisticsData getStatistics(Long diaryId) {
+        var diary = diaryRepository.findById(diaryId).orElseThrow();
+        var statistics = new StatisticsData();
+        var pages = diary.getPages();
+        statistics.setQuantityPage(pages.size());
+        var partitionByConf = pages.stream()
+                .collect(Collectors.partitioningBy(Page::isConfidential, Collectors.counting()));
+        var groupingByTagCode = pages.stream()
+                .collect(Collectors.groupingBy(page -> page.getTag().getCode(), Collectors.counting()));
+        var dateOfLastEntry = pages.stream()
+                .max(Comparator.comparing(Page::getCreateDate))
+                .map(Page::getCreateDate)
+                .orElse(null);
+        var dateOfNextNotificationAndReminder = pages.stream()
+                .filter(page -> page.getNotificationDate() != null)
+                .max(Comparator.comparing(Page::getNotificationDate))
+                .map(Page::getNotificationDate)
+                .orElse(null);
+        statistics.setQuantityConfPage(partitionByConf.get(Boolean.TRUE));
+        statistics.setQuantityNonConfPage(partitionByConf.get(Boolean.FALSE));
+        statistics.setQuantityNotificationPage(groupingByTagCode.getOrDefault(Tag.CodeEnum.NOTIFICATION.getCode(), 0L));
+        statistics.setQuantityRemainderPage(groupingByTagCode.getOrDefault(Tag.CodeEnum.REMINDER.getCode(), 0L));
+        statistics.setQuantityNotePage(groupingByTagCode.getOrDefault(Tag.CodeEnum.NOTE.getCode(), 0L));
+        statistics.setQuantityBookmarkPage(groupingByTagCode.getOrDefault(Tag.CodeEnum.BOOKMARK.getCode(), 0L));
+        statistics.setDateOfLastEntry(dateOfLastEntry);
+        statistics.setDateOfNextNotificationAndReminder(dateOfNextNotificationAndReminder);
+        return statistics;
     }
 }

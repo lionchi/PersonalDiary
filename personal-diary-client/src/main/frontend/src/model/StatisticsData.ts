@@ -6,5 +6,6 @@ export interface StatisticsData {
     quantityRemainderPage: number;
     quantityNotePage: number;
     quantityBookmarkPage: number;
-    rate: number;
+    dateOfLastEntry: string;
+    dateOfNextNotificationAndReminder: string | number;
 }

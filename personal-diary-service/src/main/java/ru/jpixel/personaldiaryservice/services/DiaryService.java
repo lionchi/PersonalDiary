@@ -4,6 +4,7 @@ import ru.jpixel.models.dtos.common.OperationResult;
 import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
+import ru.jpixel.models.dtos.open.StatisticsData;
 import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface DiaryService {
     PageAllResponse getPageAll(SearchParams searchParams);
 
     List<Long> findUserIds();
+
+    StatisticsData getStatistics(Long diaryId);
 }

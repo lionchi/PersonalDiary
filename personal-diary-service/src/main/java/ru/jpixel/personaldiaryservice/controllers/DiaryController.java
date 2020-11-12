@@ -9,6 +9,7 @@ import ru.jpixel.models.dtos.common.OperationResult;
 import ru.jpixel.models.dtos.common.SearchParams;
 import ru.jpixel.models.dtos.open.DirectoryDto;
 import ru.jpixel.models.dtos.open.PageDto;
+import ru.jpixel.models.dtos.open.StatisticsData;
 import ru.jpixel.personaldiaryservice.dtos.PageAllResponse;
 import ru.jpixel.personaldiaryservice.services.DiaryService;
 
@@ -83,5 +84,12 @@ public class DiaryController {
     @ApiOperation(value = "Найти всех пользователей, у которых есть уведомления или напоминания", response = List.class)
     public List<Long> findUserIds() {
         return diaryService.findUserIds();
+    }
+
+    @GetMapping("statistics")
+    @ApiOperation(value = "Получить статиску по дневнику", response = StatisticsData.class)
+    public StatisticsData getStatistics(@ApiParam(value = "Идентификатор дневника для сбора статистики", required = true)
+                                         @RequestParam Long diaryId) {
+        return diaryService.getStatistics(diaryId);
     }
 }

@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -465,6 +466,62 @@ public class DiaryServiceImplTest {
             assertDoesNotThrow(() -> diaryService.findUserIds());
 
             Mockito.verify(pageRepository).findUserIdsWithTagNotificationAndTagReminder(anyCollection(), any(LocalDate.class));
+        }
+    }
+
+    @Nested
+    @DisplayName("Проверка работы метода getStatistics")
+    public class GetStatistics extends InnerClass {
+        @Test
+        public void getStatisticsTest() {
+            var firstTag = new Tag();
+            firstTag.setId(1L);
+            firstTag.setNameRu("Заметка");
+            firstTag.setNameEn("Note");
+            firstTag.setCode("1");
+            var secondTag = new Tag();
+            secondTag.setId(2L);
+            secondTag.setNameRu("Уведомление");
+            secondTag.setNameEn("Notification");
+            secondTag.setCode("2");
+
+            var diary = new Diary();
+            diary.setId(1L);
+            diary.setUserId(1L);
+            diary.setKey(new byte[]{});
+
+            var firstPage = new Page();
+            firstPage.setId(1L);
+            firstPage.setTag(firstTag);
+            firstPage.setCreateDate(LocalDateTime.of(LocalDate.of(2020, 11, 1), LocalTime.MAX));
+            firstPage.setContent("ТекстТекстТекстТекстТекст");
+            firstPage.setRecordingSummary("Первая запись");
+            var secondPage = new Page();
+            secondPage.setId(2L);
+            secondPage.setTag(secondTag);
+            var dateOfLastEntry = LocalDateTime.of(LocalDate.of(2020, 11, 11), LocalTime.MAX);
+            secondPage.setCreateDate(dateOfLastEntry);
+            secondPage.setContent("ТекстТекстТекстТекстТекст");
+            secondPage.setRecordingSummary("Вторая запись");
+            var dateOfNextNotificationAndReminder = LocalDate.of(2020, 11, 30);
+            secondPage.setNotificationDate(dateOfNextNotificationAndReminder);
+
+            diary.setPages(List.of(firstPage, secondPage));
+
+            Mockito.when(diaryRepository.findById(anyLong()))
+                    .thenReturn(Optional.of(diary));
+
+            var statistics = assertDoesNotThrow(() -> diaryService.getStatistics(diary.getId()));
+
+            assertEquals(2, statistics.getQuantityPage());
+            assertEquals(0, statistics.getQuantityConfPage());
+            assertEquals(2, statistics.getQuantityNonConfPage());
+            assertEquals(1, statistics.getQuantityNotificationPage());
+            assertEquals(0, statistics.getQuantityRemainderPage());
+            assertEquals(1, statistics.getQuantityNotePage());
+            assertEquals(0, statistics.getQuantityBookmarkPage());
+            assertEquals(dateOfLastEntry, statistics.getDateOfLastEntry());
+            assertEquals(dateOfNextNotificationAndReminder, statistics.getDateOfNextNotificationAndReminder());
         }
     }
 }
