@@ -17,6 +17,22 @@
     margin-bottom: 15px;
 }
 
-.mgb-15 {
-    margin-bottom: 15px !important;
+.mgb-10 {
+    margin-bottom: 8px !important;
+}
+
+.text-size-16px {
+    font-size: 16px;
+}
+
+.text-size-24px {
+    font-size: 24px;
+}
+
+.ant-carousel .slick-dots li button {
+    background: #00adb5 !important;
+}
+
+.ant-carousel .slick-dots li.slick-active button {
+    background: #00adb5 !important;
 }

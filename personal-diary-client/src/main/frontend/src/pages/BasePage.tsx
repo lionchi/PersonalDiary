@@ -5,12 +5,10 @@ import {AppContext} from "../security/AppContext";
 import i18next from "i18next";
 import {useThemeSwitcher} from "react-css-theme-switcher";
 import {ArrowLeftOutlined, BulbTwoTone, LogoutOutlined} from '@ant-design/icons';
-import {logout} from "../api/LogoutApi";
-import {OperationResult} from "../model/OperationResult";
-import {showNotification} from "../utils/notification";
 import {RouteComponentProps, withRouter} from "react-router";
 import {all} from "../model/ERole";
 import CustomAuthorizedSection from "../components/CustomAuthorizedSection";
+import {logoutSystem} from "./common/function";
 
 const {Header, Content, Footer} = Layout;
 const {Title, Text} = Typography;
@@ -43,19 +41,9 @@ const BasePage = (props: IBasePageProps): ReactElement => {
     }
 
     const handleLogout = async (): Promise<void> => {
-        try {
-            await logout();
-            appContext.signOut();
-            props.history.push('/login');
-        } catch (e) {
-            const operationResult: OperationResult = {
-                code: 'code.error.logout',
-                ruText: 'Ошибка выхода из системы. Повторите попытку',
-                enText: 'Logout error. Try again',
-                resultType: 'error'
-            }
-            showNotification(i18next.t('notification.title.logout'), operationResult);
-        }
+        await logoutSystem();
+        appContext.signOut();
+        props.history.push('/login');
     }
 
     const handleClickLink = (): void => {

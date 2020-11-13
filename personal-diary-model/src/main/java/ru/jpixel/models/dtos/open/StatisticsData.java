@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -31,6 +30,6 @@ public class StatisticsData {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
     private LocalDateTime dateOfLastEntry;
     @ApiModelProperty(notes = "Дата ближайшего уведомления/напоминания")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate dateOfNextNotificationAndReminder;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateOfNextNotificationAndReminder;
 }

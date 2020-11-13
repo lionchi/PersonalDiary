@@ -81,7 +81,7 @@ export const getColumns = (ln: string, onClickDelete: (pageId: number) => void, 
             filterMultiple: false,
             align: 'center',
             render: (confidential: boolean): ReactElement => (
-                <Checkbox defaultChecked={confidential} disabled/>
+                <Checkbox checked={confidential} disabled/>
             )
         },
         {

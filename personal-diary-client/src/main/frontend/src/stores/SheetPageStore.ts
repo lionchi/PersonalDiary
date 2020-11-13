@@ -10,6 +10,11 @@ export class SheetPageStore {
     private isTagsDownloaded: boolean;
 
     constructor() {
+       this.clear();
+    }
+
+    @action
+    public clear(): void {
         this.tags = [];
         this.initValues = {
             id: null,

@@ -3,7 +3,7 @@ import {inject, observer} from "mobx-react";
 import React, {ReactElement, useCallback, useContext, useEffect, useMemo} from "react";
 import {RouteComponentProps, withRouter} from "react-router";
 import {AppContext} from "../../security/AppContext";
-import {Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Typography} from "antd";
+import {Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Tooltip, Typography} from "antd";
 import i18next from "i18next";
 import {renderTag} from "../common/function";
 import TextArea from "antd/lib/input/TextArea";
@@ -29,10 +29,15 @@ const EditSheetPage = inject("sheetPageStore")(observer((props: IEditSheetPagePr
     const [sheetForm] = Form.useForm();
 
     useEffect(() => {
-        appContext.setLoading(true);
-        props.sheetPageStore.fetchTags();
-        props.sheetPageStore.fetchPageByPageId(Number(props.match.params.pageId));
-        appContext.setLoading(false);
+        (async () => {
+            appContext.setLoading(true);
+            await props.sheetPageStore.fetchTags();
+            await props.sheetPageStore.fetchPageByPageId(Number(props.match.params.pageId));
+            appContext.setLoading(false);
+        })();
+        return () => {
+            props.sheetPageStore.clear();
+        }
     }, [props.match.params.pageId]);
 
     useMemo(() => {
@@ -111,8 +116,10 @@ const EditSheetPage = inject("sheetPageStore")(observer((props: IEditSheetPagePr
                             <DatePicker className="width-100" format="DD.MM.YYYY"/>
                         </Form.Item>
 
-                        <Form.Item name="confidential" valuePropName="checked" wrapperCol={{push: 10}}>
-                            <Checkbox>{i18next.t('form.page.confidential')}</Checkbox>
+                        <Form.Item name="confidential"  valuePropName="checked" wrapperCol={{push: 10}}>
+                            <Tooltip title={i18next.t('form.page.tooltip_confidential')}>
+                                <Checkbox>{i18next.t('form.page.confidential')}</Checkbox>
+                            </Tooltip>
                         </Form.Item>
 
                         <Form.Item className="center">

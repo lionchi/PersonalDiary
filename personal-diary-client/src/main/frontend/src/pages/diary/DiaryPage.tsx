@@ -28,11 +28,13 @@ const DiaryPage = inject("diaryPageStore", "sheetPageStore")(observer((props: ID
     const authContext = useContext(AppContext);
 
     useEffect(() => {
-        if (authContext.currentUser.diaryId) {
-            authContext.setLoading(true);
-            props.diaryPageStore.fetchPage(authContext.currentUser.diaryId);
-            authContext.setLoading(false);
-        }
+        (async () => {
+            if (authContext.currentUser.diaryId) {
+                authContext.setLoading(true);
+                await props.diaryPageStore.fetchPage(authContext.currentUser.diaryId);
+                authContext.setLoading(false);
+            }
+        })();
     }, []);
 
     const handleCreateDiary = async (): Promise<void> => {

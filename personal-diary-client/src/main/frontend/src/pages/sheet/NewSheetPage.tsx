@@ -5,7 +5,7 @@ import {inject, observer} from "mobx-react";
 import "./SheetPage.css"
 import {IMatchParams} from "../../model/IMatchParams";
 import i18next from "i18next";
-import {Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Typography} from "antd";
+import {Button, Checkbox, Col, DatePicker, Form, Input, Row, Select, Typography, Tooltip} from "antd";
 import {Page} from "../../model/Page";
 import TextArea from "antd/lib/input/TextArea";
 import {AppContext} from "../../security/AppContext";
@@ -29,9 +29,11 @@ const NewSheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProp
     const [sheetForm] = Form.useForm();
 
     useEffect(() => {
-        appContext.setLoading(true);
-        props.sheetPageStore.fetchTags();
-        appContext.setLoading(false);
+        (async () => {
+            appContext.setLoading(true);
+            await props.sheetPageStore.fetchTags();
+            appContext.setLoading(false);
+        })();
     }, [])
 
     const tags = useMemo(() => props.sheetPageStore.tags, [props.sheetPageStore.tags]);
@@ -100,7 +102,9 @@ const NewSheetPage = inject("sheetPageStore")(observer((props: IDiaryNewPageProp
                         </Form.Item>
 
                         <Form.Item name="confidential" valuePropName="checked" wrapperCol={{push: 10}}>
-                            <Checkbox>{i18next.t('form.page.confidential')}</Checkbox>
+                            <Tooltip title={i18next.t('form.page.tooltip_confidential')}>
+                                <Checkbox>{i18next.t('form.page.confidential')}</Checkbox>
+                            </Tooltip>
                         </Form.Item>
 
                         <Form.Item className="center">

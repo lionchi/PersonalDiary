@@ -12,6 +12,11 @@ export class DiaryPageStore {
     private searchParams: SearchParams;
 
     constructor() {
+        this.clear();
+    }
+
+    @action
+    public clear(): void {
         this.pages = [];
         this.pageTotalCount = 0;
         this.pageCurrentNumber = 1;

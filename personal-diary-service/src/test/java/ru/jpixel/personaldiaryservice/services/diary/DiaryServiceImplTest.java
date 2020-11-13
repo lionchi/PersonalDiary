@@ -503,7 +503,7 @@ public class DiaryServiceImplTest {
             secondPage.setCreateDate(dateOfLastEntry);
             secondPage.setContent("ТекстТекстТекстТекстТекст");
             secondPage.setRecordingSummary("Вторая запись");
-            var dateOfNextNotificationAndReminder = LocalDate.of(2020, 11, 30);
+            var dateOfNextNotificationAndReminder = LocalDate.now().plusDays(1);
             secondPage.setNotificationDate(dateOfNextNotificationAndReminder);
 
             diary.setPages(List.of(firstPage, secondPage));
@@ -521,7 +521,7 @@ public class DiaryServiceImplTest {
             assertEquals(1, statistics.getQuantityNotePage());
             assertEquals(0, statistics.getQuantityBookmarkPage());
             assertEquals(dateOfLastEntry, statistics.getDateOfLastEntry());
-            assertEquals(dateOfNextNotificationAndReminder, statistics.getDateOfNextNotificationAndReminder());
+            assertEquals(dateOfNextNotificationAndReminder, statistics.getDateOfNextNotificationAndReminder().toLocalDate());
         }
     }
 }

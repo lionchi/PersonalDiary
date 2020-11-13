@@ -15,6 +15,10 @@
     color: white
 }
 
+.ant-spin-dot-item {
+    background-color: #00adb5 !important;
+}
+
 .css-loading-spin {
     margin-top: 25% !important;
 }

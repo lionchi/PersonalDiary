@@ -27,6 +27,7 @@ import ru.jpixel.personaldiaryservice.repositories.open.TagRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +37,10 @@ import java.util.stream.StreamSupport;
 @Service
 @RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
+
+    private static final LocalTime TEN_HOURS_AFTERNOON = LocalTime.of(10, 0, 0, 0);
+    private static final LocalTime TWO_HOURS_AFTERNOON = LocalTime.of(14, 0, 0, 0);
+    private static final LocalTime SIX_HOURS_EVENING = LocalTime.of(18, 0, 0, 0);
 
     private final DiaryRepository diaryRepository;
     private final TagRepository tagRepository;
@@ -264,9 +269,13 @@ public class DiaryServiceImpl implements DiaryService {
                 .max(Comparator.comparing(Page::getCreateDate))
                 .map(Page::getCreateDate)
                 .orElse(null);
+        var now = LocalTime.now();
         var dateOfNextNotificationAndReminder = pages.stream()
                 .filter(page -> page.getNotificationDate() != null)
-                .max(Comparator.comparing(Page::getNotificationDate))
+                .filter(page -> TEN_HOURS_AFTERNOON.compareTo(now) > 0 || TWO_HOURS_AFTERNOON.compareTo(now) > 0 || SIX_HOURS_EVENING.compareTo(now) > 0
+                        ? page.getNotificationDate().compareTo(LocalDate.now()) >= 0
+                        : page.getNotificationDate().compareTo(LocalDate.now()) > 0)
+                .min(Comparator.comparing(Page::getNotificationDate))
                 .map(Page::getNotificationDate)
                 .orElse(null);
         statistics.setQuantityConfPage(partitionByConf.get(Boolean.TRUE));
@@ -276,7 +285,22 @@ public class DiaryServiceImpl implements DiaryService {
         statistics.setQuantityNotePage(groupingByTagCode.getOrDefault(Tag.CodeEnum.NOTE.getCode(), 0L));
         statistics.setQuantityBookmarkPage(groupingByTagCode.getOrDefault(Tag.CodeEnum.BOOKMARK.getCode(), 0L));
         statistics.setDateOfLastEntry(dateOfLastEntry);
-        statistics.setDateOfNextNotificationAndReminder(dateOfNextNotificationAndReminder);
+        statistics.setDateOfNextNotificationAndReminder(getDateOfNextNotificationAndReminder(dateOfNextNotificationAndReminder));
         return statistics;
+    }
+
+    private LocalDateTime getDateOfNextNotificationAndReminder(LocalDate date) {
+        LocalTime localTime;
+        var now = LocalTime.now();
+        if (TEN_HOURS_AFTERNOON.compareTo(now) > 0) {
+            localTime = TEN_HOURS_AFTERNOON;
+        } else if (TWO_HOURS_AFTERNOON.compareTo(now) > 0) {
+            localTime = TWO_HOURS_AFTERNOON;
+        } else if (SIX_HOURS_EVENING.compareTo(now) > 0) {
+            localTime = SIX_HOURS_EVENING;
+        } else {
+            localTime = TEN_HOURS_AFTERNOON;
+        }
+        return LocalDateTime.of(date, localTime);
     }
 }

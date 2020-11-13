@@ -4,7 +4,20 @@ import {InformationPageStore} from "../../stores/InformationPageStore";
 import {inject, observer} from "mobx-react";
 import React, {ReactElement, useContext, useEffect, useMemo} from "react";
 import BasePage from "../BasePage";
-import {Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Statistic, Typography} from "antd";
+import {
+    Button,
+    Card,
+    Carousel,
+    Col,
+    DatePicker,
+    Form,
+    Input,
+    Popconfirm,
+    Row,
+    Select,
+    Statistic, Tag,
+    Typography
+} from "antd";
 import i18next from "i18next";
 import {useForm} from "antd/lib/form/Form";
 import {UserFormData} from "../../model/UserFormData";
@@ -17,8 +30,9 @@ import {deleteUser, updateUserInfo} from "../../api/AccountApi";
 import {logout} from "../../api/LogoutApi";
 import {OperationResult} from "../../model/OperationResult";
 import Countdown from "antd/lib/statistic/Countdown";
+import {logoutSystem} from "../common/function";
 
-const {Title} = Typography;
+const {Title, Text} = Typography;
 const {Option} = Select;
 
 interface InformationPageProps extends RouteComponentProps {
@@ -32,9 +46,11 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
     const appContext = useContext(AppContext);
 
     useEffect(() => {
-        appContext.setLoading(true);
-        props.informationPageStore.fetchData(appContext.currentUser);
-        appContext.setLoading(false);
+        (async () => {
+            appContext.setLoading(true);
+            await props.informationPageStore.fetchData(appContext.currentUser);
+            appContext.setLoading(false);
+        })();
     }, []);
 
     useMemo(() => {
@@ -69,6 +85,10 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
         showNotification(i18next.t('notification.title.edit_user'), data);
         if (data.resultType !== EResultType.ERROR) {
             props.informationPageStore.updateInitFormValues(formData);
+            userForm.setFields([
+                {name: 'password', value: null},
+                {name: 'confirmNewPassword', value: null},
+            ]);
         }
         appContext.setLoading(false);
     }
@@ -79,141 +99,145 @@ const InformationPage = inject('informationPageStore')(observer((props: Informat
         showNotification(i18next.t('notification.title.delete_diary'), responseDeleteDiary.data);
         const responseDeleteUser = await deleteUser(appContext.currentUser.id);
         showNotification(i18next.t('notification.title.delete_user'), responseDeleteUser.data);
-        try {
-            await logout();
-            appContext.signOut();
-            props.history.push('/login');
-        } catch (e) {
-            const operationResult: OperationResult = {
-                code: 'code.error.logout',
-                ruText: 'Ошибка выхода из системы. Повторите попытку',
-                enText: 'Logout error. Try again',
-                resultType: 'error'
-            }
-            showNotification(i18next.t('notification.title.logout'), operationResult);
-        }
+        await logoutSystem();
+        appContext.signOut();
+        props.history.push('/login');
         appContext.setLoading(false);
     }
 
     return (
         <BasePage showBackButton>
-            <Row justify="space-between" className='row'>
-                <Col className='col' flex='50%'>
-                    <Title level={3} className="center">{i18next.t('form.information.title_information_user')}</Title>
-                    <Form form={userForm} labelCol={{span: 6}} wrapperCol={{span: 12}}
-                          name="user_form"
-                          initialValues={{prefix: "7"}}
-                          onFinish={onFinish}
-                          scrollToFirstError>
-                        <Form.Item name="name"
-                                   label={i18next.t('form.information.name')}
-                                   rules={[{required: true, message: i18next.t('form.information.error.name')}]}>
-                            <Input maxLength={255}/>
-                        </Form.Item>
+            <Carousel className='test' draggable>
+                <Row justify="space-between" className='row'>
+                    <Col className='col' style={{width: '60%', margin: '0 20% 0 20%'}}>
+                        <Title level={3}
+                               className="center">{i18next.t('form.information.title_information_user')}</Title>
+                        <Form form={userForm} labelCol={{span: 6}} wrapperCol={{span: 12}}
+                              name="user_form"
+                              initialValues={{prefix: "7"}}
+                              onFinish={onFinish}
+                              scrollToFirstError>
+                            <Form.Item name="name"
+                                       label={i18next.t('form.information.name')}
+                                       rules={[{required: true, message: i18next.t('form.information.error.name')}]}>
+                                <Input maxLength={255}/>
+                            </Form.Item>
 
-                        <Form.Item
-                            name="email"
-                            label="E-mail"
-                            rules={[
-                                {
-                                    type: 'email',
-                                    message: i18next.t('form.information.error.email_error_1')
-                                },
-                                {
-                                    required: true,
-                                    message: i18next.t('form.information.error.email_error_2')
-                                }
-                            ]}
-                        >
-                            <Input maxLength={255}/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="password"
-                            label={i18next.t('form.information.new_password')}
-                            hasFeedback>
-                            <Input.Password/>
-                        </Form.Item>
-
-                        <Form.Item
-                            name="confirmNewPassword"
-                            label={i18next.t('form.information.confirm_new_password')}
-                            dependencies={['password']}
-                            hasFeedback
-                            rules={[
-                                ({getFieldValue}) => ({
-                                    validator(rule, value) {
-                                        if (!value || getFieldValue('password') === value) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(i18next.t('form.information.error.confirm_new_password_error'));
+                            <Form.Item
+                                name="email"
+                                label="E-mail"
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: i18next.t('form.information.error.email_error_1')
                                     },
-                                }),
-                            ]}
-                        >
-                            <Input.Password/>
-                        </Form.Item>
+                                    {
+                                        required: true,
+                                        message: i18next.t('form.information.error.email_error_2')
+                                    }
+                                ]}
+                            >
+                                <Input maxLength={255}/>
+                            </Form.Item>
 
-                        <Form.Item name="phone" label={i18next.t('form.information.phone')}>
-                            <Input addonBefore={prefixSelector} maxLength={12}/>
-                        </Form.Item>
+                            <Form.Item
+                                name="password"
+                                label={i18next.t('form.information.new_password')}
+                                hasFeedback>
+                                <Input.Password/>
+                            </Form.Item>
 
-                        <Form.Item name="birthday" label={i18next.t('form.information.birthday')}>
-                            <DatePicker className="width-100" format="DD.MM.YYYY"/>
-                        </Form.Item>
+                            <Form.Item
+                                name="confirmNewPassword"
+                                label={i18next.t('form.information.confirm_new_password')}
+                                dependencies={['password']}
+                                hasFeedback
+                                rules={[
+                                    ({getFieldValue}) => ({
+                                        validator(rule, value) {
+                                            if (!value || getFieldValue('password') === value) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(i18next.t('form.information.error.confirm_new_password_error'));
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input.Password/>
+                            </Form.Item>
 
-                        <Form.Item wrapperCol={{offset: 0}}>
-                            <Button className='form-btn' style={{width: '50%'}} type="primary"
-                                    htmlType="submit">{i18next.t('form.information.change_info')}</Button>
-                        </Form.Item>
-                        <Form.Item wrapperCol={{offset: 0}}>
-                            <Popconfirm title={i18next.t('form.information.popconfirm')}
-                                        onConfirm={onClickDelete}>
-                                <Button className='form-btn' danger type="primary"
-                                        htmlType="submit">{i18next.t('form.information.delete')}</Button>
-                            </Popconfirm>
-                        </Form.Item>
-                    </Form>
-                </Col>
-                <Col className='col' flex='50%'>
-                    <Title level={3} className="center">{i18next.t('form.information.title_static')}</Title>
-                    <Card className='mgb-15' title={i18next.t('form.information.title_quantity_page')}>
-                        <Statistic value={props.informationPageStore.initStatisticsValue.quantityPage}/>
-                    </Card>
-                    <div className='div-flex-row'>
-                        <Card title={i18next.t('form.information.title_conf_page')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityConfPage}/>
+                            <Form.Item name="phone" label={i18next.t('form.information.phone')}>
+                                <Input addonBefore={prefixSelector} maxLength={12}/>
+                            </Form.Item>
+
+                            <Form.Item name="birthday" label={i18next.t('form.information.birthday')}>
+                                <DatePicker className="width-100" format="DD.MM.YYYY"/>
+                            </Form.Item>
+
+                            <Form.Item wrapperCol={{offset: 0}}>
+                                <Button className='form-btn' style={{width: '50%'}} type="primary"
+                                        htmlType="submit">{i18next.t('form.information.change_info')}</Button>
+                            </Form.Item>
+                            <Form.Item wrapperCol={{offset: 0}}>
+                                <Popconfirm title={i18next.t('form.information.popconfirm')}
+                                            onConfirm={onClickDelete}>
+                                    <Button className='form-btn' danger type="primary"
+                                            htmlType="submit">{i18next.t('form.information.delete')}</Button>
+                                </Popconfirm>
+                            </Form.Item>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row justify="space-between" className='row'>
+                    <Col className='col' style={{width: '60%', margin: '0 20% 0 20%'}}>
+                        <Title level={3} className="center">{i18next.t('form.information.title_static')}</Title>
+                        <Card className='mgb-8' title={i18next.t('form.information.title_dateOfLastEntry')}>
+                            {props.informationPageStore.initStatisticsValue.dateOfLastEntry
+                                ?
+                                <Statistic value={props.informationPageStore.initStatisticsValue.dateOfLastEntry}/>
+                                : <Text
+                                    className='text-size-16px'>{i18next.t('form.information.default_dateOfLastEntry')}</Text>
+                            }
                         </Card>
-                        <Card title={i18next.t('form.information.title_non_conf_page')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityNonConfPage}/>
-                        </Card>
-                    </div>
-                    <div className='div-flex-row'>
-                        <Card title={i18next.t('form.information.title_notification')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityNotificationPage}/>
-                        </Card>
-                        <Card title={i18next.t('form.information.title_remainder')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityRemainderPage}/>
-                        </Card>
-                        <Card title={i18next.t('form.information.title_note')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityNotePage}/>
-                        </Card>
-                        <Card title={i18next.t('form.information.title_bookmark')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityBookmarkPage}/>
-                        </Card>
-                    </div>
-                    <div className='div-flex-row'>
-                        <Card title={i18next.t('form.information.title_dateOfLastEntry')}>
-                            <Statistic value={props.informationPageStore.initStatisticsValue.dateOfLastEntry}/>
-                        </Card>
-                        <Card title={i18next.t('form.information.title_dateOfNextNotificationAndReminder')}>
+                        <Card className='mgb-8' title={i18next.t('form.information.title_dateOfNextNotificationAndReminder')}>
                             <Countdown
                                 value={props.informationPageStore.initStatisticsValue.dateOfNextNotificationAndReminder}
                                 format={i18next.t('form.information.format_countdown')}/>
                         </Card>
-                    </div>
-                </Col>
-            </Row>
+                        <Card className='mgb-8' title={i18next.t('form.information.title_quantity_page')}>
+                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityPage}/>
+                        </Card>
+                        <Card className='mgb-8' title={i18next.t('form.information.title_conf_and_non_conf_page')}>
+                            <Statistic value={props.informationPageStore.initStatisticsValue.quantityConfPage}
+                                       suffix={`/ ${props.informationPageStore.initStatisticsValue.quantityNonConfPage}`}/>
+                        </Card>
+                        <Card title={i18next.t('form.information.title_all_tag')}>
+                            <div className='div-flex-row'>
+                                <Text
+                                    className='text-size-24px'>{props.informationPageStore.initStatisticsValue.quantityNotificationPage} - <Tag
+                                    color='magenta'>
+                                    {i18next.t('form.information.title_notification')}
+                                </Tag></Text>
+                                <Text
+                                    className='text-size-24px'>{props.informationPageStore.initStatisticsValue.quantityRemainderPage} - <Tag
+                                    color='red'>
+                                    {i18next.t('form.information.title_remainder')}
+                                </Tag></Text>
+                                <Text
+                                    className='text-size-24px'>{props.informationPageStore.initStatisticsValue.quantityNotePage} - <Tag
+                                    color='green'>
+                                    {i18next.t('form.information.title_note')}
+                                </Tag></Text>
+                                <Text
+                                    className='text-size-24px'>{props.informationPageStore.initStatisticsValue.quantityBookmarkPage} - <Tag
+                                    color='blue'>
+                                    {i18next.t('form.information.title_bookmark')}
+                                </Tag></Text>
+                            </div>
+                        </Card>
+                    </Col>
+                </Row>
+            </Carousel>
         </BasePage>
     )
 }));

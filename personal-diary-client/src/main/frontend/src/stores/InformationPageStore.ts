@@ -4,13 +4,17 @@ import {StatisticsData} from "../model/StatisticsData";
 import {getStatistics, getUserInfo} from "../api/InformationApi";
 import {convertToMoment} from "../pages/common/function";
 import {PersonalDiaryUser} from "../model/PersonalDiaryUser";
-import i18next from "i18next";
 
 export class InformationPageStore {
     @observable initFormValues: UserFormData;
     @observable initStatisticsValue: StatisticsData;
 
     constructor() {
+        this.clear();
+    }
+
+    @action
+    public clear(): void {
         this.initFormValues = {
             name: null,
             email: null,
@@ -40,17 +44,15 @@ export class InformationPageStore {
             ...responseUserInfo.data,
             birthday: responseUserInfo.data.birthday ? convertToMoment(responseUserInfo.data.birthday as string) : null
         };
-        const responseStatistics = await getStatistics(currentUser.diaryId);
-        this.initStatisticsValue = {
-            ...responseStatistics.data,
-            dateOfLastEntry: responseStatistics.data.dateOfLastEntry
-                ? responseStatistics.data.dateOfLastEntry
-                : i18next.t('form.information.default_dateOfLastEntry'),
-            dateOfNextNotificationAndReminder: responseStatistics.data.dateOfNextNotificationAndReminder
-                ? new Date(responseStatistics.data.dateOfNextNotificationAndReminder).getTime()
-                : null
+        if (currentUser.diaryId) {
+            const responseStatistics = await getStatistics(currentUser.diaryId);
+            this.initStatisticsValue = {
+                ...responseStatistics.data,
+                dateOfNextNotificationAndReminder: responseStatistics.data.dateOfNextNotificationAndReminder
+                    ? new Date(responseStatistics.data.dateOfNextNotificationAndReminder).getTime()
+                    : null
+            }
         }
-        console.log();
     }
 
     @action
