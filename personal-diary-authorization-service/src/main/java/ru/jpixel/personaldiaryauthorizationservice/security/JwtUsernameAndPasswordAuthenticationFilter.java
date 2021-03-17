@@ -52,7 +52,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .claim(jwtInfo.getClaimUserId(), ((PersonalDiaryUser) auth.getPrincipal()).getId())
                 .claim(jwtInfo.getClaimDiaryId(), ((PersonalDiaryUser) auth.getPrincipal()).getDiaryId())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + jwtInfo.getExpiration() * 1000))
+                .setExpiration(new Date(now + jwtInfo.getExpiration() * 1000L))
                 .signWith(SignatureAlgorithm.HS512, jwtInfo.getSecret().getBytes())
                 .compact();
         var cookie = new Cookie(jwtInfo.getAccessCookieName(), token);
