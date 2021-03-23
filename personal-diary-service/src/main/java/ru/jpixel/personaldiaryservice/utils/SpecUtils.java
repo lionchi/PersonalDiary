@@ -14,7 +14,7 @@ public final class SpecUtils {
     public static <T> Specification<T> and(List<Specification<T>> specifications) {
         Assert.notEmpty(specifications, "Expected not empty list of specifications.");
 
-        return (Specification<T>) (root, query, criteriaBuilder) -> {
+        return (root, query, criteriaBuilder) -> {
             Specification<T> result = null;
 
             for (Specification<T> specification : specifications) {
