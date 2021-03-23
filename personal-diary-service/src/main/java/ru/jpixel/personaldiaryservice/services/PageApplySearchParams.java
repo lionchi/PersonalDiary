@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 @Component
 public class PageApplySearchParams extends ApplySearchParams<Page> {
 
+    private static final String CREATE_DATE_FILED_NAME = "createDate";
+
     public Specification<Page> getSpecificationFilter(List<SearchParams.Filter> filters) {
         return getSpecificationFilter(filters, PageSpecificationFilter.class);
     }
@@ -33,14 +35,14 @@ public class PageApplySearchParams extends ApplySearchParams<Page> {
     @Getter
     @RequiredArgsConstructor
     private enum PageSpecificationFilter implements Filtering<Page> {
-        FIND_BY_DIARY_ID((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("diary").get("id"), value)),
-        FIND_BY_NOTIFICATION_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("notificationDate"), value)),
-        FIND_BY_CREATE_DATE((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.and(
-                criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), LocalDateTime.of((LocalDate) value, LocalTime.MIN)),
-                criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), LocalDateTime.of((LocalDate) value, LocalTime.MAX))
+        FIND_BY_DIARY_ID(value -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.join("diary").get("id"), value)),
+        FIND_BY_NOTIFICATION_DATE(value -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("notificationDate"), value)),
+        FIND_BY_CREATE_DATE(value -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.greaterThanOrEqualTo(root.get(CREATE_DATE_FILED_NAME), LocalDateTime.of((LocalDate) value, LocalTime.MIN)),
+                criteriaBuilder.lessThanOrEqualTo(root.get(CREATE_DATE_FILED_NAME), LocalDateTime.of((LocalDate) value, LocalTime.MAX))
         )),
-        FIND_BY_CONFIDENTIAL((value) -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("confidential"), value)),
-        FIND_BY_TAG((value) -> (root, criteriaQuery, criteriaBuilder) -> {
+        FIND_BY_CONFIDENTIAL(value -> (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("confidential"), value)),
+        FIND_BY_TAG(value -> (root, criteriaQuery, criteriaBuilder) -> {
             String[] codes = String.valueOf(value).split(",");
             Set<String> codesSet = Stream.of(codes).collect(Collectors.toSet());
             return root.join("tag").get("code").in(codesSet);
@@ -55,7 +57,7 @@ public class PageApplySearchParams extends ApplySearchParams<Page> {
 
         SORT_BY_NOTIFICATION_DATE(List.of(root -> root.get("notificationDate"))),
         SORT_BY_TAG(List.of(root -> root.join("tag").get("code"))),
-        SORT_BY_CREATE_DATE(List.of(root -> root.get("createDate"))),
+        SORT_BY_CREATE_DATE(List.of(root -> root.get(CREATE_DATE_FILED_NAME))),
         SORT_BY_CONFIDENTIAL(List.of(root -> root.get("confidential")));
 
         private final List<SpecificationSort<Page>> specificationsSort;
